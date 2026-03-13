@@ -1,5 +1,5 @@
 import AuthService, { IUser } from '@/services/auth.service';
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 interface AuthContextType {
   getCurrentUser: () => Promise<void>;
@@ -10,6 +10,7 @@ interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
+export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null)
