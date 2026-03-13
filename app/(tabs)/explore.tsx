@@ -1,12 +1,11 @@
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
 
 export default function TabTwoScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText>Explore</ThemedText>
-    </ThemedView>
+    <View style={styles.container}>
+      <Text>Explore</Text>
+    </View>
   );
 }
 

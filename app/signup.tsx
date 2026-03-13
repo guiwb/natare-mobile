@@ -1,10 +1,10 @@
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { Text } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Signup() {
   return (
-    <ThemedView>
-      <ThemedText>Signup</ThemedText>
-    </ThemedView>
+    <SafeAreaView>
+      <Text>Signup</Text>
+    </SafeAreaView>
   );
 }
