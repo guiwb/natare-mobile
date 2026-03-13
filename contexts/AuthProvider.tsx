@@ -9,53 +9,55 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null)
-export const useAuth = () => useContext(AuthContext)
+export const AuthContext = createContext<AuthContextType | null>(null);
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getCurrentUser = useCallback(async () => {
     try {
-      setIsLoading(true)
-      const user = await AuthService.getCurrentUser()
-      setUser(user)
+      setIsLoading(true);
+      const user = await AuthService.getCurrentUser();
+      setUser(user);
     } catch (error: any) {
-      if (error.status !== 401) return alert(error)
+      if (error.status !== 401) return alert(error);
 
-    //   navigate('/login')
+      //   navigate('/login')
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      if (!email || !password) throw 'Preencha todos os campos!'
+      if (!email || !password) throw 'Preencha todos os campos!';
 
-      const user = await AuthService.login(email, password)
-      setUser(user)
+      const user = await AuthService.login(email, password);
+      setUser(user);
 
-    //   navigate('/')
+      //   navigate('/')
     } catch {
-      throw new Error('Usuário e/ou senha inválidos!')
+      throw new Error('Usuário e/ou senha inválidos!');
     }
-  }
+  };
 
   const logout = async () => {
     try {
-      await AuthService.logout()
-      setUser(null)
-    //   navigate('/login')
+      await AuthService.logout();
+      setUser(null);
+      //   navigate('/login')
     } catch {
-      throw new Error('Erro ao deslogar!')
+      throw new Error('Erro ao deslogar!');
     }
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ getCurrentUser, user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ getCurrentUser, user, login, logout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
