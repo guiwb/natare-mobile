@@ -1,18 +1,25 @@
+import { AuthProvider } from '@/contexts/AuthProvider';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
 
+function Routes() {
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="login" />
+      <Stack.Screen name="signup" />
+    </Stack>
+  );
+}
+
 export default function RootLayout() {
   return (
-    <PaperProvider>
-      <Stack initialRouteName="login">
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
-        <Stack.Screen name="login" options={{ title: 'Login' }} />
-        <Stack.Screen name="signup" options={{ title: 'Sign Up' }} />
-      </Stack>
-
-      <StatusBar style="auto" />
-    </PaperProvider>
+    <AuthProvider>
+      <PaperProvider>
+        <Routes />
+        <StatusBar style="auto" />
+      </PaperProvider>
+    </AuthProvider>
   );
 }

@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>Home tab</Text>
     </View>
   );
 }
