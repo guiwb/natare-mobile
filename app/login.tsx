@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthProvider';
 import { Redirect } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +16,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
   });
 
 export default function Login() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, login } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   if (isLoading) {
      return <View style={styles.container}><ActivityIndicator size="large" /></View>;
@@ -27,9 +30,10 @@ export default function Login() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput label="E-mail" />
-      <TextInput label="Senha" />
-      <Button mode="contained" onPress={() => {}}>
+      <TextInput label="E-mail" value={email} onChangeText={setEmail} />
+      <TextInput label="Senha" value={password} onChangeText={setPassword} />
+
+      <Button mode="contained" loading={isLoading} onPress={() => login(email, password)}>
         Entrar
       </Button>
     </SafeAreaView>

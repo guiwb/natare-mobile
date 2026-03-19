@@ -1,10 +1,11 @@
 import AuthService, { IUser } from '@/services/auth.service';
 import { createContext, useCallback, useContext, useState } from 'react';
+import { useSnackbar } from './SnackbarProvider';
 
 interface AuthContextType {
   getCurrentUser: () => Promise<void>;
   user: IUser | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
   isLoading: boolean;
 }
@@ -21,6 +22,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { snack } = useSnackbar();
 
   const getCurrentUser = useCallback(async () => {
     try {
@@ -29,23 +31,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(user);
     } catch (error: any) {
       if (error.status !== 401) return alert(error);
-
-      //   navigate('/login')
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<void | Error> => {
     try {
       if (!email || !password) throw 'Preencha todos os campos!';
 
       const user = await AuthService.login(email, password);
       setUser(user);
-
-      //   navigate('/')
     } catch {
-      throw new Error('Usuário e/ou senha inválidos!');
+      snack('Usuário e/ou senha inválidos!');
     }
   };
 
@@ -53,9 +51,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await AuthService.logout();
       setUser(null);
-      //   navigate('/login')
     } catch {
-      throw new Error('Erro ao deslogar!');
+      snack('Erro ao deslogar!');
     }
   };
 

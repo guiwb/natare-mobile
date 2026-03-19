@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/contexts/AuthProvider';
+import { SnackbarProvider } from '@/contexts/SnackbarProvider';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
@@ -15,11 +16,13 @@ function Routes() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <PaperProvider>
-        <Routes />
-        <StatusBar style="auto" />
-      </PaperProvider>
-    </AuthProvider>
+    <SnackbarProvider>
+      <AuthProvider>
+        <PaperProvider>
+          <Routes />
+          <StatusBar style="auto" />
+        </PaperProvider>
+      </AuthProvider>
+    </SnackbarProvider>
   );
 }
