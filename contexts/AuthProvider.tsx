@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(user);
       await setItemAsync('token', token);
     } catch (error: any) {
-      snack(error);
+      snack(error.message);
     }
   };
 
