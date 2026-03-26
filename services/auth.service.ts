@@ -12,23 +12,22 @@ export interface IUser {
   updated_at: Date;
 }
 
-export default class AuthService {
-  static async setCSRFCookie() {
-    await http.get('/sanctum/csrf-cookie');
-  }
+export interface ILoginResponse {
+  token: string;
+  user: IUser;
+}
 
-  static async login(email: string, password: string) {
-    await this.setCSRFCookie();
+export default class AuthService {
+  static async login(email: string, password: string): Promise<ILoginResponse> {
     const { data } = await http.post('/api/login', { email, password });
     return data;
   }
 
-  static async logout() {
-    await this.setCSRFCookie();
-    await http.delete('/api/logout');
+  static async logout(): Promise<void> {
+    return http.delete('/api/logout');
   }
 
-  static async getCurrentUser() {
+  static async getCurrentUser(): Promise<IUser> {
     const { data } = await http.get('/api/current-user');
     return data;
   }

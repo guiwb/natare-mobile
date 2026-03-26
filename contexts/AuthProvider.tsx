@@ -1,9 +1,9 @@
 import AuthService, { IUser } from '@/services/auth.service';
-import { createContext, useCallback, useContext, useState } from 'react';
+import { deleteItemAsync, setItemAsync } from 'expo-secure-store';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useSnackbar } from './SnackbarProvider';
 
 interface AuthContextType {
-  getCurrentUser: () => Promise<void>;
   user: IUser | null;
   login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
@@ -20,30 +20,33 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { snack } = useSnackbar();
 
-  const getCurrentUser = useCallback(async () => {
+  const getCurrentUser = async () => {
     try {
-      setIsLoading(true);
       const user = await AuthService.getCurrentUser();
       setUser(user);
     } catch (error: any) {
-      if (error.status !== 401) return alert(error);
+      snack(error.message);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  const login = async (email: string, password: string): Promise<void | Error> => {
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<void | Error> => {
     try {
       if (!email || !password) throw 'Preencha todos os campos!';
 
-      const user = await AuthService.login(email, password);
+      const { user, token } = await AuthService.login(email, password);
       setUser(user);
-    } catch {
-      snack('Usuário e/ou senha inválidos!');
+      await setItemAsync('token', token);
+    } catch (error: any) {
+      snack(error);
     }
   };
 
@@ -51,15 +54,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await AuthService.logout();
       setUser(null);
-    } catch {
-      snack('Erro ao deslogar!');
+      await deleteItemAsync('token');
+    } catch (error: any) {
+      snack(error.message);
     }
   };
 
+  useEffect(() => {
+    if (!user) getCurrentUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <AuthContext.Provider
-      value={{ getCurrentUser, user, login, logout, isLoading }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

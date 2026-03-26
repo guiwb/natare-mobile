@@ -1,22 +1,60 @@
-import { AuthProvider } from '@/contexts/AuthProvider';
+import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useColorScheme } from 'react-native';
-import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
+import { useEffect } from 'react';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import {
+  ActivityIndicator,
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+} from 'react-native-paper';
 
 function Routes() {
+  const { user, isLoading } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const inAuthGroup = ['login', 'signup'].includes(segments[0]);
+
+    if (!user && !inAuthGroup) {
+      router.replace('/login');
+    } else if (user && inAuthGroup) {
+      router.replace('/(tabs)');
+    }
+  }, [user, isLoading, segments, router]);
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="login" />
-      <Stack.Screen name="signup" />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="signup" />
+      </Stack>
+      {isLoading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0,0,0,0.3)',
+            },
+          ]}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+    </View>
   );
 }
 
