@@ -1,41 +1,89 @@
+import { DismissKeyboard } from '@/components/DismissKeyboard';
+import { FormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
-import { Redirect } from 'expo-router';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Image } from 'expo-image';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { z } from 'zod';
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 16,
-      gap: 8
-    }
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+    gap: 16,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default function Login() {
-  const { user, isLoading, login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  if (isLoading) {
-     return <View style={styles.container}><ActivityIndicator size="large" /></View>;
-  }
+  const handleLogin = async ({ email, password }: any) => {
+    setIsLoading(true);
+    await login(email, password);
+    setIsLoading(false);
+  };
 
-  if (user) {
-    return <Redirect href="/(tabs)" />;
-  }
+  const schema = z.object({
+    email: z
+      .string()
+      .min(1, 'Email obrigatório')
+      .refine((val) => /\S+@\S+\.\S+/.test(val), {
+        message: 'Email inválido',
+      }),
+    password: z.string().min(6, 'Mínimo 6 caracteres'),
+  });
+
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TextInput label="E-mail" value={email} onChangeText={setEmail} />
-      <TextInput label="Senha" value={password} onChangeText={setPassword} />
+    <DismissKeyboard>
+      <SafeAreaView style={styles.container}>
+        <Image
+          source={require('@/assets/images/logo.svg')}
+          style={{ width: 100, height: 100, alignSelf: 'center' }}
+        />
 
-      <Button mode="contained" loading={isLoading} onPress={() => login(email, password)}>
-        Entrar
-      </Button>
-    </SafeAreaView>
+        <FormInput
+          control={control}
+          name="email"
+          label="E-mail"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          mode="outlined"
+        />
+
+        <FormInput
+          control={control}
+          name="password"
+          label="Senha"
+          secureTextEntry
+          mode="outlined"
+        />
+
+        <Button
+          mode="contained"
+          loading={isLoading}
+          onPress={handleSubmit(handleLogin)}
+        >
+          Entrar
+        </Button>
+      </SafeAreaView>
+    </DismissKeyboard>
   );
 }
