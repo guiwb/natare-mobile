@@ -1,20 +1,50 @@
+import { useSnackbar } from '@/contexts/SnackbarProvider';
+import UserService, { IUsersList } from '@/services/user.service';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { DataTable, IconButton, Text, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  DataTable,
+  IconButton,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TabTwoScreen() {
   const theme = useTheme();
-  const [page, setPage] = useState(0);
-  const itemsPerPage = 5;
-  const data = [
-    {
-      id: 1,
-      name: 'Guilherme Barbosa',
-      created_at: Date.now(),
-    },
-  ];
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const { snack } = useSnackbar();
+
+  const itemsPerPage = 10;
+  const [list, setList] = useState<IUsersList>({
+    meta: { total: 0, offset: 0, limit: itemsPerPage },
+    items: [],
+  });
+
+  const listUsers = async (offset = 0): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const data = await UserService.list(offset, itemsPerPage);
+      setList(data);
+    } catch (error: any) {
+      snack(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const changePage = (page: number): void => {
+    setCurrentPage(page);
+    listUsers(page * itemsPerPage);
+  };
+
+  useEffect(() => {
+    listUsers();
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,24 +59,32 @@ export default function TabTwoScreen() {
           </DataTable.Title>
         </DataTable.Header>
 
-        {data.map((item) => (
-          <DataTable.Row key={item.id}>
-            <DataTable.Cell style={{ flex: 1.8 }}>{item.name}</DataTable.Cell>
-            <DataTable.Cell>
-              {dayjs(item.created_at).format('DD/MM/YYYY')}
-            </DataTable.Cell>
-            <DataTable.Cell style={{ justifyContent: 'flex-end' }}>
-              <IconButton icon="pen" iconColor={theme.colors.primary} />
-              <IconButton icon="delete" iconColor={theme.colors.error} />
+        {isLoading ? (
+          <DataTable.Row>
+            <DataTable.Cell style={{ justifyContent: 'center' }}>
+              <ActivityIndicator />
             </DataTable.Cell>
           </DataTable.Row>
-        ))}
+        ) : (
+          list.items.map((item) => (
+            <DataTable.Row key={item.id}>
+              <DataTable.Cell style={{ flex: 1.8 }}>{item.name}</DataTable.Cell>
+              <DataTable.Cell>
+                {dayjs(item.created_at).format('DD/MM/YYYY')}
+              </DataTable.Cell>
+              <DataTable.Cell style={{ justifyContent: 'flex-end' }}>
+                <IconButton icon="pen" iconColor={theme.colors.primary} />
+                <IconButton icon="delete" iconColor={theme.colors.error} />
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))
+        )}
 
         <DataTable.Pagination
-          page={page}
-          numberOfPages={Math.ceil(data.length / itemsPerPage)}
-          onPageChange={(page) => setPage(page)}
-          label={`${page + 1} de ${Math.ceil(data.length / itemsPerPage)}`}
+          page={currentPage}
+          numberOfPages={Math.ceil(list.meta.total / itemsPerPage)}
+          onPageChange={changePage}
+          label={`${currentPage + 1} de ${Math.ceil(list.meta.total / itemsPerPage)}`}
         />
       </DataTable>
     </SafeAreaView>
