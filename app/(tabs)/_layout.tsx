@@ -1,6 +1,9 @@
 import { Tabs } from 'expo-router';
+import { Icon, useTheme } from 'react-native-paper';
 
 export default function TabLayout() {
+  const theme = useTheme();
+
   return (
     <Tabs
       screenOptions={{
@@ -14,9 +17,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="users"
         options={{
-          title: 'Explore',
+          title: 'Usuários',
+          tabBarIcon(props) {
+            return (
+              <Icon
+                color={
+                  props.focused
+                    ? theme.colors.primary
+                    : theme.colors.onSurfaceDisabled
+                }
+                size={20}
+                source="account"
+              />
+            );
+          },
         }}
       />
     </Tabs>

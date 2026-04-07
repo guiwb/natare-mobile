@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 export default function TabTwoScreen() {
   return (
     <View style={styles.container}>
-      <Text>Explore</Text>
+      <Text>Usuários</Text>
     </View>
   );
 }
