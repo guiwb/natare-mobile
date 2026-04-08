@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getItemAsync } from 'expo-secure-store';
+import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
 
 export const http = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -14,3 +14,14 @@ http.interceptors.request.use(async (config) => {
 
   return config;
 });
+
+http.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await deleteItemAsync('token');
+    }
+
+    return Promise.reject(error);
+  },
+);
