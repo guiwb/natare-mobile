@@ -1,4 +1,5 @@
 import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
+import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
 import {
   DarkTheme,
@@ -95,8 +96,10 @@ export default function RootLayout() {
       <SnackbarProvider>
         <AuthProvider>
           <PaperProvider theme={paperTheme}>
-            <Routes />
-            <StatusBar style="auto" />
+            <ConfirmDialogProvider>
+              <Routes />
+              <StatusBar style="auto" />
+            </ConfirmDialogProvider>
           </PaperProvider>
         </AuthProvider>
       </SnackbarProvider>
