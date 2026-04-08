@@ -40,8 +40,8 @@ export default class UserService {
     return response;
   }
 
-  static async delete(): Promise<void> {
-    return http.delete('/api/users');
+  static async delete(id: string): Promise<void> {
+    return http.delete(`/api/users/${id}`);
   }
 
   static async list(offset: number, limit: number): Promise<IUsersList> {

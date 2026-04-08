@@ -1,3 +1,4 @@
+import { useConfirmDialog } from '@/contexts/ConfirmDialogProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import UserService, { IUsersList } from '@/services/user.service';
 import dayjs from 'dayjs';
@@ -24,8 +25,9 @@ export default function TabTwoScreen() {
     items: [],
   });
 
-  const listUsers = async (offset = 0): Promise<void> => {
+  const listUsers = async (): Promise<void> => {
     try {
+      const offset = currentPage * itemsPerPage;
       setIsLoading(true);
       const data = await UserService.list(offset, itemsPerPage);
       setList(data);
@@ -38,8 +40,19 @@ export default function TabTwoScreen() {
 
   const changePage = (page: number): void => {
     setCurrentPage(page);
-    listUsers(page * itemsPerPage);
+    listUsers();
   };
+
+  const deleteUser = async (id: string): Promise<void> => {
+    try {
+      await UserService.delete(id);
+      await listUsers();
+    } catch (error: any) {
+      snack(error.message);
+    }
+  };
+
+  const { openConfirmDialog } = useConfirmDialog();
 
   useEffect(() => {
     listUsers();
@@ -74,7 +87,17 @@ export default function TabTwoScreen() {
               </DataTable.Cell>
               <DataTable.Cell style={{ justifyContent: 'flex-end' }}>
                 <IconButton icon="pen" iconColor={theme.colors.primary} />
-                <IconButton icon="delete" iconColor={theme.colors.error} />
+                <IconButton
+                  icon="delete"
+                  onPress={() =>
+                    openConfirmDialog({
+                      title: 'Excluir',
+                      message: `Tem certeza que deseja excluir o usuário ${item.name}?`,
+                      onConfirm: () => deleteUser(item.id),
+                    })
+                  }
+                  iconColor={theme.colors.error}
+                />
               </DataTable.Cell>
             </DataTable.Row>
           ))
