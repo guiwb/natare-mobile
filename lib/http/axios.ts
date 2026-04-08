@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { deleteItemAsync, getItemAsync } from 'expo-secure-store';
+import { getItemAsync } from 'expo-secure-store';
+import { DeviceEventEmitter } from 'react-native';
 
 export const http = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -19,7 +20,7 @@ http.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      await deleteItemAsync('token');
+      DeviceEventEmitter.emit('on401');
     }
 
     return Promise.reject(error);

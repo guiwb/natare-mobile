@@ -1,6 +1,7 @@
 import AuthService, { IUser } from '@/services/auth.service';
 import { deleteItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { DeviceEventEmitter } from 'react-native';
 import { useSnackbar } from './SnackbarProvider';
 
 interface AuthContextType {
@@ -64,6 +65,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!user) getCurrentUser();
+
+    const sub = DeviceEventEmitter.addListener('on401', async () => {
+      setUser(null);
+      await deleteItemAsync('token');
+    });
+
+    return () => {
+      sub.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
