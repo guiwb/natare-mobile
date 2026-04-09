@@ -8,6 +8,7 @@ interface AuthContextType {
   user: IUser | null;
   login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -63,6 +64,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const forgotPassword = async (email: string) => {
+    try {
+      await AuthService.forgotPassword(email);
+    } catch (error: any) {
+      snack(error.message);
+    }
+  };
+
   useEffect(() => {
     if (!user) getCurrentUser();
 
@@ -78,7 +87,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, forgotPassword, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -31,4 +31,8 @@ export default class AuthService {
     const { data } = await http.get('/api/current-user');
     return data;
   }
+
+  static async forgotPassword(email: string): Promise<void> {
+    await http.post('api/forgot-password', { email });
+  }
 }

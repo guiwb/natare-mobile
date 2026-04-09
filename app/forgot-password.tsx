@@ -1,6 +1,7 @@
 import { DismissKeyboard } from '@/components/DismissKeyboard';
 import { FormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
+import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -27,15 +28,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Login() {
-  const { login } = useAuth();
+export default function ForgotPassword() {
+  const { forgotPassword } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { snack } = useSnackbar();
   const router = useRouter();
 
-  const handleLogin = async ({ email, password }: any) => {
+  const send = async ({ email, password }: any) => {
     setIsLoading(true);
-    await login(email, password);
+    await forgotPassword(email);
     setIsLoading(false);
+    snack('Um link de redefinição foi enviado para o seu e-mail!');
+    router.push('/login');
   };
 
   const schema = z.object({
@@ -45,7 +49,6 @@ export default function Login() {
       .refine((val) => /\S+@\S+\.\S+/.test(val), {
         message: 'Email inválido',
       }),
-    password: z.string().min(6, 'Mínimo 6 caracteres'),
   });
 
   const { control, handleSubmit } = useForm({
@@ -60,7 +63,7 @@ export default function Login() {
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
 
-        <Text>Entre com seu e-mail</Text>
+        <Text>Recuperação de senha</Text>
 
         <FormInput
           control={control}
@@ -72,27 +75,20 @@ export default function Login() {
           mode="outlined"
         />
 
-        <FormInput
-          control={control}
-          name="password"
-          label="Senha"
-          secureTextEntry
-          mode="outlined"
-        />
-
         <Button
           mode="contained"
           loading={isLoading}
-          onPress={handleSubmit(handleLogin)}
+          onPress={handleSubmit(send)}
         >
-          Entrar
+          Receber e-mail de recuperação
         </Button>
+
         <Button
           mode="text"
           disabled={isLoading}
-          onPress={() => router.push('/forgot-password')}
+          onPress={() => router.push('/login')}
         >
-          Esqueceu a senha?
+          Entrar com a minha conta
         </Button>
       </SafeAreaView>
     </DismissKeyboard>

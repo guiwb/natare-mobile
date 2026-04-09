@@ -25,7 +25,7 @@ function Routes() {
   useEffect(() => {
     if (isLoading) return;
 
-    const inAuthGroup = ['login', 'signup'].includes(segments[0]);
+    const inAuthGroup = ['login', 'forgot-password'].includes(segments[0]);
 
     if (!user && !inAuthGroup) {
       router.replace('/login');
@@ -39,8 +39,9 @@ function Routes() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="login" />
-        <Stack.Screen name="signup" />
+        <Stack.Screen name="forgot-password" />
       </Stack>
+
       {isLoading && (
         <View
           style={[
