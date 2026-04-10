@@ -75,8 +75,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const forgotPassword = async (email: string) => {
     try {
       await AuthService.forgotPassword(email);
-    } catch (error: any) {
-      snack(error.message);
+    } catch {
+      snack(
+        'Ocorreu um erro ao enviar o e-mail de recuperação. Tente novamente mais tarde.',
+      );
     }
   };
 

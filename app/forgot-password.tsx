@@ -34,7 +34,7 @@ export default function ForgotPassword() {
   const { snack } = useSnackbar();
   const router = useRouter();
 
-  const send = async ({ email, password }: any) => {
+  const send = async ({ email }: { email: string }) => {
     setIsLoading(true);
     await forgotPassword(email);
     setIsLoading(false);

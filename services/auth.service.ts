@@ -23,7 +23,7 @@ export default class AuthService {
     return data;
   }
 
-  static async logout(): Promise<void> {
+  static logout(): Promise<void> {
     return http.delete('/api/logout');
   }
 
@@ -32,7 +32,7 @@ export default class AuthService {
     return data;
   }
 
-  static async forgotPassword(email: string): Promise<void> {
-    await http.post('api/forgot-password', { email });
+  static forgotPassword(email: string): Promise<void> {
+    return http.post('api/forgot-password', { email });
   }
 }
