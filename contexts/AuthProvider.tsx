@@ -1,5 +1,6 @@
 import AuthService, { IUser } from '@/services/auth.service';
-import { deleteItemAsync, setItemAsync } from 'expo-secure-store';
+import { useRouter } from 'expo-router';
+import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import { useSnackbar } from './SnackbarProvider';
@@ -27,9 +28,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { snack } = useSnackbar();
+  const router = useRouter();
 
   const getCurrentUser = async () => {
     try {
+      const token = await getItemAsync('token');
+
+      if (!token) return;
+
       const user = await AuthService.getCurrentUser();
       setUser(user);
     } catch (error: any) {
@@ -49,6 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { user, token } = await AuthService.login(email, password);
       setUser(user);
       await setItemAsync('token', token);
+      router.replace('/(tabs)');
     } catch (error: any) {
       snack(error.message);
     }
@@ -59,6 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await AuthService.logout();
       setUser(null);
       await deleteItemAsync('token');
+      router.replace('/login');
     } catch (error: any) {
       snack(error.message);
     }
