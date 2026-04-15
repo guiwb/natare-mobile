@@ -7,6 +7,7 @@ import { useSnackbar } from './SnackbarProvider';
 
 interface AuthContextType {
   user: IUser | null;
+  setUser: (user: IUser | null) => void;
   login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
@@ -98,7 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, forgotPassword, isLoading }}
+      value={{ user, setUser, login, logout, forgotPassword, isLoading }}
     >
       {children}
     </AuthContext.Provider>

@@ -18,9 +18,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="users"
+        name="profile"
         options={{
-          title: 'Usuários',
+          title: 'Perfil',
           tabBarIcon(props) {
             return (
               <Icon

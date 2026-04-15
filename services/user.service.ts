@@ -40,6 +40,13 @@ export default class UserService {
     return response;
   }
 
+  static async updateProfile(user: IUser): Promise<IUser> {
+    const { data: response } = await http.patch(`/api/users/${user.id}`, {
+      name: user.name,
+    });
+    return response;
+  }
+
   static async delete(id: string): Promise<void> {
     return http.delete(`/api/users/${id}`);
   }
