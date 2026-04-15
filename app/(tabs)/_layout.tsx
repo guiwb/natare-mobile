@@ -13,7 +13,20 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Início',
+          tabBarIcon(props) {
+            return (
+              <Icon
+                color={
+                  props.focused
+                    ? theme.colors.primary
+                    : theme.colors.onSurfaceDisabled
+                }
+                size={20}
+                source="home"
+              />
+            );
+          },
         }}
       />
 
