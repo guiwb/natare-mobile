@@ -83,6 +83,7 @@ export default function Login() {
         <Button
           mode="contained"
           loading={isLoading}
+          disabled={isLoading}
           onPress={handleSubmit(handleLogin)}
         >
           Entrar
