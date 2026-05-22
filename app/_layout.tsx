@@ -38,6 +38,24 @@ const customDarkTheme = {
     ...MD3DarkTheme.colors,
     primary: '#4285F4',
     background: '#121212',
+    surface: '#1E1E1E',
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#A0A0A0',
+    },
+    feedback: {
+      success: '#4ADE80',
+      danger: '#EF4444',
+      streak: '#F97316',
+    },
+    border: 'rgba(255, 255, 255, 0.05)',
+    intensity: {
+      lvl1: 'rgba(66, 133, 244, 0.2)',
+      lvl2: 'rgba(66, 133, 244, 0.4)',
+      lvl3: 'rgba(66, 133, 244, 0.6)',
+      lvl4: 'rgba(66, 133, 244, 0.8)',
+      lvl5: 'rgba(66, 133, 244, 1)',
+    },
   },
 };
 
