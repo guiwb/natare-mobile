@@ -31,6 +31,26 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="workouts"
+        options={{
+          title: 'Treinos',
+          tabBarIcon(props) {
+            return (
+              <Icon
+                color={
+                  props.focused
+                    ? theme.colors.primary
+                    : theme.colors.onSurfaceDisabled
+                }
+                size={20}
+                source="dumbbell"
+              />
+            );
+          },
+        }}
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
