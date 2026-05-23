@@ -43,13 +43,14 @@ export function UITabBar({ state, descriptors, navigation }: any) {
 const StyledContainer = styled.View`
   position: absolute;
   bottom: 20px;
-  left: 15%;
-  width: 70%;
+  left: 24px;
+  right: 24px;
+  flex: 1;
   border-radius: 50px;
   background-color: ${({ theme }) => `${theme.colors.surface}99`};
   flex-direction: row;
   justify-content: space-around;
-  padding: 8px 12px;
+  padding: 8px 0;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.outline};
 `;

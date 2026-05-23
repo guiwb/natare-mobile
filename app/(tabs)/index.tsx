@@ -1,32 +1,17 @@
-import { useAuth } from '@/contexts/AuthProvider';
-import { StyleSheet, View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
+import HomeHeader from '@/components/Home/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import styled from 'styled-components/native';
 
 export default function HomeScreen() {
-  const { logout, user } = useAuth();
-  const theme = useTheme();
-
   return (
-    <View style={styles.container}>
-      <Text variant="titleMedium">Olá, seja bem-vindo {user?.name}!</Text>
-      <Button
-        mode="contained"
-        buttonColor={theme.colors.errorContainer}
-        textColor={theme.colors.onErrorContainer}
-        icon="logout"
-        onPress={logout}
-      >
-        Sair
-      </Button>
-    </View>
+    <StyledContainer>
+      <HomeHeader />
+    </StyledContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 16,
-  },
-});
+const StyledContainer = styled(SafeAreaView)`
+  flex: 1;
+  padding: 20px 24px 24px;
+  gap: 16px;
+`;
