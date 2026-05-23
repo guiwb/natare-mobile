@@ -1,72 +1,31 @@
+import { UITabBar } from '@/components/UI/TabBar';
 import { Tabs } from 'expo-router';
-import { Icon, useTheme } from 'react-native-paper';
 
 export default function TabLayout() {
-  const theme = useTheme();
-
   return (
     <Tabs
-      screenOptions={{
-        headerShown: false,
-      }}
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <UITabBar {...props} />}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Início',
-          tabBarIcon(props) {
-            return (
-              <Icon
-                color={
-                  props.focused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceDisabled
-                }
-                size={20}
-                source="home"
-              />
-            );
-          },
+          tabBarIcon: () => 'home',
         }}
       />
-
       <Tabs.Screen
         name="workouts"
         options={{
           title: 'Treinos',
-          tabBarIcon(props) {
-            return (
-              <Icon
-                color={
-                  props.focused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceDisabled
-                }
-                size={20}
-                source="dumbbell"
-              />
-            );
-          },
+          tabBarIcon: () => 'dumbbell',
         }}
       />
-
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon(props) {
-            return (
-              <Icon
-                color={
-                  props.focused
-                    ? theme.colors.primary
-                    : theme.colors.onSurfaceDisabled
-                }
-                size={20}
-                source="account"
-              />
-            );
-          },
+          tabBarIcon: () => 'account',
         }}
       />
     </Tabs>

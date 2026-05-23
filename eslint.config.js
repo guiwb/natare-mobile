@@ -6,5 +6,9 @@ module.exports = defineConfig([
   expoConfig,
   {
     ignores: ['dist/*'],
+    rules: {
+      'import/no-named-as-default': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+    },
   },
 ]);
