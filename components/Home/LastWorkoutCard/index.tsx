@@ -20,7 +20,7 @@ export function LastWorkoutCard() {
       </View>
 
       <View style={{ flexDirection: 'row', gap: 16 }}>
-        <DataCard title="Distância total" value="8.0" unitText="m" />
+        <DataCard title="Distância total" value="8.0" unitText="km" />
         <DataCard title="Tempo estimado" value="45" unitText="min" />
       </View>
 

@@ -27,6 +27,7 @@ const StyledView = styled.View`
   padding: 12px;
   flex: 1;
   padding: 12px;
+  gap: 10px;
 `;
 
 const StyledTitle = styled.Text`
