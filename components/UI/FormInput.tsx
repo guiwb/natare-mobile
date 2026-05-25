@@ -8,7 +8,7 @@ type TParams = {
   label: string;
 } & Omit<ComponentProps<typeof TextInput>, 'value' | 'onChangeText'>;
 
-export function FormInput({ control, name, label, ...props }: TParams) {
+export function UIFormInput({ control, name, label, ...props }: TParams) {
   return (
     <Controller
       control={control}

@@ -11,7 +11,7 @@ interface IProps {
   loading?: boolean;
 }
 
-export function ConfirmDialog({
+export function UIConfirmDialog({
   visible,
   onDismiss,
   onConfirm,

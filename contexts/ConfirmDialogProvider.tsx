@@ -1,4 +1,4 @@
-import { ConfirmDialog } from '@/components/UI/ConfirmDialog';
+import { UIConfirmDialog } from '@/components/UI/ConfirmDialog';
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 interface IConfirmOptions {
@@ -39,7 +39,7 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
     <ConfirmDialogContext.Provider value={{ openConfirmDialog }}>
       {children}
 
-      <ConfirmDialog
+      <UIConfirmDialog
         visible={visible}
         onDismiss={() => setVisible(false)}
         onConfirm={handleConfirm}

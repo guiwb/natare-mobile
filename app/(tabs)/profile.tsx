@@ -1,4 +1,4 @@
-import { FormInput } from '@/components/UI/FormInput';
+import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { IUser } from '@/services/auth.service';
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
         <Text variant="titleLarge">Perfil</Text>
 
         <View style={styles.form}>
-          <FormInput
+          <UIFormInput
             mode="outlined"
             label="Nome"
             name="name"

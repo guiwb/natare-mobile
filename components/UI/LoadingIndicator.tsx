@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
-export function LoadingIndicator() {
+export function UILoadingIndicator() {
   return (
     <View
       style={[

@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export function ProfilePicture({ uri }: { uri: string }) {
+export function UIProfilePicture({ uri }: { uri: string }) {
   return <StyledImage source={{ uri }} alt="Profile Picture" />;
 }
 

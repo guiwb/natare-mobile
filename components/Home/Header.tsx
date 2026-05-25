@@ -1,12 +1,12 @@
 import { UIIconButton } from '@/components/UI/IconButton';
-import { ProfilePicture } from '@/components/UI/ProfilePicture';
+import { UIProfilePicture } from '@/components/UI/ProfilePicture';
 import { Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 export function HomeHeader() {
   return (
     <StyledView>
-      <ProfilePicture uri="https://avatars.githubusercontent.com/u/12345678?v=4" />
+      <UIProfilePicture uri="https://avatars.githubusercontent.com/u/12345678?v=4" />
 
       <StyledGreetings>
         <StyledSmallText>Boas-vindas</StyledSmallText>

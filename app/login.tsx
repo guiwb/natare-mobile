@@ -1,5 +1,5 @@
 import { DismissKeyboard } from '@/components/DismissKeyboard';
-import { FormInput } from '@/components/UI/FormInput';
+import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Image } from 'expo-image';
@@ -62,7 +62,7 @@ export default function Login() {
 
         <Text>Entre com seu e-mail</Text>
 
-        <FormInput
+        <UIFormInput
           control={control}
           name="email"
           label="E-mail"
@@ -72,7 +72,7 @@ export default function Login() {
           mode="outlined"
         />
 
-        <FormInput
+        <UIFormInput
           control={control}
           name="password"
           label="Senha"

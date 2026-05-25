@@ -1,4 +1,4 @@
-import { LoadingIndicator } from '@/components/UI/LoadingIndicator';
+import { UILoadingIndicator } from '@/components/UI/LoadingIndicator';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
@@ -17,5 +17,5 @@ export default function Index() {
     }
   }, [user, isLoading, router]);
 
-  return <LoadingIndicator />;
+  return <UILoadingIndicator />;
 }

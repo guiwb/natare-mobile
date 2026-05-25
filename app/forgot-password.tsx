@@ -1,5 +1,5 @@
 import { DismissKeyboard } from '@/components/DismissKeyboard';
-import { FormInput } from '@/components/UI/FormInput';
+import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,7 +65,7 @@ export default function ForgotPassword() {
 
         <Text>Recuperação de senha</Text>
 
-        <FormInput
+        <UIFormInput
           control={control}
           name="email"
           label="E-mail"
