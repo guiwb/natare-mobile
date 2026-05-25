@@ -1,4 +1,4 @@
-import HomeHeader from '@/components/Home/Header';
+import { HomeHeader } from '@/components/Home/Header';
 import { LastWorkoutCard } from '@/components/Home/LastWorkoutCard';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';

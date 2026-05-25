@@ -1,4 +1,4 @@
-import LoadingIndicator from '@/components/UI/LoadingIndicator';
+import { LoadingIndicator } from '@/components/UI/LoadingIndicator';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
