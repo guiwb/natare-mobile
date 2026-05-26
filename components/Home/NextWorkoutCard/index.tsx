@@ -1,4 +1,4 @@
-import { DataCard } from '@/components/Home/LastWorkoutCard/DataCard';
+import { DataCard } from '@/components/Home/NextWorkoutCard/DataCard';
 import { UIBadge } from '@/components/UI/Badge';
 import { UIButton } from '@/components/UI/Button';
 import { UICard } from '@/components/UI/Card';
@@ -6,13 +6,19 @@ import { UISquareIcon } from '@/components/UI/SquareIcon';
 import { View } from 'react-native';
 import styled from 'styled-components/native';
 
-export function LastWorkoutCard() {
+export function NextWorkoutCard() {
   return (
     <StyledCard>
       <View style={{ flexDirection: 'column', gap: 8 }}>
         <UIBadge icon="timer" text="Hoje às 17:30" />
         <StyledHeadline>Regenerativo</StyledHeadline>
-        <UISquareIcon icon="swim" size={40} color="default" />
+        <UISquareIcon
+          icon="swim"
+          size={40}
+          color="default"
+          bgOpacity={30}
+          style={{ position: 'absolute', right: 0, top: 0 }}
+        />
       </View>
 
       <View style={{ flexDirection: 'row', gap: 16 }}>

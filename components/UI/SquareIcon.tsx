@@ -13,16 +13,20 @@ export function UISquareIcon({
   iconSize = 24,
   size = 40,
   color = 'default',
+  bgOpacity = 10,
+  style,
 }: {
   icon: string;
   iconSize?: number;
   size?: number;
   color?: 'red' | 'green' | 'orange' | 'default';
+  bgOpacity?: number;
+  style?: any;
 }) {
-  const bgColor = `${colorMap[color]}33`;
+  const bgColor = `${colorMap[color]}${bgOpacity}`;
 
   return (
-    <StyledIcon size={size} bgColor={bgColor}>
+    <StyledIcon size={size} bgColor={bgColor} style={style}>
       <Icon source={icon} size={iconSize} color={colorMap[color]} />
     </StyledIcon>
   );
@@ -35,7 +39,4 @@ const StyledIcon = styled.View<{ size: number; bgColor: string }>`
   background-color: ${({ bgColor }) => bgColor};
   align-items: center;
   justify-content: center;
-  position: absolute;
-  right: 0;
-  top: 0;
 `;
