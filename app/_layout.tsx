@@ -19,6 +19,7 @@ function Routes() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="login" />
         <Stack.Screen name="forgot-password" />
+        <Stack.Screen name="change-password" />
       </Stack>
     </View>
   );

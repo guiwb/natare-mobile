@@ -1,4 +1,7 @@
-import { UIFormInput } from '@/components/UI/FormInput';
+import { ProfileAvatar } from '@/components/Profile/Avatar';
+import { DangerZone } from '@/components/Profile/DangerZone';
+import { PersonalDetailsForm } from '@/components/Profile/PersonalDetailsForm';
+import { PreferencesSection } from '@/components/Profile/PreferencesSection';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { IUser } from '@/services/auth.service';
@@ -6,19 +9,24 @@ import UserService from '@/services/user.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Keyboard, ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Keyboard, ScrollView } from 'react-native';
+import { Text } from 'react-native-paper';
+import styled from 'styled-components/native';
 import { z } from 'zod';
+
+const schema = z.object({
+  name: z.string().min(1, 'Nome obrigatório'),
+  birthDate: z.date().optional(),
+  gender: z.string().optional(),
+  weight: z.string().optional(),
+  height: z.string().optional(),
+});
 
 export default function ProfileScreen() {
   const { user, setUser } = useAuth();
   const { snack } = useSnackbar();
   const [loading, setLoading] = useState(false);
-
-  const schema = z.object({
-    name: z.string().min(1, 'Nome obrigatório'),
-  });
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
 
   const { control, setValue, handleSubmit } = useForm({
     resolver: zodResolver(schema),
@@ -27,18 +35,16 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (user) {
       setValue('name', user.name);
+      setAvatarUri(user.profile_picture ?? null);
     }
   }, [user, setValue]);
 
-  const update = async (data: { name: string }) => {
+  const onSave = handleSubmit(async (data) => {
     Keyboard.dismiss();
-
     try {
       setLoading(true);
-
       const updatedUser = { ...user, name: data.name } as IUser;
       await UserService.updateProfile(updatedUser);
-
       setUser(updatedUser);
       snack('Perfil atualizado com sucesso');
     } catch {
@@ -46,48 +52,59 @@ export default function ProfileScreen() {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView keyboardShouldPersistTaps="handled">
-        <Text variant="titleLarge">Perfil</Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{
+        gap: 24,
+        paddingBottom: 120,
+        paddingHorizontal: 24,
+        paddingTop: 60,
+      }}
+    >
+      <ScreenTitle>Perfil</ScreenTitle>
 
-        <View style={styles.form}>
-          <UIFormInput
-            mode="outlined"
-            label="Nome"
-            name="name"
-            control={control}
-          />
-          <TextInput
-            mode="outlined"
-            label="Email"
-            editable={false}
-            disabled
-            value={user?.email}
-          />
-        </View>
+      <AvatarBlock>
+        <ProfileAvatar uri={avatarUri} onImageChange={setAvatarUri} />
+        <UserName>{user?.name}</UserName>
+        <UserEmail>{user?.email}</UserEmail>
+      </AvatarBlock>
 
-        <Button
-          mode="contained"
-          onPress={handleSubmit(update)}
-          loading={loading}
-        >
-          Atualizar
-        </Button>
-      </ScrollView>
-    </SafeAreaView>
+      <PersonalDetailsForm
+        control={control}
+        email={user?.email}
+        onSave={onSave}
+        loading={loading}
+      />
+
+      <PreferencesSection />
+
+      <DangerZone />
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  form: {
-    gap: 20,
-    marginVertical: 30,
-  },
-});
+const ScreenTitle = styled(Text)`
+  font-size: 22px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.onSurface};
+`;
+
+const AvatarBlock = styled.View`
+  align-items: center;
+  gap: 6px;
+`;
+
+const UserName = styled.Text`
+  font-size: 18px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.onSurface};
+`;
+
+const UserEmail = styled.Text`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colors.onSurfaceVariant};
+`;

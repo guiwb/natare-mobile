@@ -7,15 +7,18 @@ export function UIButton({
   iconRight,
   style,
   textStyle,
+  onPress,
 }: {
   text: string;
   iconLeft?: string;
   iconRight?: string;
   style?: any;
   textStyle?: any;
+  onPress?: () => void;
 }) {
   return (
     <StyledPressable
+      onPress={onPress}
       style={({ pressed }) => [
         {
           transform: [{ scale: pressed ? 0.96 : 1 }],
