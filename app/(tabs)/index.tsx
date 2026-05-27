@@ -1,14 +1,21 @@
+import { ActivityHeatmapCard } from '@/components/Home/ActivityHeatmapCard';
 import { DayStreakCard } from '@/components/Home/DayStreakCard';
 import { HomeHeader } from '@/components/Home/Header';
 import { LastWorkoutCard } from '@/components/Home/LastWorkoutCard';
 import { NextWorkoutCard } from '@/components/Home/NextWorkoutCard';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import styled from 'styled-components/native';
+import { ScrollView, View } from 'react-native';
 
 export default function HomeScreen() {
   return (
-    <StyledContainer>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        gap: 24,
+        paddingBottom: 120,
+        paddingHorizontal: 24,
+        paddingTop: 60,
+      }}
+    >
       <HomeHeader />
       <NextWorkoutCard />
 
@@ -16,12 +23,8 @@ export default function HomeScreen() {
         <DayStreakCard />
         <LastWorkoutCard />
       </View>
-    </StyledContainer>
+
+      <ActivityHeatmapCard />
+    </ScrollView>
   );
 }
-
-const StyledContainer = styled(SafeAreaView)`
-  flex: 1;
-  padding: 20px 24px;
-  gap: 24px;
-`;
