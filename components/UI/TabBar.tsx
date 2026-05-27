@@ -1,3 +1,4 @@
+import { BlurView } from 'expo-blur';
 import { Pressable, Text } from 'react-native';
 import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
@@ -6,7 +7,7 @@ export function UITabBar({ state, descriptors, navigation }: any) {
   const theme = useTheme();
 
   return (
-    <StyledContainer>
+    <StyledBlur intensity={50} tint="dark">
       {state.routes.map((route: any, index: number) => {
         const focused = state.index === index;
         const { options } = descriptors[route.key];
@@ -36,23 +37,22 @@ export function UITabBar({ state, descriptors, navigation }: any) {
           </StyledTabItem>
         );
       })}
-    </StyledContainer>
+    </StyledBlur>
   );
 }
 
-const StyledContainer = styled.View`
+const StyledBlur = styled(BlurView)`
   position: absolute;
   bottom: 20px;
   left: 24px;
   right: 24px;
-  flex: 1;
   border-radius: 50px;
-  background-color: ${({ theme }) => `${theme.colors.surface}99`};
+  overflow: hidden;
   flex-direction: row;
   justify-content: space-around;
   padding: 8px 0;
   border-width: 1px;
-  border-color: ${({ theme }) => theme.colors.outline};
+  border-color: rgba(255, 255, 255, 0.08);
 `;
 
 const StyledTabItem = styled(Pressable)<{ focused: boolean }>`

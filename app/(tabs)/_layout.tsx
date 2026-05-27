@@ -1,12 +1,15 @@
 import { UITabBar } from '@/components/UI/TabBar';
+import { UITopBlur } from '@/components/UI/TopBlur';
 import { Tabs } from 'expo-router';
+import { View } from 'react-native';
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{ headerShown: false }}
-      tabBar={(props) => <UITabBar {...props} />}
-    >
+    <View style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={{ headerShown: false }}
+        tabBar={(props) => <UITabBar {...props} />}
+      >
       <Tabs.Screen
         name="index"
         options={{
@@ -28,6 +31,8 @@ export default function TabLayout() {
           tabBarIcon: () => 'account',
         }}
       />
-    </Tabs>
+      </Tabs>
+      <UITopBlur />
+    </View>
   );
 }
