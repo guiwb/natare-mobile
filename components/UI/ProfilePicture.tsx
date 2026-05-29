@@ -1,7 +1,12 @@
 import styled from 'styled-components/native';
 
-export function UIProfilePicture({ uri }: { uri: string }) {
-  return <StyledImage source={{ uri }} alt="Profile Picture" />;
+export function UIProfilePicture({ uri }: { uri?: string }) {
+  return (
+    <StyledImage
+      source={{ uri: uri ?? 'https://via.placeholder.com/150' }}
+      alt="Profile Picture"
+    />
+  );
 }
 
 const StyledImage = styled.Image`

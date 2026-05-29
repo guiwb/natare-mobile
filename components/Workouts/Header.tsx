@@ -1,12 +1,15 @@
 import { UIIconButton } from '@/components/UI/IconButton';
 import { UIProfilePicture } from '@/components/UI/ProfilePicture';
+import { useAuth } from '@/contexts/AuthProvider';
 import { Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 export function WorkoutsHeader() {
+  const { user } = useAuth();
+
   return (
     <Container>
-      <UIProfilePicture uri="https://avatars.githubusercontent.com/u/12345678?v=4" />
+      <UIProfilePicture uri={user?.profile_picture} />
       <Title>Seus treinos</Title>
       <UIIconButton icon="bell-outline" onPress={() => {}} />
     </Container>

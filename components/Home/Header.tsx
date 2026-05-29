@@ -1,16 +1,18 @@
 import { UIIconButton } from '@/components/UI/IconButton';
 import { UIProfilePicture } from '@/components/UI/ProfilePicture';
+import { useAuth } from '@/contexts/AuthProvider';
 import { Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 export function HomeHeader() {
+  const { user } = useAuth();
   return (
     <StyledView>
-      <UIProfilePicture uri="https://avatars.githubusercontent.com/u/12345678?v=4" />
+      <UIProfilePicture uri={user?.profile_picture} />
 
       <StyledGreetings>
         <StyledSmallText>Boas-vindas</StyledSmallText>
-        <StyledHeadlineText>Guilherme Barbosa</StyledHeadlineText>
+        <StyledHeadlineText>{user?.name}</StyledHeadlineText>
       </StyledGreetings>
 
       <UIIconButton icon="bell-outline" onPress={() => {}} />
