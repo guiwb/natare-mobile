@@ -43,6 +43,7 @@ export default class UserService {
   static async updateProfile(user: IUser): Promise<IUser> {
     const { data: response } = await http.patch(`/api/users/${user.id}`, {
       name: user.name,
+      profile_picture: user.profile_picture,
     });
     return response;
   }

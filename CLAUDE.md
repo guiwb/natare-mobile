@@ -27,6 +27,9 @@ A single custom MD3 theme is defined in `app/_layout.tsx` and passed to both `re
 ### HTTP & Auth
 `lib/http/axios.ts` exports a pre-configured Axios instance (`http`) that reads the JWT from `expo-secure-store` on every request and emits a `DeviceEventEmitter` event `on401` on 401 responses. `AuthProvider` listens for `on401` to clear the session. Services in `services/` use `http` directly via static class methods.
 
+### External services
+Third-party HTTP integrations (Cloudinary, etc.) follow the same pattern: a static class in `services/` that encapsulates all calls to that API. Use `fetch` for APIs outside the backend (no JWT needed). Example: `CloudinaryService` in `services/cloudinary.service.ts`.
+
 ### IP auto-update
 `scripts/update-env-ip.js` runs before every `expo start` command and rewrites `EXPO_PUBLIC_API_URL` in `.env` with the machine's current local IP. This keeps physical devices working without manual `.env` edits.
 

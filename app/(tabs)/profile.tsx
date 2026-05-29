@@ -5,6 +5,7 @@ import { PreferencesSection } from '@/components/Profile/PreferencesSection';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { IUser } from '@/services/auth.service';
+import CloudinaryService from '@/services/cloudinary.service';
 import UserService from '@/services/user.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
@@ -27,6 +28,7 @@ export default function ProfileScreen() {
   const { snack } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const [pendingLocalUri, setPendingLocalUri] = useState<string | null>(null);
 
   const { control, setValue, handleSubmit } = useForm({
     resolver: zodResolver(schema),
@@ -43,9 +45,24 @@ export default function ProfileScreen() {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const updatedUser = { ...user, name: data.name } as IUser;
+      let profilePicture = user?.profile_picture;
+
+      if (pendingLocalUri) {
+        profilePicture = await CloudinaryService.uploadImage(
+          pendingLocalUri,
+          'profiles',
+        );
+        setPendingLocalUri(null);
+      }
+
+      const updatedUser = {
+        ...user,
+        name: data.name,
+        profile_picture: profilePicture,
+      } as IUser;
       await UserService.updateProfile(updatedUser);
       setUser(updatedUser);
+      setAvatarUri(profilePicture ?? null);
       snack('Perfil atualizado com sucesso');
     } catch {
       snack('Erro ao atualizar perfil');
@@ -68,7 +85,10 @@ export default function ProfileScreen() {
       <ScreenTitle>Perfil</ScreenTitle>
 
       <AvatarBlock>
-        <ProfileAvatar uri={avatarUri} onImageChange={setAvatarUri} />
+        <ProfileAvatar
+          uri={pendingLocalUri ?? avatarUri}
+          onImageChange={setPendingLocalUri}
+        />
         <UserName>{user?.name}</UserName>
         <UserEmail>{user?.email}</UserEmail>
       </AvatarBlock>
