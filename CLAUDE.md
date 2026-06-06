@@ -40,8 +40,5 @@ Third-party HTTP integrations (Cloudinary, etc.) follow the same pattern: a stat
 - `UICard` wraps a `Pressable` and accepts `style` as `PressableProps['style']`, so `({ pressed }) => ...` callbacks work.
 - `UISquareIcon` accepts a `color` prop (`'default' | 'red' | 'green' | 'orange'`) that controls both icon and background tint.
 
-### Idioma
-Todos os textos visíveis ao usuário (labels, mensagens, títulos, placeholders) devem estar em português brasileiro.
-
 ### Forms
 `react-hook-form` + `zod` for validation. `UIFormInput` wraps the controlled input pattern.
