@@ -19,7 +19,11 @@ export interface ILoginResponse {
 
 export default class AuthService {
   static async login(email: string, password: string): Promise<ILoginResponse> {
-    const { data } = await http.post('/api/login', { email, password });
+    const { data } = await http.post('/api/login', {
+      email,
+      password,
+      client: 'mobile',
+    });
     return data;
   }
 

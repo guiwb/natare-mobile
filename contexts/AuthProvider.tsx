@@ -58,7 +58,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await setItemAsync('token', token);
       router.replace('/(tabs)');
     } catch (error: any) {
-      snack(error.message);
+      if (error?.response?.data?.message === 'MOBILE_NOT_ALLOWED') {
+        snack('Treinadores e administradores devem acessar pela versão web.');
+        return;
+      }
+
+      snack(typeof error === 'string' ? error : 'E-mail ou senha inválidos!');
     }
   };
 
