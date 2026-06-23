@@ -100,17 +100,36 @@ export function ActivityHeatmapCard() {
             </MonthButton>
           }
         >
-          {MONTHS.map((month, index) => (
-            <Menu.Item
-              key={month}
-              dense
-              title={month}
-              onPress={() => {
-                setSelectedMonth(index);
-                setMenuVisible(false);
-              }}
-            />
-          ))}
+          {MONTHS.map((month, index) => {
+            const selected = index === selectedMonth;
+            return (
+              <Menu.Item
+                key={month}
+                dense
+                title={month}
+                titleStyle={
+                  selected
+                    ? { color: theme.colors.primary, fontWeight: '700' }
+                    : undefined
+                }
+                trailingIcon={
+                  selected
+                    ? () => (
+                        <Icon
+                          source="check"
+                          size={18}
+                          color={theme.colors.primary}
+                        />
+                      )
+                    : undefined
+                }
+                onPress={() => {
+                  setSelectedMonth(index);
+                  setMenuVisible(false);
+                }}
+              />
+            );
+          })}
         </UIMenu>
       </HeaderRow>
 

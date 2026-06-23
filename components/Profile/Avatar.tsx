@@ -61,7 +61,7 @@ export function ProfileAvatar({ uri, name, onImageChange, onRemove }: Props) {
         leadingIcon={() => (
           <Icon source="image-edit" size={20} color={theme.colors.onSurface} />
         )}
-        title="Editar foto"
+        title={uri ? 'Editar foto' : 'Adicionar foto'}
         onPress={pickImage}
       />
       {uri && (
