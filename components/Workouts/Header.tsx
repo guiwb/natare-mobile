@@ -1,4 +1,4 @@
-import { UIIconButton } from '@/components/UI/IconButton';
+import { UILogo } from '@/components/UI/Logo';
 import { UIProfilePicture } from '@/components/UI/ProfilePicture';
 import { useAuth } from '@/contexts/AuthProvider';
 import { Text } from 'react-native-paper';
@@ -11,7 +11,7 @@ export function WorkoutsHeader() {
     <Container>
       <UIProfilePicture uri={user?.profile_picture} name={user?.name} />
       <Title>Seus treinos</Title>
-      <UIIconButton icon="bell-outline" onPress={() => {}} />
+      <UILogo size={45} />
     </Container>
   );
 }

@@ -3,9 +3,9 @@ import { WorkoutsHeader } from '@/components/Workouts/Header';
 import { MOCK_WORKOUTS, Workout } from '@/components/Workouts/mockData';
 import { WeekNavigator } from '@/components/Workouts/WeekNavigator';
 import { WorkoutSection } from '@/components/Workouts/WorkoutSection';
+import { UIScreen } from '@/components/UI/Screen';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import { ScrollView } from 'react-native';
 
 function getWeekBounds(offset: number): {
   start: dayjs.Dayjs;
@@ -48,17 +48,7 @@ export default function WorkoutsScreen() {
   }, [weekWorkouts, filter]);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        gap: 20,
-        paddingBottom: 120,
-        paddingHorizontal: 24,
-        paddingTop: 60,
-      }}
-    >
-      <WorkoutsHeader />
-
+    <UIScreen header={<WorkoutsHeader />} contentStyle={{ gap: 20 }}>
       <WeekNavigator
         offset={weekOffset}
         onPrev={() => setWeekOffset((o) => o - 1)}
@@ -69,6 +59,6 @@ export default function WorkoutsScreen() {
 
       <WorkoutSection title="Agendados" workouts={scheduled} />
       <WorkoutSection title="Passados" workouts={past} />
-    </ScrollView>
+    </UIScreen>
   );
 }

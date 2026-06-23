@@ -2,6 +2,7 @@ import { ProfileAvatar } from '@/components/Profile/Avatar';
 import { DangerZone } from '@/components/Profile/DangerZone';
 import { PersonalDetailsForm } from '@/components/Profile/PersonalDetailsForm';
 import { PreferencesSection } from '@/components/Profile/PreferencesSection';
+import { UIScreen } from '@/components/UI/Screen';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { IUser } from '@/services/auth.service';
@@ -10,7 +11,7 @@ import UserService from '@/services/user.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Keyboard, ScrollView } from 'react-native';
+import { Keyboard } from 'react-native';
 import { Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 import { z } from 'zod';
@@ -90,18 +91,10 @@ export default function ProfileScreen() {
   });
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
+    <UIScreen
+      header={<ScreenTitle>Perfil</ScreenTitle>}
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{
-        gap: 24,
-        paddingBottom: 120,
-        paddingHorizontal: 24,
-        paddingTop: 60,
-      }}
     >
-      <ScreenTitle>Perfil</ScreenTitle>
-
       <AvatarBlock>
         <ProfileAvatar
           uri={pendingLocalUri ?? avatarUri}
@@ -123,7 +116,7 @@ export default function ProfileScreen() {
       <PreferencesSection />
 
       <DangerZone />
-    </ScrollView>
+    </UIScreen>
   );
 }
 
