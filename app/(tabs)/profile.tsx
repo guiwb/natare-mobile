@@ -29,19 +29,39 @@ export default function ProfileScreen() {
   const { snack } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
-  const [pendingLocalUri, setPendingLocalUri] = useState<string | null>(null);
-  const [removed, setRemoved] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
-  const handleImageChange = (uri: string) => {
-    setPendingLocalUri(uri);
-    setRemoved(false);
+  const persistPicture = async (profilePicture: string) => {
+    if (!user) return;
+    setAvatarLoading(true);
+    try {
+      const updatedUser = { ...user, profile_picture: profilePicture };
+      await UserService.updateProfile(updatedUser);
+      setUser(updatedUser);
+      setAvatarUri(profilePicture || null);
+      snack('Foto atualizada');
+    } catch {
+      setAvatarUri(user.profile_picture ?? null);
+      snack('Erro ao atualizar foto');
+    } finally {
+      setAvatarLoading(false);
+    }
   };
 
-  const handleRemove = () => {
-    setPendingLocalUri(null);
-    setAvatarUri(null);
-    setRemoved(true);
+  const handleImageChange = async (uri: string) => {
+    setAvatarUri(uri);
+    setAvatarLoading(true);
+    try {
+      const url = await CloudinaryService.uploadImage(uri, 'profiles');
+      await persistPicture(url);
+    } catch {
+      setAvatarUri(user?.profile_picture ?? null);
+      setAvatarLoading(false);
+      snack('Erro ao enviar imagem');
+    }
   };
+
+  const handleRemove = () => persistPicture('');
 
   const { control, setValue, handleSubmit } = useForm({
     resolver: zodResolver(schema),
@@ -51,7 +71,6 @@ export default function ProfileScreen() {
     if (user) {
       setValue('name', user.name);
       setAvatarUri(user.profile_picture ?? null);
-      setRemoved(false);
     }
   }, [user, setValue]);
 
@@ -59,29 +78,9 @@ export default function ProfileScreen() {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      let profilePicture = user?.profile_picture;
-
-      if (removed) {
-        profilePicture = '';
-      }
-
-      if (pendingLocalUri) {
-        profilePicture = await CloudinaryService.uploadImage(
-          pendingLocalUri,
-          'profiles',
-        );
-        setPendingLocalUri(null);
-      }
-
-      const updatedUser = {
-        ...user,
-        name: data.name,
-        profile_picture: profilePicture,
-      } as IUser;
+      const updatedUser = { ...user, name: data.name } as IUser;
       await UserService.updateProfile(updatedUser);
       setUser(updatedUser);
-      setAvatarUri(profilePicture ?? null);
-      setRemoved(false);
       snack('Perfil atualizado com sucesso');
     } catch {
       snack('Erro ao atualizar perfil');
@@ -97,8 +96,9 @@ export default function ProfileScreen() {
     >
       <AvatarBlock>
         <ProfileAvatar
-          uri={pendingLocalUri ?? avatarUri}
+          uri={avatarUri}
           name={user?.name}
+          loading={avatarLoading}
           onImageChange={handleImageChange}
           onRemove={handleRemove}
         />

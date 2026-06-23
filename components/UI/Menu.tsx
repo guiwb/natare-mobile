@@ -1,6 +1,6 @@
 import { BlurView } from 'expo-blur';
 import { ReactNode } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
 import { Menu } from 'react-native-paper';
 
 type Props = {
@@ -35,13 +35,15 @@ export function UIMenu({
         },
       ]}
     >
-      <BlurView
-        intensity={60}
-        tint={dark ? 'dark' : 'light'}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
-      />
-      {children}
+      <View style={styles.clip}>
+        <BlurView
+          intensity={60}
+          tint={dark ? 'dark' : 'light'}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+        {children}
+      </View>
     </Menu>
   );
 }
@@ -51,6 +53,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 16,
     borderWidth: 1,
+  },
+  clip: {
+    borderRadius: 16,
     overflow: 'hidden',
   },
 });
