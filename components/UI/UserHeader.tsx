@@ -20,7 +20,9 @@ export function UIUserHeader({
 
   return (
     <Container>
-      <UILogo size={45} />
+      <Pressable onPress={() => router.navigate('/')}>
+        <UILogo size={45} />
+      </Pressable>
 
       <Greetings>
         {subtitle && <Greeting>{subtitle}</Greeting>}

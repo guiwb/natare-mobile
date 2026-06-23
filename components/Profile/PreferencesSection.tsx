@@ -1,4 +1,5 @@
 import { UICard } from '@/components/UI/Card';
+import { useAuth } from '@/contexts/AuthProvider';
 import { ProfileRow } from './ProfileRow';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -7,6 +8,7 @@ import styled from 'styled-components/native';
 
 export function PreferencesSection() {
   const router = useRouter();
+  const { logout } = useAuth();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
@@ -33,6 +35,10 @@ export function PreferencesSection() {
             title="Alterar senha"
             onPress={() => router.push('/change-password')}
           />
+
+          <Divider />
+
+          <ProfileRow icon="logout" title="Sair da conta" onPress={logout} />
         </Rows>
       </UICard>
     </Section>

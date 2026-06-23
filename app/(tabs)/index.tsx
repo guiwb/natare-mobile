@@ -11,6 +11,7 @@ export default function HomeScreen() {
   const { user } = useAuth();
   return (
     <UIScreen
+      contentStyle={{ gap: 14 }}
       header={
         <UIUserHeader subtitle="Boas-vindas," title={user?.name ?? 'Início'} />
       }

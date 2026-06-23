@@ -169,7 +169,8 @@ export function ActivityHeatmapCard() {
 
 const StyledCard = styled(UICard)`
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  padding: 16px;
 `;
 
 const HeaderRow = styled.View`
@@ -219,7 +220,7 @@ const WeekRow = styled.View`
 
 const Cell = styled.View<{ color: string }>`
   flex: 1;
-  height: 16px;
+  height: 14px;
   border-radius: 6px;
   background-color: ${({ color }) => color};
 `;

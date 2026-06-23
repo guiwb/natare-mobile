@@ -20,11 +20,12 @@ export function DayStreakCard() {
 const StyledCard = styled(UICard)`
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  padding: 16px;
 `;
 
 const StyledStreakText = styled.Text`
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   color: ${(props) => props.theme.colors.onSurface};
 `;

@@ -28,7 +28,8 @@ export function LastWorkoutCard() {
 const StyledCard = styled(UICard)`
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  padding: 16px;
 `;
 
 const StyledTitleText = styled.Text`

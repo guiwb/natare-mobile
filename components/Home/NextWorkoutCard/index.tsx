@@ -43,5 +43,6 @@ const StyledHeadline = styled.Text`
 
 const StyledCard = styled(UICard)`
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
+  padding: 16px;
 `;
