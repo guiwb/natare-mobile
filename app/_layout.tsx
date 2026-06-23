@@ -1,3 +1,4 @@
+import { AppBackground } from '@/components/AppBackground';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
@@ -15,7 +16,13 @@ import { ThemeProvider as StyledProvider } from 'styled-components/native';
 function Routes() {
   return (
     <View style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <AppBackground />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: 'transparent' },
+        }}
+      >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="login" />
         <Stack.Screen name="forgot-password" />
@@ -62,7 +69,7 @@ export default function RootLayout() {
     ...baseNavTheme,
     colors: {
       ...baseNavTheme.colors,
-      background: paperTheme.colors.background,
+      background: 'transparent',
     },
   };
 

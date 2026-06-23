@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, useColorScheme, View } from 'react-native';
 
-export function AuthBackground() {
+export function AppBackground() {
   const dark = useColorScheme() === 'dark';
 
   return (

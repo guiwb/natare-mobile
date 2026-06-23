@@ -25,6 +25,7 @@ export default function TabLayout() {
         <Tabs
           tabBarPosition="bottom"
           screenOptions={{ swipeEnabled: true }}
+          sceneContainerStyle={{ backgroundColor: 'transparent' }}
           tabBar={(props) => <UITabBar {...props} />}
         >
           <Tabs.Screen name="index" options={{ title: 'Início' }} />

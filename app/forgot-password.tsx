@@ -1,4 +1,3 @@
-import { AuthBackground } from '@/components/Auth/AuthBackground';
 import { AuthCard } from '@/components/Auth/AuthCard';
 import { AuthChip } from '@/components/Auth/AuthChip';
 import { DismissKeyboard } from '@/components/DismissKeyboard';
@@ -42,7 +41,6 @@ export default function ForgotPassword() {
 
   return (
     <StyledScreen>
-      <AuthBackground />
       <DismissKeyboard>
         <StyledCenter edges={['top', 'bottom']}>
           <AuthCard>

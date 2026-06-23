@@ -1,4 +1,5 @@
-import { PressableProps } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { PressableProps, StyleSheet, useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
 
 export function UICard({
@@ -10,13 +11,25 @@ export function UICard({
   style?: PressableProps['style'];
   onPress?: PressableProps['onPress'];
 }) {
-  return <StyledCard style={style} onPress={onPress}>{children}</StyledCard>;
+  const dark = useColorScheme() === 'dark';
+  return (
+    <StyledCard style={style} onPress={onPress}>
+      <BlurView
+        intensity={24}
+        tint={dark ? 'dark' : 'light'}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+      {children}
+    </StyledCard>
+  );
 }
 
 const StyledCard = styled.Pressable`
-  background-color: ${({ theme }) => theme.colors.surface};
   border-width: 1px;
-  border-color: ${(props) => props.theme.colors.outline};
+  border-color: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 20px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.04);
 `;
