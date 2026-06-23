@@ -1,14 +1,30 @@
 import { UITabBar } from '@/components/UI/TabBar';
 import { TabBarProvider } from '@/contexts/TabBarProvider';
-import { Tabs } from 'expo-router';
+import {
+  createMaterialTopTabNavigator,
+  MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationOptions,
+} from '@react-navigation/material-top-tabs';
+import { ParamListBase, TabNavigationState } from '@react-navigation/native';
+import { withLayoutContext } from 'expo-router';
 import { View } from 'react-native';
+
+const { Navigator } = createMaterialTopTabNavigator();
+
+const Tabs = withLayoutContext<
+  MaterialTopTabNavigationOptions,
+  typeof Navigator,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationEventMap
+>(Navigator);
 
 export default function TabLayout() {
   return (
     <TabBarProvider>
       <View style={{ flex: 1 }}>
         <Tabs
-          screenOptions={{ headerShown: false }}
+          tabBarPosition="bottom"
+          screenOptions={{ swipeEnabled: true }}
           tabBar={(props) => <UITabBar {...props} />}
         >
           <Tabs.Screen name="index" options={{ title: 'Início' }} />
