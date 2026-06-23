@@ -46,8 +46,7 @@ export default function Login() {
 
             <StyledTitle>Bem-vindo de volta</StyledTitle>
             <StyledSubtitle>
-              Entre para continuar a planejar seus treinos e acompanhar sua
-              evolução.
+              Entre para ver seus próximos treinos e acompanhar sua evolução.
             </StyledSubtitle>
 
             <UIFormInput
