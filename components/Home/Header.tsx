@@ -8,7 +8,7 @@ export function HomeHeader() {
   const { user } = useAuth();
   return (
     <StyledView>
-      <UIProfilePicture uri={user?.profile_picture} />
+      <UIProfilePicture uri={user?.profile_picture} name={user?.name} />
 
       <StyledGreetings>
         <StyledSmallText>Boas-vindas</StyledSmallText>

@@ -1,14 +1,23 @@
+import { UIMenu } from '@/components/UI/Menu';
+import { UIProfilePicture } from '@/components/UI/ProfilePicture';
 import * as ImagePicker from 'expo-image-picker';
-import { Icon } from 'react-native-paper';
+import { useState } from 'react';
+import { Icon, Menu, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 type Props = {
   uri?: string | null;
+  name?: string;
   onImageChange: (uri: string) => void;
+  onRemove: () => void;
 };
 
-export function ProfileAvatar({ uri, onImageChange }: Props) {
+export function ProfileAvatar({ uri, name, onImageChange, onRemove }: Props) {
+  const theme = useTheme();
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const pickImage = async () => {
+    setMenuVisible(false);
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return;
 
@@ -24,30 +33,62 @@ export function ProfileAvatar({ uri, onImageChange }: Props) {
     }
   };
 
+  const remove = () => {
+    setMenuVisible(false);
+    onRemove();
+  };
+
   return (
-    <Container>
-      <AvatarImage source={{ uri: uri ?? undefined }} />
-      <EditButton onPress={pickImage}>
-        <Icon source="camera" size={16} color="#fff" />
-      </EditButton>
-    </Container>
+    <UIMenu
+      visible={menuVisible}
+      onDismiss={() => setMenuVisible(false)}
+      anchor={
+        <Anchor onPress={() => setMenuVisible(true)}>
+          <UIProfilePicture
+            uri={uri}
+            name={name}
+            size={90}
+            borderColor={theme.colors.primary}
+          />
+          <EditButton>
+            <Icon source="camera" size={16} color="#fff" />
+          </EditButton>
+        </Anchor>
+      }
+    >
+      <Menu.Item
+        dense
+        leadingIcon={() => (
+          <Icon source="image-edit" size={20} color={theme.colors.onSurface} />
+        )}
+        title="Editar foto"
+        onPress={pickImage}
+      />
+      {uri && (
+        <Menu.Item
+          dense
+          leadingIcon={() => (
+            <Icon
+              source="trash-can-outline"
+              size={20}
+              color={theme.colors.error}
+            />
+          )}
+          title="Remover foto"
+          titleStyle={{ color: theme.colors.error }}
+          onPress={remove}
+        />
+      )}
+    </UIMenu>
   );
 }
 
-const Container = styled.View`
+const Anchor = styled.Pressable`
   position: relative;
   align-self: center;
 `;
 
-const AvatarImage = styled.Image`
-  width: 90px;
-  height: 90px;
-  border-radius: 45px;
-  border-width: 3px;
-  border-color: ${({ theme }) => theme.colors.primary};
-`;
-
-const EditButton = styled.Pressable`
+const EditButton = styled.View`
   position: absolute;
   bottom: 0;
   right: 0;

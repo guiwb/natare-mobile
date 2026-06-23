@@ -9,7 +9,7 @@ export function WorkoutsHeader() {
 
   return (
     <Container>
-      <UIProfilePicture uri={user?.profile_picture} />
+      <UIProfilePicture uri={user?.profile_picture} name={user?.name} />
       <Title>Seus treinos</Title>
       <UIIconButton icon="bell-outline" onPress={() => {}} />
     </Container>

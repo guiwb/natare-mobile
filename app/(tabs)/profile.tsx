@@ -29,6 +29,18 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [pendingLocalUri, setPendingLocalUri] = useState<string | null>(null);
+  const [removed, setRemoved] = useState(false);
+
+  const handleImageChange = (uri: string) => {
+    setPendingLocalUri(uri);
+    setRemoved(false);
+  };
+
+  const handleRemove = () => {
+    setPendingLocalUri(null);
+    setAvatarUri(null);
+    setRemoved(true);
+  };
 
   const { control, setValue, handleSubmit } = useForm({
     resolver: zodResolver(schema),
@@ -38,6 +50,7 @@ export default function ProfileScreen() {
     if (user) {
       setValue('name', user.name);
       setAvatarUri(user.profile_picture ?? null);
+      setRemoved(false);
     }
   }, [user, setValue]);
 
@@ -46,6 +59,10 @@ export default function ProfileScreen() {
     try {
       setLoading(true);
       let profilePicture = user?.profile_picture;
+
+      if (removed) {
+        profilePicture = '';
+      }
 
       if (pendingLocalUri) {
         profilePicture = await CloudinaryService.uploadImage(
@@ -63,6 +80,7 @@ export default function ProfileScreen() {
       await UserService.updateProfile(updatedUser);
       setUser(updatedUser);
       setAvatarUri(profilePicture ?? null);
+      setRemoved(false);
       snack('Perfil atualizado com sucesso');
     } catch {
       snack('Erro ao atualizar perfil');
@@ -87,7 +105,9 @@ export default function ProfileScreen() {
       <AvatarBlock>
         <ProfileAvatar
           uri={pendingLocalUri ?? avatarUri}
-          onImageChange={setPendingLocalUri}
+          name={user?.name}
+          onImageChange={handleImageChange}
+          onRemove={handleRemove}
         />
         <UserName>{user?.name}</UserName>
         <UserEmail>{user?.email}</UserEmail>

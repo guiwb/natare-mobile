@@ -1,4 +1,5 @@
 import { UICard } from '@/components/UI/Card';
+import { UIMenu } from '@/components/UI/Menu';
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Icon, Menu, useTheme } from 'react-native-paper';
@@ -85,7 +86,7 @@ export function ActivityHeatmapCard() {
     <StyledCard>
       <HeaderRow>
         <Title>Mapa de atividades</Title>
-        <Menu
+        <UIMenu
           visible={menuVisible}
           onDismiss={() => setMenuVisible(false)}
           anchor={
@@ -102,6 +103,7 @@ export function ActivityHeatmapCard() {
           {MONTHS.map((month, index) => (
             <Menu.Item
               key={month}
+              dense
               title={month}
               onPress={() => {
                 setSelectedMonth(index);
@@ -109,7 +111,7 @@ export function ActivityHeatmapCard() {
               }}
             />
           ))}
-        </Menu>
+        </UIMenu>
       </HeaderRow>
 
       <View style={{ gap: 4 }}>
