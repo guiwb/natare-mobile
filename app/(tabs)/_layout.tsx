@@ -29,7 +29,10 @@ export default function TabLayout() {
           tabBar={(props) => <UITabBar {...props} />}
         >
           <Tabs.Screen name="index" options={{ title: 'Início' }} />
-          <Tabs.Screen name="workouts" options={{ title: 'Treinos' }} />
+          <Tabs.Screen
+            name="workouts"
+            options={{ title: 'Treinos', swipeEnabled: false }}
+          />
           <Tabs.Screen
             name="notifications"
             options={{ title: 'Notificações' }}

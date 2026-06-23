@@ -10,6 +10,7 @@ import {
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { ThemeProvider as StyledProvider } from 'styled-components/native';
 
@@ -74,19 +75,21 @@ export default function RootLayout() {
   };
 
   return (
-    <ThemeProvider value={navTheme}>
-      <SnackbarProvider>
-        <AuthProvider>
-          <StyledProvider theme={paperTheme}>
-            <PaperProvider theme={paperTheme}>
-              <ConfirmDialogProvider>
-                <Routes />
-                <StatusBar style="auto" />
-              </ConfirmDialogProvider>
-            </PaperProvider>
-          </StyledProvider>
-        </AuthProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider value={navTheme}>
+        <SnackbarProvider>
+          <AuthProvider>
+            <StyledProvider theme={paperTheme}>
+              <PaperProvider theme={paperTheme}>
+                <ConfirmDialogProvider>
+                  <Routes />
+                  <StatusBar style="auto" />
+                </ConfirmDialogProvider>
+              </PaperProvider>
+            </StyledProvider>
+          </AuthProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
