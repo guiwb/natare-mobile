@@ -1,5 +1,5 @@
+import { UIUserHeader } from '@/components/UI/UserHeader';
 import { FilterTabs, WorkoutFilter } from '@/components/Workouts/FilterTabs';
-import { WorkoutsHeader } from '@/components/Workouts/Header';
 import { MOCK_WORKOUTS, Workout } from '@/components/Workouts/mockData';
 import { WeekNavigator } from '@/components/Workouts/WeekNavigator';
 import { WorkoutSection } from '@/components/Workouts/WorkoutSection';
@@ -82,7 +82,7 @@ export default function WorkoutsScreen() {
   const header = (
     <GestureDetector gesture={tabSwipe}>
       <HeaderStack>
-        <WorkoutsHeader />
+        <UIUserHeader title="Treinos" />
         <WeekNavigator
           offset={weekOffset}
           onPrev={() => changeWeek(-1)}

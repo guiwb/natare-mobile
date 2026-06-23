@@ -3,6 +3,7 @@ import { DangerZone } from '@/components/Profile/DangerZone';
 import { PersonalDetailsForm } from '@/components/Profile/PersonalDetailsForm';
 import { PreferencesSection } from '@/components/Profile/PreferencesSection';
 import { UIScreen } from '@/components/UI/Screen';
+import { UIUserHeader } from '@/components/UI/UserHeader';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import { IUser } from '@/services/auth.service';
@@ -12,7 +13,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Keyboard } from 'react-native';
-import { Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 import { z } from 'zod';
 
@@ -91,7 +91,7 @@ export default function ProfileScreen() {
 
   return (
     <UIScreen
-      header={<ScreenTitle>Perfil</ScreenTitle>}
+      header={<UIUserHeader title="Perfil" showAvatar={false} />}
       keyboardShouldPersistTaps="handled"
     >
       <AvatarBlock>
@@ -119,12 +119,6 @@ export default function ProfileScreen() {
     </UIScreen>
   );
 }
-
-const ScreenTitle = styled(Text)`
-  font-size: 22px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.onSurface};
-`;
 
 const AvatarBlock = styled.View`
   align-items: center;

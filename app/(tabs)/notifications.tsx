@@ -1,11 +1,12 @@
 import { UIScreen } from '@/components/UI/Screen';
+import { UIUserHeader } from '@/components/UI/UserHeader';
 import { Icon, Text } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 export default function NotificationsScreen() {
   return (
     <UIScreen
-      header={<Title>Notificações</Title>}
+      header={<UIUserHeader title="Notificações" />}
       contentStyle={{ flexGrow: 1 }}
     >
       <Empty>
@@ -15,12 +16,6 @@ export default function NotificationsScreen() {
     </UIScreen>
   );
 }
-
-const Title = styled(Text)`
-  font-size: 22px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.onSurface};
-`;
 
 const Empty = styled.View`
   flex: 1;
