@@ -2,18 +2,35 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 
-const interfaces = os.networkInterfaces();
-let localIp = '127.0.0.1';
+const VIRTUAL_IFACE = /^(lo|docker|br-|veth|virbr|tun|tap|vmnet|vboxnet|utun|llw|awdl)/i;
 
-for (const name of Object.keys(interfaces)) {
-  for (const iface of interfaces[name]) {
+function isDockerRange(ip) {
+  const match = ip.match(/^172\.(\d+)\./);
+  return match && Number(match[1]) >= 16 && Number(match[1]) <= 31;
+}
+
+function rank(ip) {
+  if (ip.startsWith('192.168.')) return 0;
+  if (ip.startsWith('10.')) return 1;
+  if (isDockerRange(ip)) return 3;
+  return 2;
+}
+
+const interfaces = os.networkInterfaces();
+const candidates = [];
+
+for (const [name, ifaces] of Object.entries(interfaces)) {
+  if (VIRTUAL_IFACE.test(name)) continue;
+
+  for (const iface of ifaces) {
     if (iface.family === 'IPv4' && !iface.internal) {
-      localIp = iface.address;
-      break;
+      candidates.push(iface.address);
     }
   }
-  if (localIp !== '127.0.0.1') break;
 }
+
+candidates.sort((a, b) => rank(a) - rank(b));
+const localIp = candidates[0] || '127.0.0.1';
 
 const envPath = path.join(process.cwd(), '.env');
 if (fs.existsSync(envPath)) {
