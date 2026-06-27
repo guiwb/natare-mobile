@@ -1,4 +1,5 @@
 import AuthService, { IUser } from '@/services/auth.service';
+import NotificationsService from '@/services/notifications.service';
 import { useRouter } from 'expo-router';
 import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -58,17 +59,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await setItemAsync('token', token);
       router.replace('/(tabs)');
     } catch (error: any) {
+      if (typeof error === 'string') {
+        snack(error);
+        return;
+      }
+
       if (error?.response?.data?.message === 'MOBILE_NOT_ALLOWED') {
         snack('Treinadores e administradores devem acessar pela versão web.');
         return;
       }
 
-      snack(typeof error === 'string' ? error : 'E-mail ou senha inválidos!');
+      if (!error?.response) {
+        snack('Não foi possível conectar ao servidor. Verifique sua conexão.');
+        return;
+      }
+
+      snack('E-mail ou senha inválidos!');
     }
   };
 
   const logout = async () => {
     try {
+      const pushToken = await getItemAsync('pushToken');
+      if (pushToken) {
+        await NotificationsService.removeToken(pushToken).catch(() => {});
+        await deleteItemAsync('pushToken');
+      }
+
       await AuthService.logout();
       setUser(null);
       await deleteItemAsync('token');

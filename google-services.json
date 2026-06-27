@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "345151145819",
+    "project_id": "natare-app",
+    "storage_bucket": "natare-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345151145819:android:71f485040a3628b2a5fc7e",
+        "android_client_info": {
+          "package_name": "com.guiweige.nataremobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH-CuV757F5x6fZKY0K8OBPLAR7AagzMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

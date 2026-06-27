@@ -1,3 +1,4 @@
+import { useNotifications } from '@/contexts/NotificationsProvider';
 import { useTabBar } from '@/contexts/TabBarProvider';
 import { BlurView } from 'expo-blur';
 import { Animated, Pressable, View } from 'react-native';
@@ -15,6 +16,7 @@ const ICONS: Record<string, { focused: string; unfocused: string }> = {
 
 export function UITabBar({ state, navigation }: any) {
   const { scale } = useTabBar();
+  const { unreadCount } = useNotifications();
 
   return (
     <StyledBlur
@@ -30,7 +32,7 @@ export function UITabBar({ state, navigation }: any) {
           unfocused: 'circle-outline',
         };
         const icon = focused ? icons.focused : icons.unfocused;
-        const showDot = route.name === 'notifications';
+        const showDot = route.name === 'notifications' && unreadCount > 0;
 
         return (
           <StyledTabItem

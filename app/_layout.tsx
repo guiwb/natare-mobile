@@ -1,6 +1,7 @@
 import { AppBackground } from '@/components/AppBackground';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
+import { NotificationsProvider } from '@/contexts/NotificationsProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
 import {
   DarkTheme,
@@ -81,10 +82,12 @@ export default function RootLayout() {
           <AuthProvider>
             <StyledProvider theme={paperTheme}>
               <PaperProvider theme={paperTheme}>
-                <ConfirmDialogProvider>
-                  <Routes />
-                  <StatusBar style="auto" />
-                </ConfirmDialogProvider>
+                <NotificationsProvider>
+                  <ConfirmDialogProvider>
+                    <Routes />
+                    <StatusBar style="auto" />
+                  </ConfirmDialogProvider>
+                </NotificationsProvider>
               </PaperProvider>
             </StyledProvider>
           </AuthProvider>
