@@ -3,7 +3,7 @@ import { UISquareIcon } from '@/components/UI/SquareIcon';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import styled from 'styled-components/native';
-import { Workout } from './mockData';
+import { Workout } from './types';
 
 const STATUS_COLOR = {
   scheduled: 'default',
@@ -22,12 +22,12 @@ function formatDatetime(date: Date): string {
   const d = dayjs(date);
   const today = dayjs().startOf('day');
 
-  if (d.isSame(today, 'day')) return `Hoje às ${d.format('hh:mm')}`;
+  if (d.isSame(today, 'day')) return `Hoje às ${d.format('HH:mm')}`;
   if (d.isSame(today.add(1, 'day'), 'day'))
-    return `Amanhã às ${d.format('hh:mm')}`;
+    return `Amanhã às ${d.format('HH:mm')}`;
   if (d.isSame(today.subtract(1, 'day'), 'day'))
-    return `Ontem às ${d.format('hh:mm')}`;
-  return d.format('ddd, D [de] MMMM [às] hh:mm');
+    return `Ontem às ${d.format('HH:mm')}`;
+  return d.format('ddd, D [de] MMMM [às] HH:mm');
 }
 
 export function WorkoutCard({ workout }: { workout: Workout }) {

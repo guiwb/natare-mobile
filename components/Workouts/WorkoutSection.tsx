@@ -1,4 +1,4 @@
-import { Workout } from './mockData';
+import { Workout } from './types';
 import { WorkoutCard } from './WorkoutCard';
 import styled from 'styled-components/native';
 

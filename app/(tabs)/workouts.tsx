@@ -1,14 +1,16 @@
 import { UIUserHeader } from '@/components/UI/UserHeader';
 import { FilterTabs, WorkoutFilter } from '@/components/Workouts/FilterTabs';
-import { MOCK_WORKOUTS, Workout } from '@/components/Workouts/mockData';
+import { toWorkout, Workout } from '@/components/Workouts/types';
 import { WeekNavigator } from '@/components/Workouts/WeekNavigator';
 import { WorkoutSection } from '@/components/Workouts/WorkoutSection';
 import { UIScreen } from '@/components/UI/Screen';
+import { useSnackbar } from '@/contexts/SnackbarProvider';
+import WorkoutService from '@/services/workout.service';
 import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { Icon } from 'react-native-paper';
+import { ActivityIndicator, Icon } from 'react-native-paper';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 
@@ -21,45 +23,56 @@ function getWeekBounds(offset: number): {
   return { start, end };
 }
 
-function filterByWeek(workouts: Workout[], offset: number): Workout[] {
-  const { start, end } = getWeekBounds(offset);
-  return workouts.filter((w) => {
-    const d = dayjs(w.datetime);
-    return d.isAfter(start.subtract(1, 'ms')) && d.isBefore(end.add(1, 'ms'));
-  });
-}
-
 export default function WorkoutsScreen() {
   const router = useRouter();
+  const { snack } = useSnackbar();
   const [weekOffset, setWeekOffset] = useState(0);
   const [direction, setDirection] = useState(1);
   const [filter, setFilter] = useState<WorkoutFilter>('all');
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const changeWeek = (dir: number) => {
     setDirection(dir);
     setWeekOffset((o) => o + dir);
   };
 
-  const weekWorkouts = useMemo(
-    () => filterByWeek(MOCK_WORKOUTS, weekOffset),
-    [weekOffset],
+  useEffect(() => {
+    let active = true;
+    const { start, end } = getWeekBounds(weekOffset);
+    setLoading(true);
+
+    WorkoutService.list({
+      from: start.toISOString(),
+      to: end.toISOString(),
+      status: filter === 'all' ? undefined : filter,
+      limit: 100,
+    })
+      .then((res) => {
+        if (active) setWorkouts(res.items.map(toWorkout));
+      })
+      .catch(() => {
+        if (active) snack('Erro ao carregar treinos');
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weekOffset, filter]);
+
+  const { scheduled, past } = useMemo(
+    () => ({
+      scheduled: workouts.filter((w) => w.status === 'scheduled'),
+      past: workouts.filter((w) => w.status !== 'scheduled'),
+    }),
+    [workouts],
   );
 
-  const { scheduled, past } = useMemo(() => {
-    const applyFilter = (w: Workout) => filter === 'all' || w.status === filter;
-
-    return {
-      scheduled: weekWorkouts.filter(
-        (w) => w.status === 'scheduled' && applyFilter(w),
-      ),
-      past: weekWorkouts.filter(
-        (w) =>
-          (w.status === 'completed' || w.status === 'missed') && applyFilter(w),
-      ),
-    };
-  }, [weekWorkouts, filter]);
-
-  const isEmpty = scheduled.length === 0 && past.length === 0;
+  const isEmpty = !loading && scheduled.length === 0 && past.length === 0;
 
   const weekSwipe = Gesture.Pan()
     .runOnJS(true)
@@ -104,7 +117,11 @@ export default function WorkoutsScreen() {
             )}
             style={{ flex: 1, gap: 20 }}
           >
-            {isEmpty ? (
+            {loading ? (
+              <Loading>
+                <ActivityIndicator />
+              </Loading>
+            ) : isEmpty ? (
               <EmptyState>
                 <Icon
                   source="calendar-blank-outline"
@@ -136,6 +153,13 @@ const SwipeArea = styled.View`
 
 const HeaderStack = styled.View`
   gap: 14px;
+`;
+
+const Loading = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
 `;
 
 const EmptyState = styled.View`
