@@ -8,7 +8,8 @@ import { useSnackbar } from '@/contexts/SnackbarProvider';
 import WorkoutService from '@/services/workout.service';
 import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DeviceEventEmitter } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { ActivityIndicator, Icon } from 'react-native-paper';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
@@ -37,7 +38,7 @@ export default function WorkoutsScreen() {
     setWeekOffset((o) => o + dir);
   };
 
-  useEffect(() => {
+  const fetchWorkouts = useCallback(() => {
     let active = true;
     const { start, end } = getWeekBounds(weekOffset);
     setLoading(true);
@@ -63,6 +64,16 @@ export default function WorkoutsScreen() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weekOffset, filter]);
+
+  useEffect(fetchWorkouts, [fetchWorkouts]);
+
+  useEffect(() => {
+    const listener = DeviceEventEmitter.addListener(
+      'workoutCompletionChanged',
+      fetchWorkouts,
+    );
+    return () => listener.remove();
+  }, [fetchWorkouts]);
 
   const { scheduled, past } = useMemo(
     () => ({

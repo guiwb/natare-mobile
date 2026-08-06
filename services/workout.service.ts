@@ -2,16 +2,41 @@ import { http } from '@/lib/http/axios';
 
 export type WorkoutStatus = 'scheduled' | 'completed' | 'missed';
 
+export interface IWorkoutSerie {
+  id: string;
+  position: number;
+  workout_section_id: string;
+  distance: number;
+  repetitions: number;
+  duration: number;
+  equipment?: string[];
+  intensity_zone: string;
+  swim_stroke: string;
+  notes?: string;
+}
+
+export interface IWorkoutSection {
+  id: string;
+  name: string;
+  position: number;
+  interval?: number;
+  workout_id: string;
+  series?: IWorkoutSerie[];
+}
+
 export interface IWorkout {
   id: string;
   name: string;
   description?: string;
   scheduled_at: string;
   status: WorkoutStatus;
+  completed_at?: string | null;
+  completions_count?: number;
   total_distance?: number;
   total_duration?: number;
   created_at: string;
   updated_at: string;
+  sections?: IWorkoutSection[];
 }
 
 export interface IWorkoutList {
@@ -42,6 +67,21 @@ export default class WorkoutService {
         limit: params.limit,
       },
     });
+    return data;
+  }
+
+  static async get(id: string): Promise<IWorkout> {
+    const { data } = await http.get(`/api/workouts/${id}`);
+    return data;
+  }
+
+  static async complete(id: string): Promise<IWorkout> {
+    const { data } = await http.post(`/api/workouts/${id}/completion`);
+    return data;
+  }
+
+  static async uncomplete(id: string): Promise<IWorkout> {
+    const { data } = await http.delete(`/api/workouts/${id}/completion`);
     return data;
   }
 }

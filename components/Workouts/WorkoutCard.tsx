@@ -1,9 +1,13 @@
 import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
-import dayjs from 'dayjs';
-import 'dayjs/locale/pt-br';
+import { useRouter } from 'expo-router';
 import styled from 'styled-components/native';
-import { Workout } from './types';
+import {
+  formatDatetime,
+  formatMeters,
+  formatTotalDuration,
+  Workout,
+} from './types';
 
 const STATUS_COLOR = {
   scheduled: 'default',
@@ -17,25 +21,14 @@ const DOT_COLOR = {
   missed: '#EF4444',
 } as const;
 
-function formatDatetime(date: Date): string {
-  dayjs.locale('pt-br');
-  const d = dayjs(date);
-  const today = dayjs().startOf('day');
-
-  if (d.isSame(today, 'day')) return `Hoje às ${d.format('HH:mm')}`;
-  if (d.isSame(today.add(1, 'day'), 'day'))
-    return `Amanhã às ${d.format('HH:mm')}`;
-  if (d.isSame(today.subtract(1, 'day'), 'day'))
-    return `Ontem às ${d.format('HH:mm')}`;
-  return d.format('ddd, D [de] MMMM [às] HH:mm');
-}
-
 export function WorkoutCard({ workout }: { workout: Workout }) {
-  const { name, icon, status, datetime, distance, duration } = workout;
+  const router = useRouter();
+  const { id, name, icon, status, datetime, distance, duration } = workout;
   const isMissed = status === 'missed';
 
   return (
     <PressableCard
+      onPress={() => router.navigate(`/workout/${id}`)}
       style={({ pressed }) => ({
         opacity: pressed ? 0.75 : 1,
       })}
@@ -57,10 +50,10 @@ export function WorkoutCard({ workout }: { workout: Workout }) {
       </InfoColumn>
 
       <StatsColumn>
+        <StatValue strikethrough={isMissed}>{formatMeters(distance)}</StatValue>
         <StatValue strikethrough={isMissed}>
-          {distance != null ? `${distance} km` : '--'}
+          {formatTotalDuration(duration)}
         </StatValue>
-        <StatValue strikethrough={isMissed}>{duration} min</StatValue>
       </StatsColumn>
     </PressableCard>
   );

@@ -12,7 +12,12 @@ type TabBarContextValue = {
   onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
 };
 
-const TabBarContext = createContext<TabBarContextValue | null>(null);
+// Telas fora do stack de tabs (ex.: detalhe de treino) usam UIScreen sem
+// haver tab bar para animar, entao o default e um no-op.
+const TabBarContext = createContext<TabBarContextValue>({
+  scale: new Animated.Value(1),
+  onScroll: () => {},
+});
 
 export function TabBarProvider({ children }: { children: ReactNode }) {
   const scale = useRef(new Animated.Value(1)).current;
@@ -48,7 +53,5 @@ export function TabBarProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTabBar() {
-  const ctx = useContext(TabBarContext);
-  if (!ctx) throw new Error('useTabBar must be used within TabBarProvider');
-  return ctx;
+  return useContext(TabBarContext);
 }
