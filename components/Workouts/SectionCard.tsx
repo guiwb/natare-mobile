@@ -40,6 +40,17 @@ export function SectionCard({
         </SeriesCount>
       </Header>
 
+      {!!section.notes && (
+        <Notes>
+          <Icon
+            source="information-outline"
+            size={13}
+            color={theme.colors.primary}
+          />
+          <NotesText>{section.notes}</NotesText>
+        </Notes>
+      )}
+
       <Meta>
         <MetaItem>
           <Icon
@@ -113,6 +124,23 @@ const SectionName = styled.Text`
 const SeriesCount = styled.Text`
   font-size: 11px;
   color: ${({ theme }) => theme.colors.onSurfaceVariant};
+`;
+
+const Notes = styled.View`
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.colors.primaryContainer};
+`;
+
+const NotesText = styled.Text`
+  flex: 1;
+  font-size: 12px;
+  line-height: 17px;
+  color: ${({ theme }) => theme.colors.onSurface};
 `;
 
 const Meta = styled.View`

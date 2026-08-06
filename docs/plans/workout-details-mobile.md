@@ -172,7 +172,7 @@ Independente das fases 1 e 2; nada quebra se ficar para depois.
 
 - **Vocabulário duplicado entre web e mobile**: consequência aceita da decisão 2. Ao adicionar um caso novo em qualquer enum do backend, atualizar os dois mapas no mesmo ciclo. O fallback `?? value` garante que esquecer degrada para o valor cru em vez de quebrar a tela. Se a divergência incomodar no futuro, as saídas são um pacote compartilhado de constantes ou um endpoint de catálogo, ambos fora de escopo agora.
 - ~~**`notes` de seção não existe no backend**~~ **resolvido**: migration `add_notes_to_workout_sections_table`, `$fillable`, `sections.*.notes` nas duas FormRequests, `notes` no `WorkoutSectionsResource` e `schema.dbml` atualizado. Coberto por `tests/Feature/WorkoutSectionFieldsTest.php` (create, update e nullable). Falta apenas exibir no mobile, ver abaixo.
-- **Exibir `notes` da seção no mobile**: o dado agora chega no payload do `show`, mas `components/Workouts/SectionCard.tsx` não renderiza. Decisão de UI pendente.
+- ~~**Exibir `notes` da seção no mobile**~~ **resolvido**: `SectionCard.tsx` renderiza a observação num bloco destacado logo abaixo do cabeçalho da seção, quando presente.
 - **Status de treino no web**: quando alguma tela do web passar a consumir `status` da API, criar o `WORKOUT_STATUS_MAP` com os rótulos da tabela de vocabulário. Hoje seria código morto (ver Fase 3).
 - **`UpcomingList` ainda usa mock**: `src/mocks/home.js` alimenta a lista de próximos treinos da Home do web, com vocabulário de status próprio. Integrar com `GET /api/workouts` é trabalho separado.
 - **Rótulos de papel**: definidos na tabela de vocabulário, sem consumidor. Entram no cliente que primeiro precisar exibir papel.

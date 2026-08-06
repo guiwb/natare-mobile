@@ -18,6 +18,7 @@ export interface IWorkoutSerie {
 export interface IWorkoutSection {
   id: string;
   name: string;
+  notes?: string | null;
   position: number;
   interval?: number;
   workout_id: string;
