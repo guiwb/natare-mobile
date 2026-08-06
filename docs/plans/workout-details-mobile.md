@@ -157,17 +157,23 @@ Enums que não tinham tradução em lugar nenhum, definidos agora:
 
 Independente das fases 1 e 2; nada quebra se ficar para depois.
 
-- [ ] `src/types/workout.ts`: alinhar `IntensityZoneEnum` e `SwimStrokeEnum` com os enums do backend (remover `AT`, `VO2`, `LP`, `LT`; adicionar `A3`, `A4`, `SOLTO`, `PROGRESSIVE`, `STYLE`, `LEG_STROKE`, `DRILL`). Correção de tipagem, sem efeito em runtime.
-- [ ] Criar `WORKOUT_STATUS_MAP` em `src/constants/workout.js` com os mesmos rótulos da tabela acima, substituindo os textos hardcoded em `src/pages/Authed/Home/UpcomingList.jsx` e `src/pages/Authed/Notifications/index.jsx`.
+- [x] `src/types/workout.ts`: alinhar `IntensityZoneEnum` e `SwimStrokeEnum` com os enums do backend (remover `AT`, `VO2`, `LP`, `LT`; adicionar `A3`, `A4`, `SOLTO`, `PROGRESSIVE`, `STYLE`, `LEG_STROKE`, `DRILL`). Correção de tipagem, sem efeito em runtime.
+- [x] Renomear `rest_time` para `interval` em todo o web (`src/types/workout.ts`, `src/store/workoutStore.ts`, `src/components/Workouts/SectionCard.jsx`, `WorkoutTotals.jsx`, `workoutHelpers.js`, `ShareImage/Poster.jsx`, `src/utils/shareWorkout.js`).
+  - **Bug encontrado durante a Fase 3**: o web gravava `rest_time`, mas a API valida e persiste `interval` (`StoreWorkoutRequest:30`, `WorkoutSections::$fillable`). Como `validated()` descarta chave não validada, o descanso digitado pelo treinador nunca era salvo, e o `interval` devolvido pelo `show` nunca era lido de volta. Isso também deixava vazio o descanso na tela nova do mobile.
+- [x] ~~Criar `WORKOUT_STATUS_MAP`~~ **cancelado**: a premissa do plano estava errada. `src/pages/Authed/Home/UpcomingList.jsx` renderiza o mock `UPCOMING` de `src/mocks/home.js`, com vocabulário próprio (`today` / `scheduled`) e sem integração com a API; o `STATUS_LABELS` de `src/pages/Authed/Notifications/index.jsx` é status de envio de comunicado (`pending`, `completed`, `partial`, `failed`), não de treino. Nenhuma tela do web consome `status` de treino da API, então o mapa nasceria como código morto.
 
 ### Critérios de aceite
 
-- Nenhum rótulo de status de treino permanece hardcoded no web.
 - `src/types/workout.ts` e os enums do backend declaram exatamente o mesmo conjunto de valores.
+- O descanso digitado numa seção sobrevive a salvar e reabrir o treino, e aparece na tela de detalhes do mobile.
+- `npm run lint`, `npx prettier --check` e `npm run build` limpos.
 
 ## Pendências / futuro
 
 - **Vocabulário duplicado entre web e mobile**: consequência aceita da decisão 2. Ao adicionar um caso novo em qualquer enum do backend, atualizar os dois mapas no mesmo ciclo. O fallback `?? value` garante que esquecer degrada para o valor cru em vez de quebrar a tela. Se a divergência incomodar no futuro, as saídas são um pacote compartilhado de constantes ou um endpoint de catálogo, ambos fora de escopo agora.
+- **`notes` de seção não existe no backend**: o web tem campo de observação por seção (`section.notes`, usado em `SectionCard.jsx`, `Poster.jsx` e `shareWorkout.js`), mas `notes` só existe em série. Não há coluna em `workout_sections`, nem regra em `StoreWorkoutRequest`, nem `$fillable`. O texto digitado é descartado no save, mesmo sintoma do `rest_time`. Corrigir exige migration + `$fillable` + validação + `docs/database/schema.dbml`, então ficou fora da Fase 3.
+- **Status de treino no web**: quando alguma tela do web passar a consumir `status` da API, criar o `WORKOUT_STATUS_MAP` com os rótulos da tabela de vocabulário. Hoje seria código morto (ver Fase 3).
+- **`UpcomingList` ainda usa mock**: `src/mocks/home.js` alimenta a lista de próximos treinos da Home do web, com vocabulário de status próprio. Integrar com `GET /api/workouts` é trabalho separado.
 - **Rótulos de papel**: definidos na tabela de vocabulário, sem consumidor. Entram no cliente que primeiro precisar exibir papel.
 - **Equipamento como campo livre**: se um dia precisar virar contrato (relatório por equipamento, filtro), o caminho é `EquipmentEnum` + validação em `equipment.*`, precedido de `SELECT DISTINCT jsonb_array_elements_text(equipment::jsonb) FROM workout_section_series WHERE equipment IS NOT NULL` para ver o que já existe no banco.
 - **Payload de coach no `show`**: `teams` (com `withActiveAthletesCount`) e `unique_athletes_count` são carregados para todo viewer, inclusive atleta, que não usa nada disso. Vale condicionar ao papel numa limpeza futura; mexer nisso hoje afeta o web.
