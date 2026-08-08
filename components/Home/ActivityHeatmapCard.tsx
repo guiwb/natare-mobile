@@ -118,11 +118,12 @@ export function ActivityHeatmapCard() {
   useEffect(() => fetchHeatmap(), [fetchHeatmap]);
 
   useEffect(() => {
-    const listener = DeviceEventEmitter.addListener(
-      'workoutCompletionChanged',
-      () => fetchHeatmap(true),
-    );
-    return () => listener.remove();
+    const refetch = () => fetchHeatmap(true);
+    const listeners = [
+      DeviceEventEmitter.addListener('workoutCompletionChanged', refetch),
+      DeviceEventEmitter.addListener('homeRefresh', refetch),
+    ];
+    return () => listeners.forEach((listener) => listener.remove());
   }, [fetchHeatmap]);
 
   const data = useMemo(() => levelsFromDays(days), [days]);

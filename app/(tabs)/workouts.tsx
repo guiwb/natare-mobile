@@ -12,6 +12,7 @@ import { useSnackbar } from '@/contexts/SnackbarProvider';
 import WorkoutService from '@/services/workout.service';
 import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
+import { useRefresh } from '@/hooks/useRefresh';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -48,6 +49,25 @@ export default function WorkoutsScreen() {
     setDirection(dir);
     setWeekOffset((o) => o + dir);
   };
+
+  const loadWorkouts = useCallback(() => {
+    const { start, end } = getWeekBounds(weekOffset);
+    return WorkoutService.list({
+      from: start.toISOString(),
+      to: end.toISOString(),
+      status: filter === 'all' ? undefined : filter,
+      limit: 100,
+    });
+  }, [weekOffset, filter]);
+
+  const { refreshing, onRefresh } = useRefresh(async () => {
+    try {
+      const res = await loadWorkouts();
+      setWorkouts(res.items.map(toWorkout));
+    } catch {
+      snack('Erro ao carregar treinos');
+    }
+  });
 
   const fetchWorkouts = useCallback(() => {
     let active = true;
@@ -129,7 +149,12 @@ export default function WorkoutsScreen() {
   );
 
   return (
-    <UIScreen header={header} contentStyle={{ gap: 20, flexGrow: 1 }}>
+    <UIScreen
+      header={header}
+      contentStyle={{ gap: 20, flexGrow: 1 }}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    >
       <GestureDetector gesture={weekSwipe}>
         <SwipeArea>
           <Animated.View

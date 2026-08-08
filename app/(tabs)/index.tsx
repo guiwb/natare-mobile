@@ -15,6 +15,7 @@ import HomeService, {
   IHomeSummary,
   INextWorkout,
 } from '@/services/home.service';
+import { useRefresh } from '@/hooks/useRefresh';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
 
@@ -72,6 +73,11 @@ export default function HomeScreen() {
     return () => listener.remove();
   }, [fetchSummary]);
 
+  const { refreshing, onRefresh } = useRefresh(async () => {
+    DeviceEventEmitter.emit('homeRefresh');
+    await fetchSummary(true);
+  });
+
   /**
    * O overlay abre na hora e o refetch corre por baixo: o streak novo entra
    * quando a resposta chega. Quem controla quando fechar e o proprio overlay
@@ -101,6 +107,8 @@ export default function HomeScreen() {
     <>
       <UIScreen
         contentStyle={{ gap: 14 }}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         header={
           <UIUserHeader subtitle="Boas-vindas," title={user?.name ?? 'Início'} />
         }

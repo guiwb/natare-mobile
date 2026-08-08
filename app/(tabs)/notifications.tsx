@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/pt-br';
 import { useFocusEffect } from 'expo-router';
+import { useRefresh } from '@/hooks/useRefresh';
 import { useCallback } from 'react';
 import { Pressable } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
@@ -17,6 +18,7 @@ dayjs.locale('pt-br');
 export default function NotificationsScreen() {
   const { items, unreadCount, loading, refresh, markRead, markAllRead } =
     useNotifications();
+  const { refreshing, onRefresh } = useRefresh(refresh);
 
   useFocusEffect(
     useCallback(() => {
@@ -34,6 +36,8 @@ export default function NotificationsScreen() {
         />
       }
       contentStyle={{ flexGrow: 1 }}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     >
       {unreadCount > 0 && (
         <MarkAll onPress={markAllRead}>

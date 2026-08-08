@@ -6,10 +6,11 @@ import { UIScreen } from '@/components/UI/Screen';
 import { UIUserHeader } from '@/components/UI/UserHeader';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
-import { IUser } from '@/services/auth.service';
+import AuthService, { IUser } from '@/services/auth.service';
 import CloudinaryService from '@/services/cloudinary.service';
 import UserService from '@/services/user.service';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRefresh } from '@/hooks/useRefresh';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Keyboard } from 'react-native';
@@ -74,6 +75,14 @@ export default function ProfileScreen() {
     }
   }, [user, setValue]);
 
+  const { refreshing, onRefresh } = useRefresh(async () => {
+    try {
+      setUser(await AuthService.getCurrentUser());
+    } catch {
+      snack('Erro ao atualizar o perfil');
+    }
+  });
+
   const onSave = handleSubmit(async (data) => {
     Keyboard.dismiss();
     try {
@@ -93,6 +102,8 @@ export default function ProfileScreen() {
     <UIScreen
       header={<UIUserHeader title="Perfil" showAvatar={false} />}
       keyboardShouldPersistTaps="handled"
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     >
       <AvatarBlock>
         <ProfileAvatar
