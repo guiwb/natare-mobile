@@ -28,6 +28,12 @@ function isNotStartedError(error: unknown): boolean {
 
 const STATUS_TONE = {
   scheduled: { color: '#4285f4', icon: 'calendar-clock', square: 'default' },
+  in_progress: { color: '#F97316', icon: 'progress-clock', square: 'orange' },
+  awaiting_confirmation: {
+    color: '#EAB308',
+    icon: 'clock-alert-outline',
+    square: 'orange',
+  },
   completed: { color: '#22C55E', icon: 'check-circle', square: 'green' },
   missed: { color: '#EF4444', icon: 'close-circle', square: 'red' },
 } as const;

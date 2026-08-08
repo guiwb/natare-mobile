@@ -1,6 +1,11 @@
 import { http } from '@/lib/http/axios';
 
-export type WorkoutStatus = 'scheduled' | 'completed' | 'missed';
+export type WorkoutStatus =
+  | 'scheduled'
+  | 'in_progress'
+  | 'awaiting_confirmation'
+  | 'completed'
+  | 'missed';
 
 export interface IWorkoutSerie {
   id: string;

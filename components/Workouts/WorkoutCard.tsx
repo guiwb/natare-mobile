@@ -11,12 +11,16 @@ import {
 
 const STATUS_COLOR = {
   scheduled: 'default',
+  in_progress: 'orange',
+  awaiting_confirmation: 'orange',
   completed: 'green',
   missed: 'red',
 } as const;
 
 const DOT_COLOR = {
   scheduled: '#4285f4',
+  in_progress: '#F97316',
+  awaiting_confirmation: '#EAB308',
   completed: '#22C55E',
   missed: '#EF4444',
 } as const;

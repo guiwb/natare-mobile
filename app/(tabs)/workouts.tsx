@@ -1,6 +1,10 @@
 import { UIUserHeader } from '@/components/UI/UserHeader';
 import { FilterTabs, WorkoutFilter } from '@/components/Workouts/FilterTabs';
-import { toWorkout, Workout } from '@/components/Workouts/types';
+import {
+  toWorkout,
+  Workout,
+  WorkoutStatus,
+} from '@/components/Workouts/types';
 import { WeekNavigator } from '@/components/Workouts/WeekNavigator';
 import { WorkoutSection } from '@/components/Workouts/WorkoutSection';
 import { UIScreen } from '@/components/UI/Screen';
@@ -14,6 +18,13 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { ActivityIndicator, Icon } from 'react-native-paper';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import styled from 'styled-components/native';
+
+// treino que ainda aceita acao do atleta fica no bloco de cima
+const PENDING_STATUSES: WorkoutStatus[] = [
+  'scheduled',
+  'in_progress',
+  'awaiting_confirmation',
+];
 
 function getWeekBounds(offset: number): {
   start: dayjs.Dayjs;
@@ -77,8 +88,8 @@ export default function WorkoutsScreen() {
 
   const { scheduled, past } = useMemo(
     () => ({
-      scheduled: workouts.filter((w) => w.status === 'scheduled'),
-      past: workouts.filter((w) => w.status !== 'scheduled'),
+      scheduled: workouts.filter((w) => PENDING_STATUSES.includes(w.status)),
+      past: workouts.filter((w) => !PENDING_STATUSES.includes(w.status)),
     }),
     [workouts],
   );

@@ -34,6 +34,8 @@ export const EQUIPMENT_LABELS: Record<string, string> = {
 
 export const WORKOUT_STATUS_LABELS: Record<WorkoutStatus, string> = {
   scheduled: 'Agendado',
+  in_progress: 'Em andamento',
+  awaiting_confirmation: 'Aguardando confirmação',
   completed: 'Concluído',
   missed: 'Perdido',
 };
