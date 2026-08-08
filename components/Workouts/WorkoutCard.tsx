@@ -1,6 +1,8 @@
 import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 import {
   formatDatetime,
@@ -29,37 +31,44 @@ export function WorkoutCard({ workout }: { workout: Workout }) {
   const router = useRouter();
   const { id, name, icon, status, datetime, distance, duration } = workout;
   const isMissed = status === 'missed';
+  const [pressed, setPressed] = useState(false);
+
+  // um Tap do gesture-handler falha assim que o dedo desliza, entao arrastar
+  // para trocar de semana comecando em cima do card nao abre o detalhe
+  const tap = Gesture.Tap()
+    .runOnJS(true)
+    .maxDistance(12)
+    .onBegin(() => setPressed(true))
+    .onFinalize(() => setPressed(false))
+    .onEnd(() => router.navigate(`/workout/${id}`));
 
   return (
-    <PressableCard
-      onPress={() => router.navigate(`/workout/${id}`)}
-      style={({ pressed }) => ({
-        opacity: pressed ? 0.75 : 1,
-      })}
-    >
-      <UISquareIcon
-        icon={icon}
-        size={44}
-        iconSize={22}
-        color={STATUS_COLOR[status]}
-        bgOpacity={20}
-      />
+    <GestureDetector gesture={tap}>
+      <PressableCard style={{ opacity: pressed ? 0.75 : 1 }}>
+        <UISquareIcon
+          icon={icon}
+          size={44}
+          iconSize={22}
+          color={STATUS_COLOR[status]}
+          bgOpacity={20}
+        />
 
-      <InfoColumn>
-        <NameRow>
-          <WorkoutName>{name}</WorkoutName>
-          <StatusDot color={DOT_COLOR[status]} />
-        </NameRow>
-        <DateText>{formatDatetime(datetime)}</DateText>
-      </InfoColumn>
+        <InfoColumn>
+          <NameRow>
+            <WorkoutName>{name}</WorkoutName>
+            <StatusDot color={DOT_COLOR[status]} />
+          </NameRow>
+          <DateText>{formatDatetime(datetime)}</DateText>
+        </InfoColumn>
 
-      <StatsColumn>
-        <StatValue strikethrough={isMissed}>{formatMeters(distance)}</StatValue>
-        <StatValue strikethrough={isMissed}>
-          {formatTotalDuration(duration)}
-        </StatValue>
-      </StatsColumn>
-    </PressableCard>
+        <StatsColumn>
+          <StatValue strikethrough={isMissed}>{formatMeters(distance)}</StatValue>
+          <StatValue strikethrough={isMissed}>
+            {formatTotalDuration(duration)}
+          </StatValue>
+        </StatsColumn>
+      </PressableCard>
+    </GestureDetector>
   );
 }
 
