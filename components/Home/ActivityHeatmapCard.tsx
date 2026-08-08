@@ -1,8 +1,10 @@
 import { UICard } from '@/components/UI/Card';
 import { UIMenu } from '@/components/UI/Menu';
-import { useMemo, useState } from 'react';
-import { View } from 'react-native';
-import { Icon, Menu, useTheme } from 'react-native-paper';
+import { useSnackbar } from '@/contexts/SnackbarProvider';
+import HomeService, { IHeatmapDay } from '@/services/home.service';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DeviceEventEmitter, View } from 'react-native';
+import { ActivityIndicator, Icon, Menu, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -55,28 +57,75 @@ function buildGrid(
   );
 }
 
-function generateMockData(year: number, month: number): Record<string, number> {
-  const data: Record<string, number> = {};
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  for (let d = 1; d <= daysInMonth; d++) {
-    if (Math.random() > 0.25) {
-      data[`${year}-${month + 1}-${d}`] = Math.floor(Math.random() * 5);
-    }
-  }
-  return data;
+/**
+ * Nivel 0 e dia sem conclusao. Os demais sao quartis sobre a maior distancia
+ * diaria do proprio mes, entao a escala e relativa ao mes exibido.
+ * As datas vem como `YYYY-MM-DD` ja no fuso da empresa e sao lidas como texto,
+ * sem `new Date()`, que reinterpretaria em UTC e deslocaria a celula.
+ */
+function levelsFromDays(days: IHeatmapDay[]): Record<string, number> {
+  const max = Math.max(...days.map((d) => d.distance), 0);
+  if (!max) return {};
+
+  return days.reduce<Record<string, number>>((acc, day) => {
+    const [year, month, dayOfMonth] = day.date.split('-').map(Number);
+    const level = Math.min(Math.ceil((day.distance / max) * 4), 4);
+    acc[`${year}-${month}-${dayOfMonth}`] = Math.max(level, 1);
+    return acc;
+  }, {});
 }
 
 export function ActivityHeatmapCard() {
   const today = new Date();
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
   const [menuVisible, setMenuVisible] = useState(false);
+  const [days, setDays] = useState<IHeatmapDay[]>([]);
+  const [loading, setLoading] = useState(true);
   const theme = useTheme();
+  const { snack } = useSnackbar();
 
   const year = today.getFullYear();
-  const data = useMemo(
-    () => generateMockData(year, selectedMonth),
+
+  // `silent` rebusca sem trocar a grade pelo spinner, para refresh e conclusao
+  const fetchHeatmap = useCallback(
+    (silent = false) => {
+      let active = true;
+      const month = `${year}-${String(selectedMonth + 1).padStart(2, '0')}`;
+      if (!silent) setLoading(true);
+
+      HomeService.heatmap({ month })
+        .then((res) => {
+          if (active) setDays(res.days);
+        })
+        .catch(() => {
+          if (active) {
+            setDays([]);
+            snack('Erro ao carregar o mapa de atividades');
+          }
+        })
+        .finally(() => {
+          if (active && !silent) setLoading(false);
+        });
+
+      return () => {
+        active = false;
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [year, selectedMonth],
   );
+
+  useEffect(() => fetchHeatmap(), [fetchHeatmap]);
+
+  useEffect(() => {
+    const listener = DeviceEventEmitter.addListener(
+      'workoutCompletionChanged',
+      () => fetchHeatmap(true),
+    );
+    return () => listener.remove();
+  }, [fetchHeatmap]);
+
+  const data = useMemo(() => levelsFromDays(days), [days]);
   const rows = useMemo(
     () => buildGrid(year, selectedMonth, data),
     [year, selectedMonth, data],
@@ -133,28 +182,34 @@ export function ActivityHeatmapCard() {
         </UIMenu>
       </HeaderRow>
 
-      <View style={{ gap: 4 }}>
-        <DayLabelsRow>
-          {DAYS.map((day) => (
-            <DayLabel key={day}>{day}</DayLabel>
-          ))}
-        </DayLabelsRow>
-
-        {rows.map((row, rowIndex) => (
-          <WeekRow key={rowIndex}>
-            {row.map((cell, cellIndex) => (
-              <Cell
-                key={cellIndex}
-                color={
-                  cell.day !== null
-                    ? INTENSITY_COLORS[cell.level]
-                    : 'transparent'
-                }
-              />
+      {loading ? (
+        <GridLoading rows={rows.length}>
+          <ActivityIndicator />
+        </GridLoading>
+      ) : (
+        <View style={{ gap: 4 }}>
+          <DayLabelsRow>
+            {DAYS.map((day) => (
+              <DayLabel key={day}>{day}</DayLabel>
             ))}
-          </WeekRow>
-        ))}
-      </View>
+          </DayLabelsRow>
+
+          {rows.map((row, rowIndex) => (
+            <WeekRow key={rowIndex}>
+              {row.map((cell, cellIndex) => (
+                <Cell
+                  key={cellIndex}
+                  color={
+                    cell.day !== null
+                      ? INTENSITY_COLORS[cell.level]
+                      : 'transparent'
+                  }
+                />
+              ))}
+            </WeekRow>
+          ))}
+        </View>
+      )}
 
       <LegendRow>
         <LegendLabel>Menor volume</LegendLabel>
@@ -199,6 +254,12 @@ const MonthButton = styled.Pressable`
 const MonthButtonText = styled.Text`
   color: ${({ theme }) => theme.colors.onSurface};
   font-size: 14px;
+`;
+
+const GridLoading = styled.View<{ rows: number }>`
+  height: ${({ rows }) => rows * 18 + 20}px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const DayLabelsRow = styled.View`

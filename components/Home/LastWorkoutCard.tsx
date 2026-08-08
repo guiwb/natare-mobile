@@ -1,26 +1,38 @@
 import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
-import { View } from 'react-native';
+import { formatMeters, formatShortDate } from '@/components/Workouts/types';
+import { ILastWorkout } from '@/services/home.service';
 import styled from 'styled-components/native';
 
-export function LastWorkoutCard() {
+export function LastWorkoutCard({ workout }: { workout: ILastWorkout | null }) {
   return (
     <StyledCard>
-      <StyledMediumText>Última atividade</StyledMediumText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
-        <UISquareIcon icon="calendar-check" />
+      <StyledMediumText numberOfLines={1}>Última atividade</StyledMediumText>
 
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            gap: 4,
-          }}
-        >
-          <StyledTitleText>Ontem</StyledTitleText>
-          <StyledSmallText>8km de natação</StyledSmallText>
-        </View>
-      </View>
+      <Row>
+        <UISquareIcon
+          icon={workout ? 'calendar-check' : 'calendar-blank-outline'}
+          size={36}
+          iconSize={20}
+        />
+
+        <TextColumn>
+          {workout ? (
+            <>
+              <StyledTitleText numberOfLines={1}>
+                {formatShortDate(new Date(workout.scheduled_at))}
+              </StyledTitleText>
+              <StyledSmallText numberOfLines={1}>
+                {formatMeters(workout.total_distance)}
+              </StyledSmallText>
+            </>
+          ) : (
+            <StyledSmallText numberOfLines={2}>
+              Nenhuma atividade ainda
+            </StyledSmallText>
+          )}
+        </TextColumn>
+      </Row>
     </StyledCard>
   );
 }
@@ -32,14 +44,27 @@ const StyledCard = styled(UICard)`
   padding: 16px;
 `;
 
+const Row = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+`;
+
+const TextColumn = styled.View`
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+`;
+
 const StyledTitleText = styled.Text`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bold;
   color: ${(props) => props.theme.colors.onSurface};
 `;
 
 const StyledMediumText = styled.Text`
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   color: ${(props) => props.theme.colors.onSurfaceVariant};
 `;

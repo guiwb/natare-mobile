@@ -1,19 +1,72 @@
+import { AllCaughtUpCard } from '@/components/Home/AllCaughtUpCard';
 import { DataCard } from '@/components/Home/NextWorkoutCard/DataCard';
 import { UIBadge } from '@/components/UI/Badge';
 import { UIButton } from '@/components/UI/Button';
 import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
-import { View } from 'react-native';
+import {
+  formatDatetime,
+  formatMeters,
+  formatTotalDuration,
+  iconForVolume,
+} from '@/components/Workouts/types';
+import { useSnackbar } from '@/contexts/SnackbarProvider';
+import { INextWorkout } from '@/services/home.service';
+import WorkoutService from '@/services/workout.service';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, DeviceEventEmitter, View } from 'react-native';
 import styled from 'styled-components/native';
 
-export function NextWorkoutCard() {
+export function NextWorkoutCard({
+  workout,
+  loading,
+  onCompleted,
+}: {
+  workout: INextWorkout | null;
+  loading: boolean;
+  onCompleted: (workout: INextWorkout) => void;
+}) {
+  const router = useRouter();
+  const { snack } = useSnackbar();
+  const [completing, setCompleting] = useState(false);
+
+  const complete = async () => {
+    if (!workout || completing) return;
+
+    setCompleting(true);
+    try {
+      await WorkoutService.complete(workout.id);
+      DeviceEventEmitter.emit('workoutCompletionChanged');
+      onCompleted(workout);
+    } catch {
+      snack('Não foi possível marcar o treino como feito');
+    } finally {
+      setCompleting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <StyledCard>
+        <LoadingBox>
+          <ActivityIndicator />
+        </LoadingBox>
+      </StyledCard>
+    );
+  }
+
+  if (!workout) {
+    return <AllCaughtUpCard />;
+  }
+
   return (
-    <StyledCard>
+    <StyledCard onPress={() => router.navigate(`/workout/${workout.id}`)}>
       <View style={{ flexDirection: 'column', gap: 8 }}>
-        <UIBadge icon="timer" text="Hoje às 17:30" />
-        <StyledHeadline>Regenerativo</StyledHeadline>
+        <UIBadge icon="timer" text={formatDatetime(new Date(workout.scheduled_at))} />
+        <StyledHeadline>{workout.name}</StyledHeadline>
         <UISquareIcon
-          icon="swim"
+          icon={iconForVolume(workout.total_distance)}
           size={40}
           color="default"
           bgOpacity={30}
@@ -22,14 +75,23 @@ export function NextWorkoutCard() {
       </View>
 
       <View style={{ flexDirection: 'row', gap: 16 }}>
-        <DataCard title="Distância total" value="8.0" unitText="km" />
-        <DataCard title="Tempo estimado" value="45" unitText="min" />
+        <DataCard
+          title="Distância total"
+          value={formatMeters(workout.total_distance)}
+        />
+        <DataCard
+          title="Tempo estimado"
+          value={formatTotalDuration(workout.total_duration)}
+        />
       </View>
 
       <UIButton
         textStyle={{ fontWeight: '700' }}
         text="Marcar como feito"
         iconRight="check-bold"
+        loading={completing}
+        disabled={!workout.can_complete}
+        onPress={complete}
       />
     </StyledCard>
   );
@@ -45,4 +107,10 @@ const StyledCard = styled(UICard)`
   flex-direction: column;
   gap: 14px;
   padding: 16px;
+`;
+
+const LoadingBox = styled.View`
+  height: 180px;
+  align-items: center;
+  justify-content: center;
 `;

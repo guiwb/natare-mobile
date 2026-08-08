@@ -1,15 +1,19 @@
 import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
+import { IStreak } from '@/services/home.service';
 import { View } from 'react-native';
 import styled from 'styled-components/native';
 
-export function DayStreakCard() {
+export function DayStreakCard({ streak }: { streak: IStreak }) {
   return (
     <StyledCard>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <UISquareIcon icon="fire" color="orange" />
         <StyledStreakText>
-          14 <StyledSmallText>dias</StyledSmallText>
+          {streak.days}{' '}
+          <StyledSmallText>
+            {streak.days === 1 ? 'dia' : 'dias'}
+          </StyledSmallText>
         </StyledStreakText>
       </View>
       <StyledLabel>Em sequência</StyledLabel>

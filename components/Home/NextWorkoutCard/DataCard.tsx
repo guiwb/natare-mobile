@@ -7,13 +7,14 @@ export function DataCard({
 }: {
   title: string;
   value: string | number;
-  unitText: string;
+  unitText?: string;
 }) {
   return (
     <StyledView>
       <StyledTitle>{title}</StyledTitle>
       <StyledValue>
-        {value} <StyledValueLabel>{unitText}</StyledValueLabel>
+        {value}
+        {!!unitText && <StyledValueLabel> {unitText}</StyledValueLabel>}
       </StyledValue>
     </StyledView>
   );

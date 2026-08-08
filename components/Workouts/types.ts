@@ -58,6 +58,20 @@ export function formatDatetime(date: Date): string {
   return d.format('ddd, D [de] MMMM [às] HH:mm');
 }
 
+/**
+ * Versao curta de `formatDatetime`, sem hora, para caber em cards estreitos.
+ */
+export function formatShortDate(date: Date): string {
+  dayjs.locale('pt-br');
+  const d = dayjs(date);
+  const today = dayjs().startOf('day');
+
+  if (d.isSame(today, 'day')) return 'Hoje';
+  if (d.isSame(today.subtract(1, 'day'), 'day')) return 'Ontem';
+  if (d.isSame(today, 'year')) return d.format('D [de] MMM');
+  return d.format('D [de] MMM [de] YYYY');
+}
+
 export function toWorkout(item: IWorkout): Workout {
   return {
     id: item.id,
