@@ -20,7 +20,7 @@ import { ActivityIndicator, Icon } from 'react-native-paper';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 
-// treino que ainda aceita acao do atleta fica no bloco de cima
+// workouts that still accept athlete action stay in the top block
 const PENDING_STATUSES: WorkoutStatus[] = [
   'scheduled',
   'in_progress',

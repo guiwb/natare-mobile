@@ -12,8 +12,8 @@ type TabBarContextValue = {
   onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
 };
 
-// Telas fora do stack de tabs (ex.: detalhe de treino) usam UIScreen sem
-// haver tab bar para animar, entao o default e um no-op.
+// Screens outside the tabs stack (e.g. workout detail) use UIScreen with no
+// tab bar to animate, so the default is a no-op.
 const TabBarContext = createContext<TabBarContextValue>({
   scale: new Animated.Value(1),
   onScroll: () => {},

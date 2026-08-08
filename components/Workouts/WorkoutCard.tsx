@@ -33,8 +33,8 @@ export function WorkoutCard({ workout }: { workout: Workout }) {
   const isMissed = status === 'missed';
   const [pressed, setPressed] = useState(false);
 
-  // um Tap do gesture-handler falha assim que o dedo desliza, entao arrastar
-  // para trocar de semana comecando em cima do card nao abre o detalhe
+  // a gesture-handler Tap fails as soon as the finger slides, so swiping to
+  // change the week starting on top of the card does not open the detail
   const tap = Gesture.Tap()
     .runOnJS(true)
     .maxDistance(12)

@@ -25,8 +25,8 @@ export function WorkoutCompletedOverlay({
   streakDays: number | null;
   onDismiss: () => void;
 }) {
-  // o Modal precisa continuar montado durante o fade de saida, senao ele
-  // desaparece de uma vez e a animacao de exit nunca aparece
+  // the Modal must stay mounted during the exit fade, otherwise it vanishes at
+  // once and the exit animation never shows up
   const [mounted, setMounted] = useState(visible);
 
   useEffect(() => {

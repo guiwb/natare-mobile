@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * Tempo minimo com o spinner na tela. Sem isso, uma request rapida liga e
- * desliga o `refreshing` no mesmo piscar e o usuario nao ve feedback nenhum,
- * ficando com a impressao de que o pull-to-refresh nao fez nada.
+ * Minimum time the spinner stays on screen. Without it, a fast request turns
+ * `refreshing` on and off in the same blink and the user sees no feedback at
+ * all, left with the impression that the pull-to-refresh did nothing.
  */
 const MIN_SPINNER_MS = 600;
 
 /**
- * Estado de pull-to-refresh para passar ao `UIScreen`. Ignora toques enquanto
- * ja esta atualizando e garante o tempo minimo de spinner.
+ * Pull-to-refresh state to hand to `UIScreen`. Ignores taps while already
+ * refreshing and enforces the minimum spinner time.
  */
 export function useRefresh(task: () => Promise<unknown>) {
   const [refreshing, setRefreshing] = useState(false);
   const running = useRef(false);
   const mounted = useRef(true);
 
-  // mantido em ref para o `onRefresh` nao mudar de identidade a cada render
+  // kept in a ref so `onRefresh` does not change identity on every render
   const taskRef = useRef(task);
   taskRef.current = task;
 

@@ -35,7 +35,7 @@ export default function ChangePasswordScreen() {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      // TODO: chamar endpoint de troca de senha
+      // TODO: call the change-password endpoint
       snack('Senha alterada com sucesso');
       router.back();
     } catch {

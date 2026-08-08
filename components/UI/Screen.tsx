@@ -45,20 +45,21 @@ export function UIScreen({
   const contentTop = headerHeight + 16;
 
   /**
-   * No iOS o conteudo desce por `contentInset`, e nao por padding, para o
-   * RefreshControl ser desenhado dentro da inset (abaixo do header sobreposto)
-   * em vez de ficar colado no topo do ScrollView, atras dele.
+   * On iOS the content is pushed down by `contentInset`, not by padding, so
+   * the RefreshControl is drawn inside the inset (below the overlaid header)
+   * instead of sticking to the top of the ScrollView, behind it.
    *
-   * `contentOffset` so vale na montagem, quando `headerHeight` ainda e o chute
-   * inicial, entao a primeira medicao real reposiciona o scroll na mao.
+   * `contentOffset` only applies on mount, when `headerHeight` is still the
+   * initial guess, so the first real measurement repositions the scroll by
+   * hand.
    */
   const onHeaderLayout = (height: number) => {
     setHeaderHeight(height);
 
     if (!IOS || insetApplied.current) return;
     insetApplied.current = true;
-    // espera a nova contentInset ser aplicada, senao o scroll e limitado pela
-    // inset antiga e o conteudo nasce parcialmente atras do header
+    // wait for the new contentInset to be applied, otherwise the scroll is
+    // clamped by the old inset and the content starts partly behind the header
     requestAnimationFrame(() =>
       scrollRef.current?.scrollTo({ y: -(height + 16), animated: false }),
     );
@@ -77,16 +78,16 @@ export function UIScreen({
         scrollIndicatorInsets={IOS ? { top: contentTop } : undefined}
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior="never"
-        // telas curtas precisam poder passar do topo, senao nao ha overscroll
-        // para o RefreshControl reagir
+        // short screens must be able to scroll past the top, otherwise there
+        // is no overscroll for the RefreshControl to react to
         alwaysBounceVertical={!!onRefresh}
         refreshControl={
           onRefresh && (
             <RefreshControl
               refreshing={!!refreshing}
               onRefresh={onRefresh}
-              // no iOS quem posiciona o spinner e a contentInset; aqui seria
-              // deslocamento em dobro
+              // on iOS the contentInset is what positions the spinner; setting
+              // this here would offset it twice
               progressViewOffset={IOS ? undefined : headerHeight}
               tintColor="#FFFFFF"
               colors={['#4285F4']}
@@ -95,7 +96,7 @@ export function UIScreen({
         }
         contentContainerStyle={[
           styles.content,
-          // no iOS o espaco do header vem da contentInset acima
+          // on iOS the header space comes from the contentInset above
           IOS ? null : { paddingTop: contentTop },
           contentStyle,
         ]}

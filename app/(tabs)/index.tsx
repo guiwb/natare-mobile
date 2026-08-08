@@ -42,9 +42,9 @@ export default function HomeScreen() {
   }, []);
 
   /**
-   * `silent` mantem o conteudo atual na tela enquanto rebusca, para o
-   * pull-to-refresh e o pos-conclusao nao derrubarem os cards para o
-   * esqueleto de carregamento.
+   * `silent` keeps the current content on screen while refetching, so that
+   * pull-to-refresh and the post-completion refresh do not drop the cards
+   * back to the loading skeleton.
    */
   const fetchSummary = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -79,9 +79,9 @@ export default function HomeScreen() {
   });
 
   /**
-   * O overlay abre na hora e o refetch corre por baixo: o streak novo entra
-   * quando a resposta chega. Quem controla quando fechar e o proprio overlay
-   * (auto-dismiss ou toque do usuario).
+   * The overlay opens right away and the refetch runs underneath: the new
+   * streak lands when the response arrives. The overlay itself decides when
+   * to close (auto-dismiss or user tap).
    */
   const onCompleted = useCallback(
     async (workout: INextWorkout) => {

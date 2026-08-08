@@ -58,10 +58,11 @@ function buildGrid(
 }
 
 /**
- * Nivel 0 e dia sem conclusao. Os demais sao quartis sobre a maior distancia
- * diaria do proprio mes, entao a escala e relativa ao mes exibido.
- * As datas vem como `YYYY-MM-DD` ja no fuso da empresa e sao lidas como texto,
- * sem `new Date()`, que reinterpretaria em UTC e deslocaria a celula.
+ * Level 0 is a day without any completion. The rest are quartiles over the
+ * highest daily distance of the month itself, so the scale is relative to the
+ * displayed month. Dates arrive as `YYYY-MM-DD` already in the company
+ * timezone and are read as text, without `new Date()`, which would reinterpret
+ * them as UTC and shift the cell.
  */
 function levelsFromDays(days: IHeatmapDay[]): Record<string, number> {
   const max = Math.max(...days.map((d) => d.distance), 0);
@@ -86,7 +87,8 @@ export function ActivityHeatmapCard() {
 
   const year = today.getFullYear();
 
-  // `silent` rebusca sem trocar a grade pelo spinner, para refresh e conclusao
+  // `silent` refetches without swapping the grid for the spinner, used by
+  // refresh and completion
   const fetchHeatmap = useCallback(
     (silent = false) => {
       let active = true;

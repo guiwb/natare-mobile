@@ -22,8 +22,8 @@ export function iconForVolume(distanceMeters: number): string {
   return 'waves';
 }
 
-// `distance` em metros, `duration` de serie e `interval` de secao em segundos,
-// mesma convencao usada no natare-web.
+// `distance` in meters, series `duration` and section `interval` in seconds,
+// same convention used in natare-web.
 export function formatMeters(meters: number): string {
   if (!meters) return '--';
   return meters >= 1000
@@ -59,7 +59,7 @@ export function formatDatetime(date: Date): string {
 }
 
 /**
- * Versao curta de `formatDatetime`, sem hora, para caber em cards estreitos.
+ * Short version of `formatDatetime`, without the time, to fit narrow cards.
  */
 export function formatShortDate(date: Date): string {
   dayjs.locale('pt-br');
