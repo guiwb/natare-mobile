@@ -1,10 +1,12 @@
 import { UICard } from '@/components/UI/Card';
+import { useRouter } from 'expo-router';
 import { useTheme } from 'react-native-paper';
 import { ProfileRow } from './ProfileRow';
 import styled from 'styled-components/native';
 
 export function DangerZone() {
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <Section>
@@ -17,6 +19,7 @@ export function DangerZone() {
             title="Excluir conta"
             titleColor={theme.colors.error}
             subtitle="Remover permanentemente seus dados"
+            onPress={() => router.push('/delete-account')}
           />
         </Rows>
       </UICard>

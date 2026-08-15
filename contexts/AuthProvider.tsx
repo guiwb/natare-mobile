@@ -12,6 +12,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -78,21 +79,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const clearLocalSession = async () => {
+    setUser(null);
+    await deleteItemAsync('pushToken');
+    await deleteItemAsync('token');
+    router.replace('/login');
+  };
+
   const logout = async () => {
     try {
       const pushToken = await getItemAsync('pushToken');
       if (pushToken) {
         await NotificationsService.removeToken(pushToken).catch(() => {});
-        await deleteItemAsync('pushToken');
       }
 
       await AuthService.logout();
-      setUser(null);
-      await deleteItemAsync('token');
-      router.replace('/login');
+      await clearLocalSession();
     } catch (error: any) {
       snack(error.message);
     }
+  };
+
+  /**
+   * The backend already revokes tokens and push tokens, so only the local
+   * state needs cleaning up. Errors bubble up so the screen can tell a wrong
+   * password from a failed request.
+   */
+  const deleteAccount = async (password: string) => {
+    await AuthService.deleteAccount(password);
+    await clearLocalSession();
   };
 
   const forgotPassword = async (email: string) => {
@@ -121,7 +136,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, login, logout, forgotPassword, isLoading }}
+      value={{
+        user,
+        setUser,
+        login,
+        logout,
+        forgotPassword,
+        deleteAccount,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>
