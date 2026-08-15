@@ -39,4 +39,8 @@ export default class AuthService {
   static forgotPassword(email: string): Promise<void> {
     return http.post('api/forgot-password', { email });
   }
+
+  static deleteAccount(password: string): Promise<void> {
+    return http.delete('/api/account', { data: { password } });
+  }
 }
