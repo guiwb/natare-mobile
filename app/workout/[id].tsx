@@ -126,6 +126,15 @@ export default function WorkoutDetailsScreen() {
       <ScreenTitle numberOfLines={1}>
         {workout?.name ?? 'Detalhes do treino'}
       </ScreenTitle>
+      {isCompleted && (
+        <HeaderAction onPress={() => router.navigate(`/workout/share/${id}`)}>
+          <Icon
+            source="share-variant"
+            size={20}
+            color={theme.colors.onSurface}
+          />
+        </HeaderAction>
+      )}
     </HeaderRow>
   );
 
@@ -225,6 +234,21 @@ export default function WorkoutDetailsScreen() {
             Você poderá marcar a conclusão quando o treino começar.
           </FooterHint>
         )}
+        {isCompleted && (
+          <UIButton
+            text="Compartilhar treino"
+            iconLeft="share-variant"
+            iconColor={theme.colors.primary}
+            onPress={() => router.navigate(`/workout/share/${id}`)}
+            fullWidth
+            style={{
+              backgroundColor: 'transparent',
+              borderWidth: 1,
+              borderColor: theme.colors.primary,
+            }}
+            textStyle={{ color: theme.colors.primary }}
+          />
+        )}
         {isCompleted && !!workout.completed_at && (
           <CompletedAt>
             Concluído em {formatDatetime(new Date(workout.completed_at))}
@@ -242,6 +266,10 @@ const HeaderRow = styled.View`
 `;
 
 const BackButton = styled.Pressable`
+  padding: 4px;
+`;
+
+const HeaderAction = styled.Pressable`
   padding: 4px;
 `;
 

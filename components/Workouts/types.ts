@@ -72,6 +72,15 @@ export function formatShortDate(date: Date): string {
   return d.format('D [de] MMM [de] YYYY');
 }
 
+/**
+ * Absolute date, without relative words, for content that leaves the app
+ * (a shared image has no "hoje").
+ */
+export function formatFullDate(date: Date): string {
+  dayjs.locale('pt-br');
+  return dayjs(date).format('D [de] MMMM [de] YYYY');
+}
+
 export function toWorkout(item: IWorkout): Workout {
   return {
     id: item.id,

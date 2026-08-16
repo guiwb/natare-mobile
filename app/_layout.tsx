@@ -31,6 +31,7 @@ function Routes() {
         <Stack.Screen name="change-password" />
         <Stack.Screen name="delete-account" />
         <Stack.Screen name="workout/[id]" />
+        <Stack.Screen name="workout/share/[id]" />
       </Stack>
     </View>
   );
