@@ -30,6 +30,11 @@ A single custom MD3 theme is defined in `app/_layout.tsx` and passed to both `re
 ### External services
 Third-party HTTP integrations (Cloudinary, etc.) follow the same pattern: a static class in `services/` that encapsulates all calls to that API. Use `fetch` for APIs outside the backend (no JWT needed). Example: `CloudinaryService` in `services/cloudinary.service.ts`.
 
+### Native modules
+Local Expo modules live in `modules/`. `instagram-story-share` sends the workout card to the
+Instagram Stories composer as a sticker (transparency survives, unlike the share sheet); see
+`docs/instagram-stories.md`. Any change there needs a new dev build.
+
 ### IP auto-update
 `scripts/update-env-ip.js` runs before every `expo start` command and rewrites `EXPO_PUBLIC_API_URL` in `.env` with the machine's current local IP. This keeps physical devices working without manual `.env` edits.
 

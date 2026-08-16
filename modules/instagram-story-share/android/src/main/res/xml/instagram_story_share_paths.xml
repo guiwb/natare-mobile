@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+  <!-- view-shot writes the captured PNG to the app cache dir -->
+  <cache-path name="cache" path="." />
+  <files-path name="files" path="." />
+</paths>
