@@ -2,11 +2,18 @@ import { UICard } from '@/components/UI/Card';
 import { UISquareIcon } from '@/components/UI/SquareIcon';
 import { formatMeters, formatShortDate } from '@/components/Workouts/types';
 import { ILastWorkout } from '@/services/home.service';
+import { useRouter } from 'expo-router';
 import styled from 'styled-components/native';
 
 export function LastWorkoutCard({ workout }: { workout: ILastWorkout | null }) {
+  const router = useRouter();
+
   return (
-    <StyledCard>
+    <StyledCard
+      onPress={
+        workout ? () => router.navigate(`/workout/${workout.id}`) : undefined
+      }
+    >
       <StyledMediumText numberOfLines={1}>Última atividade</StyledMediumText>
 
       <Row>

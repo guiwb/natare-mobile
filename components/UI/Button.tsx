@@ -6,6 +6,7 @@ export function UIButton({
   text,
   iconLeft,
   iconRight,
+  iconColor = 'white',
   loading,
   disabled,
   fullWidth,
@@ -16,6 +17,7 @@ export function UIButton({
   text: string;
   iconLeft?: string;
   iconRight?: string;
+  iconColor?: string;
   loading?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
@@ -42,9 +44,9 @@ export function UIButton({
         <ActivityIndicator color="white" size={20} />
       ) : (
         <>
-          {iconLeft && <Icon source={iconLeft} size={20} color="white" />}
+          {iconLeft && <Icon source={iconLeft} size={20} color={iconColor} />}
           <StyledText style={textStyle}>{text}</StyledText>
-          {iconRight && <Icon source={iconRight} size={20} color="white" />}
+          {iconRight && <Icon source={iconRight} size={20} color={iconColor} />}
         </>
       )}
     </StyledPressable>
