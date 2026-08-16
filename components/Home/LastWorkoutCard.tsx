@@ -3,10 +3,7 @@ import { UISquareIcon } from '@/components/UI/SquareIcon';
 import { formatMeters, formatShortDate } from '@/components/Workouts/types';
 import { ILastWorkout } from '@/services/home.service';
 import { useRouter } from 'expo-router';
-import { Icon } from 'react-native-paper';
 import styled from 'styled-components/native';
-
-const SHARE_COLOR = '#4285F4';
 
 export function LastWorkoutCard({ workout }: { workout: ILastWorkout | null }) {
   const router = useRouter();
@@ -14,17 +11,10 @@ export function LastWorkoutCard({ workout }: { workout: ILastWorkout | null }) {
   return (
     <StyledCard
       onPress={
-        workout
-          ? () => router.navigate(`/workout/share/${workout.id}`)
-          : undefined
+        workout ? () => router.navigate(`/workout/${workout.id}`) : undefined
       }
     >
-      <TitleRow>
-        <StyledMediumText numberOfLines={1}>Última atividade</StyledMediumText>
-        {!!workout && (
-          <Icon source="share-variant" size={14} color={SHARE_COLOR} />
-        )}
-      </TitleRow>
+      <StyledMediumText numberOfLines={1}>Última atividade</StyledMediumText>
 
       <Row>
         <UISquareIcon
@@ -59,13 +49,6 @@ const StyledCard = styled(UICard)`
   flex-direction: column;
   gap: 10px;
   padding: 16px;
-`;
-
-const TitleRow = styled.View`
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
 `;
 
 const Row = styled.View`
