@@ -11,7 +11,7 @@ import {
   iconForVolume,
 } from '@/components/Workouts/types';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
-import { INextWorkout } from '@/services/home.service';
+import { ILastWorkout, INextWorkout } from '@/services/home.service';
 import WorkoutService from '@/services/workout.service';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -20,10 +20,12 @@ import styled from 'styled-components/native';
 
 export function NextWorkoutCard({
   workout,
+  lastWorkout,
   loading,
   onCompleted,
 }: {
   workout: INextWorkout | null;
+  lastWorkout: ILastWorkout | null;
   loading: boolean;
   onCompleted: (workout: INextWorkout) => void;
 }) {
@@ -57,7 +59,7 @@ export function NextWorkoutCard({
   }
 
   if (!workout) {
-    return <AllCaughtUpCard />;
+    return <AllCaughtUpCard lastWorkout={lastWorkout} />;
   }
 
   return (

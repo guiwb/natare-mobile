@@ -1,5 +1,6 @@
 import { formatMeters } from '@/components/Workouts/types';
 import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { BackHandler, Modal, Pressable } from 'react-native';
 import { Icon } from 'react-native-paper';
@@ -10,6 +11,7 @@ const EXIT_MS = 280;
 const AUTO_DISMISS_MS = 10000;
 
 export type CompletedWorkout = {
+  id: string;
   name: string;
   total_distance: number;
 };
@@ -25,6 +27,7 @@ export function WorkoutCompletedOverlay({
   streakDays: number | null;
   onDismiss: () => void;
 }) {
+  const router = useRouter();
   // the Modal must stay mounted during the exit fade, otherwise it vanishes at
   // once and the exit animation never shows up
   const [mounted, setMounted] = useState(visible);
@@ -40,11 +43,25 @@ export function WorkoutCompletedOverlay({
     return () => clearTimeout(timeout);
   }, [visible]);
 
+  // sharing navigates away, so the auto-dismiss must not fire meanwhile
+  const [sharing, setSharing] = useState(false);
+
   useEffect(() => {
-    if (!visible) return;
+    if (!visible || sharing) return;
     const timeout = setTimeout(onDismiss, AUTO_DISMISS_MS);
     return () => clearTimeout(timeout);
-  }, [visible, onDismiss]);
+  }, [visible, sharing, onDismiss]);
+
+  useEffect(() => {
+    if (!visible) setSharing(false);
+  }, [visible]);
+
+  const share = () => {
+    if (!workout) return;
+    setSharing(true);
+    onDismiss();
+    router.navigate(`/workout/share/${workout.id}`);
+  };
 
   useEffect(() => {
     if (!visible) return;
@@ -97,9 +114,18 @@ export function WorkoutCompletedOverlay({
             )}
           </TapArea>
 
-          <CloseButton onPress={onDismiss}>
-            <CloseText>Fechar</CloseText>
-          </CloseButton>
+          <Actions>
+            {!!workout && (
+              <ShareButton onPress={share}>
+                <Icon source="share-variant" size={20} color="#16A34A" />
+                <ShareText>Compartilhar</ShareText>
+              </ShareButton>
+            )}
+
+            <CloseButton onPress={onDismiss}>
+              <CloseText>Fechar</CloseText>
+            </CloseButton>
+          </Actions>
         </Backdrop>
       )}
     </Modal>
@@ -159,9 +185,30 @@ const StreakLabel = styled.Text`
   color: rgba(255, 255, 255, 0.85);
 `;
 
+const Actions = styled.View`
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+`;
+
+const ShareButton = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 24px;
+  background-color: white;
+`;
+
+const ShareText = styled.Text`
+  font-size: 15px;
+  font-weight: 700;
+  color: #16a34a;
+`;
+
 const CloseButton = styled.Pressable`
   align-self: center;
-  margin-bottom: 24px;
   padding: 12px 32px;
   border-radius: 24px;
   border-width: 1px;

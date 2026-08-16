@@ -87,6 +87,7 @@ export default function HomeScreen() {
     async (workout: INextWorkout) => {
       setOverlayStreak(null);
       setCompleted({
+        id: workout.id,
         name: workout.name,
         total_distance: workout.total_distance,
       });
@@ -119,6 +120,7 @@ export default function HomeScreen() {
           <>
             <NextWorkoutCard
               workout={summary.next_workout}
+              lastWorkout={summary.last_workout}
               loading={loading}
               onCompleted={onCompleted}
             />
