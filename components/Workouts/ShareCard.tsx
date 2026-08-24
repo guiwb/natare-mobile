@@ -151,7 +151,7 @@ export const ShareCard = forwardRef<View, Props>(function ShareCard(
       <Content pointerEvents="none">
         <Brand>
           <UILogo size={34} />
-          <BrandName>Natare</BrandName>
+          <BrandName>NatareApp</BrandName>
         </Brand>
 
         <Stats>
