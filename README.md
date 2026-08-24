@@ -79,7 +79,7 @@ npx eas build --profile production --platform ios
 Sem FCM o `getExpoPushTokenAsync` falha e nenhum token é registrado (o feed in-app ainda funciona, mas não chega push no SO).
 
 1. No [Firebase Console](https://console.firebase.google.com), abra (ou crie) o projeto e adicione um **app Android** em Configurações do projeto → Geral → "Seus apps" → Adicionar app → Android.
-   - **Nome do pacote:** deve bater com `android.package` do `app.json` (`com.guiweige.nataremobile`).
+   - **Nome do pacote:** deve bater com `android.package` do `app.json` (`com.guiweige.natareapp`).
    - **SHA-1:** opcional, não é necessário para push.
 2. Baixe o **`google-services.json`** e coloque na raiz de `natare-mobile/`.
 3. Referencie no `app.json` (já configurado):

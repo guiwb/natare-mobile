@@ -1,17 +1,21 @@
 {
   "expo": {
     "name": "NatareApp",
-    "slug": "natare-app",
+    "slug": "natare-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "nataremobile",
+    "scheme": "natareapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.guiweige.natareapp",
       "supportsTablet": true,
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["instagram-stories"]
+        "LSApplicationQueriesSchemes": [
+          "instagram-stories"
+        ],
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -23,7 +27,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.guiweige.nataremobile",
+      "package": "com.guiweige.natareapp",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -46,7 +50,13 @@
       ],
       "expo-secure-store",
       "expo-notifications",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O NatareApp precisa acessar suas fotos para você escolher a imagem do seu perfil."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

@@ -12,10 +12,19 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "ios": {
+        "resourceClass": "m-medium"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "gui.wb@icloud.com",
+        "ascAppId": "6804849983",
+        "appleTeamId": "THX27976R5"
+      }
+    }
   }
 }
