@@ -34,6 +34,12 @@ Critérios usados:
 - `swim` e `coach` capturam quem busca em inglês, comum entre nadadores.
 - Se o subtítulo mudar para uma opção que não contenha "equipe", incluir `equipe` na lista (trocar por `aulas`).
 
+## Texto promocional (170 caracteres, editável sem nova versão)
+
+```
+Os treinos da sua equipe de natação no bolso: o treinador prescreve, você acompanha cada série e vê sua evolução ao longo da temporada.
+```
+
 ## Descrição
 
 ```
