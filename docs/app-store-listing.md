@@ -95,15 +95,19 @@ O app não utiliza login social de terceiros.
 
 ## App Privacy (questionário)
 
-| Categoria | Coletado | Vinculado ao usuário | Usado para rastreamento | Finalidade |
+| Categoria | Tipo | Vinculado ao usuário | Rastreamento | Finalidade |
 | --- | --- | --- | --- | --- |
-| Nome | Sim | Sim | Não | Funcionalidade do app |
-| E-mail | Sim | Sim | Não | Funcionalidade do app |
-| Telefone | Sim | Sim | Não | Funcionalidade do app |
-| Fotos (avatar) | Sim | Sim | Não | Funcionalidade do app |
-| Dados de saúde e fitness (altura, peso, treinos) | Sim | Sim | Não | Funcionalidade do app |
-| Identificadores do dispositivo (push token) | Sim | Sim | Não | Funcionalidade do app |
-| Dados de uso / diagnóstico | Não | - | - | - |
+| Informações de contato | Nome | Sim | Não | Funcionalidade do app |
+| Informações de contato | E-mail | Sim | Não | Funcionalidade do app |
+| Saúde e condicionamento | Saúde (altura, peso) | Sim | Não | Funcionalidade do app |
+| Saúde e condicionamento | Condicionamento físico (treinos) | Sim | Não | Funcionalidade do app |
+| Conteúdo de usuário | Fotos (avatar) | Sim | Não | Funcionalidade do app |
+| Identificadores | ID de usuário | Sim | Não | Funcionalidade do app |
+| Identificadores | ID do dispositivo (push token) | Sim | Não | Funcionalidade do app |
+| Outros dados | Data de nascimento e sexo | Sim | Não | Funcionalidade do app |
+
+Telefone não é declarado: o app não coleta esse campo (só o web, preenchido pelo treinador).
+Sem analytics, crash reporting, localização, contatos ou histórico.
 
 Nenhum dado é usado para rastreamento entre apps ou publicidade.
 
