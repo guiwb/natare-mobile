@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:345151145819:android:8babd0ccf1f1d753a5fc7e",
+        "android_client_info": {
+          "package_name": "com.guiweige.natareapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH-CuV757F5x6fZKY0K8OBPLAR7AagzMo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:345151145819:android:71f485040a3628b2a5fc7e",
         "android_client_info": {
           "package_name": "com.guiweige.nataremobile"
