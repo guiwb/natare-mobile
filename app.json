@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.guiweige.natareapp",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "instagram-stories"
