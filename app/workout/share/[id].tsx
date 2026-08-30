@@ -59,9 +59,17 @@ export default function ShareWorkoutScreen() {
       .then((data) => {
         if (active) setWorkout(data);
       })
-      .catch(() => {
+      .catch((error) => {
         if (!active) return;
-        snack('Erro ao carregar o treino');
+        const status = error?.response?.status;
+
+        snack(
+          status === 403
+            ? 'Você não tem mais acesso a este treino'
+            : status === 404
+              ? 'Treino não encontrado'
+              : 'Erro ao carregar o treino',
+        );
         router.back();
       })
       .finally(() => {
