@@ -19,7 +19,8 @@ release.
    (25 USD, pagamento único) com a mesma conta Google usada no Firebase.
 2. Escolher o tipo de conta:
    - **Pessoal**: exige 12 testadores em teste fechado por 14 dias contínuos
-     antes de conseguir liberar a produção.
+     antes de conseguir liberar a produção (detalhes na seção
+     "Teste fechado obrigatório").
    - **Organização**: não passa por essa exigência, mas pede um número D-U-N-S.
 3. Concluir a verificação de identidade (documento e endereço). Pode levar alguns
    dias e **bloqueia a publicação** até terminar, então é o primeiro passo.
@@ -97,10 +98,51 @@ URL de exclusão de conta.
 1. *Internal testing > Testers*: criar a lista de e-mails Google e mandar o link
    de opt-in
 2. Instalar em um dispositivo real e validar
-3. *Internal testing > Promote release > Production* e enviar para revisão
+3. Se a conta for **pessoal**, rodar o teste fechado obrigatório antes de pedir
+   acesso à produção (seção abaixo)
+4. *Promote release > Production* e enviar para revisão
 
 A primeira revisão costuma levar de alguns dias até ~7 dias, bem mais que as
 seguintes.
+
+## Teste fechado obrigatório (conta pessoal)
+
+Contas de desenvolvedor **pessoais** criadas depois de novembro de 2023 precisam
+rodar um teste fechado antes de conseguir publicar em produção. Contas de
+**organização** (as que exigem D-U-N-S) não passam por essa etapa.
+
+A regra: no mínimo **12 testadores com opt-in aceito**, mantidos
+**continuamente por 14 dias**, em um track de **teste fechado**.
+
+O que costuma dar errado:
+
+- **Teste interno não conta.** Só o track *Closed testing* alimenta o prazo; o
+  interno serve para validar o `.aab`.
+- **São 12 contas Google distintas e reais**, e cada uma precisa entrar pelo link
+  de opt-in. Convidado que não aceitou não entra na contagem.
+- **Se alguém sair do teste, a contagem quebra** e os 14 dias reiniciam. Convidar
+  uma folga (15 a 20 pessoas) evita refazer o prazo por causa de uma desistência.
+- **Os 14 dias só começam** quando o teste fechado está publicado e os 12 já estão
+  dentro, não na data do convite.
+- **A conta verificada é pré-requisito**: não dá para publicar em nenhum track
+  antes da verificação de identidade terminar, então ela está no caminho crítico
+  da data de lançamento.
+
+Depois dos 14 dias aparece o formulário **Apply for production access**, que
+pergunta como o teste foi conduzido e o que mudou com o feedback dos testadores.
+O Google revisa esse pedido, o que leva mais alguns dias, e só então a promoção
+para produção fica disponível e o app entra na revisão normal.
+
+Somando verificação de identidade, 14 dias de teste, análise do pedido de produção
+e revisão do app, o intervalo realista entre criar a conta e ter o app na loja é
+de 3 a 4 semanas.
+
+Para o NatareApp os testadores saem dos próprios atletas e treinadores, mas
+precisam usar conta Google e aceitar o convite.
+
+> O Google já mexeu nessa política mais de uma vez desde 2023. Conferir o número
+> de testadores e o prazo na própria tela de *Closed testing* antes de montar a
+> lista.
 
 ## Fluxo dos próximos releases
 
