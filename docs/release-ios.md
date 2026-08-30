@@ -1,6 +1,7 @@
 # Release iOS (App Store)
 
 Processo de build e submissão do NatareApp para a App Store via EAS.
+Para a Google Play, veja [release-android.md](./release-android.md).
 
 ## Pré-requisitos (feitos uma única vez)
 

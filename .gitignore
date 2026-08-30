@@ -42,3 +42,7 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Google Play service account (EAS submit)
+google-play-service-account.json
+*-service-account.json

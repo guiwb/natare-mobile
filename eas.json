@@ -15,6 +15,9 @@
       "autoIncrement": true,
       "ios": {
         "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "app-bundle"
       }
     }
   },
@@ -24,6 +27,10 @@
         "appleId": "gui.wb@icloud.com",
         "ascAppId": "6804849983",
         "appleTeamId": "THX27976R5"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "internal"
       }
     }
   }
