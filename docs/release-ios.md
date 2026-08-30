@@ -23,8 +23,14 @@ Para a Google Play, veja [release-android.md](./release-android.md).
 
 ```bash
 npx eas build --platform ios --profile production   # build assinado na nuvem
-npx eas submit --platform ios --profile production  # envia o .ipa para o App Store Connect
+npx eas submit --platform ios --profile production --latest  # envia o .ipa para o App Store Connect
 ```
+
+Sem `--latest` o EAS pergunta qual build enviar. O `eas submit` pede a senha da
+conta Apple: use uma **senha específica de app**, gerada em
+[account.apple.com](https://account.apple.com) > *Sign-In and Security >
+App-Specific Passwords*, e não a senha normal do Apple ID. Para não digitar toda
+vez, exportar `EXPO_APPLE_APP_SPECIFIC_PASSWORD`.
 
 Depois da submissão:
 
