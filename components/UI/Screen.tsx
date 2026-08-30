@@ -16,7 +16,32 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FADE = 28;
-const HEADER_FILL = '#06070a';
+// the Android header is a plain gradient, so it fades over a shorter distance
+// to clear the first card instead of overlapping it
+const FADE_ANDROID = 18;
+
+// a straight fill-to-transparent ramp reads as a hard edge, so the alpha falls
+// off on a curve and the last stops are nearly invisible
+const HEADER_FADE = [
+  'rgba(10, 18, 32, 0.8)',
+  'rgba(10, 18, 32, 0.8)',
+  'rgba(10, 18, 32, 0.68)',
+  'rgba(10, 18, 32, 0.47)',
+  'rgba(10, 18, 32, 0.25)',
+  'rgba(10, 18, 32, 0.1)',
+  'rgba(10, 18, 32, 0)',
+] as const;
+
+const headerFadeStops = (solid: number) =>
+  [
+    0,
+    solid,
+    solid + (1 - solid) * 0.22,
+    solid + (1 - solid) * 0.42,
+    solid + (1 - solid) * 0.62,
+    solid + (1 - solid) * 0.82,
+    1,
+  ] as const;
 
 const IOS = Platform.OS === 'ios';
 
@@ -130,9 +155,11 @@ export function UIScreen({
           </MaskedView>
         ) : (
           <LinearGradient
-            colors={[HEADER_FILL, HEADER_FILL, 'transparent']}
-            locations={[0, headerHeight / (headerHeight + FADE), 1]}
-            style={[StyleSheet.absoluteFill, { bottom: -FADE }]}
+            colors={HEADER_FADE}
+            locations={headerFadeStops(
+              headerHeight / (headerHeight + FADE_ANDROID),
+            )}
+            style={[StyleSheet.absoluteFill, { bottom: -FADE_ANDROID }]}
             pointerEvents="none"
           />
         )}

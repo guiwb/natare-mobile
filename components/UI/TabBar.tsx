@@ -6,6 +6,7 @@ import { Icon } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
+const IOS = Platform.OS === 'ios';
 const BASE_OFFSET = 20;
 
 const ICONS: Record<string, { focused: string; unfocused: string }> = {
@@ -21,7 +22,7 @@ export function UITabBar({ state, navigation }: any) {
   const { bottom } = useSafeAreaInsets();
 
   // Android draws the tab bar under the system navigation bar (edge to edge)
-  const offset = BASE_OFFSET + (Platform.OS === 'android' ? bottom : 0);
+  const offset = BASE_OFFSET + (IOS ? 0 : bottom);
 
   return (
     <StyledBar style={{ transform: [{ scale }], bottom: offset }}>
@@ -41,7 +42,8 @@ export function UITabBar({ state, navigation }: any) {
               key={route.key}
               onPress={() => navigation.navigate(route.name)}
             >
-              <StyledPill focused={focused}>
+              <StyledPill>
+                {focused && <PillFill />}
                 <IconBox>
                   <Icon
                     source={icon}
@@ -82,14 +84,24 @@ const StyledTabItem = styled(Pressable)`
   align-items: center;
 `;
 
-const StyledPill = styled.View<{ focused: boolean }>`
+const StyledPill = styled.View`
   width: 56px;
   height: 40px;
-  border-radius: 20px;
   align-items: center;
   justify-content: center;
-  background-color: ${({ focused }) =>
-    focused ? 'rgba(255, 255, 255, 0.16)' : 'transparent'};
+`;
+
+/* a childless layer that clips itself, so Android rounds it even when the
+   parent outline does not */
+const PillFill = styled.View`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.16);
 `;
 
 const IconBox = styled.View`

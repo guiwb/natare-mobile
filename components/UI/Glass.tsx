@@ -11,7 +11,7 @@ type Props = ComponentProps<typeof BlurView>;
  * ones, which need to hide whatever scrolls under them.
  */
 const androidFill = (intensity: number) =>
-  intensity <= 30 ? 'rgba(255, 255, 255, 0.06)' : 'rgba(16, 18, 24, 0.94)';
+  intensity <= 30 ? 'rgba(255, 255, 255, 0.03)' : 'rgba(16, 18, 24, 0.94)';
 
 export const UIGlass = forwardRef<BlurView | View, Props>(function UIGlass(
   props,
