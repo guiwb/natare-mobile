@@ -1,13 +1,11 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 export function AppBackground() {
-  const dark = useColorScheme() === 'dark';
-
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       <LinearGradient
-        colors={dark ? ['#06070a', '#0a0b10'] : ['#eef2fa', '#e2e8f4']}
+        colors={['#06070a', '#0a0b10']}
         style={StyleSheet.absoluteFill}
       />
       <LinearGradient

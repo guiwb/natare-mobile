@@ -1,14 +1,12 @@
 import { BlurView } from 'expo-blur';
 import { ReactNode } from 'react';
-import { useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
 
 export function AuthCard({ children }: { children: ReactNode }) {
-  const dark = useColorScheme() === 'dark';
   return (
     <StyledBlur
       intensity={24}
-      tint={dark ? 'dark' : 'light'}
+      tint="dark"
       experimentalBlurMethod="dimezisBlurView"
     >
       <StyledInner>{children}</StyledInner>

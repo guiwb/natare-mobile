@@ -24,7 +24,7 @@ Access control is declarative: `app/_layout.tsx` reads `useAuth` and wraps the s
 `SnackbarProvider` → `AuthProvider` → `StyledProvider` (styled-components) → `PaperProvider` (react-native-paper) → `ConfirmDialogProvider`
 
 ### Theme
-A single custom MD3 theme is defined in `app/_layout.tsx` and passed to both `react-native-paper` (`PaperProvider`) and `styled-components` (`StyledProvider`). `styled.d.ts` extends `DefaultTheme` from styled-components to match `MD3Theme`, so `theme.colors.*` from react-native-paper is available inside all styled components.
+The app is dark only (`userInterfaceStyle: "dark"` in `app.json`, no `useColorScheme` anywhere). A single custom MD3 dark theme (`appTheme`) is defined in `app/_layout.tsx` and passed to both `react-native-paper` (`PaperProvider`) and `styled-components` (`StyledProvider`). `styled.d.ts` extends `DefaultTheme` from styled-components to match `MD3Theme`, so `theme.colors.*` from react-native-paper is available inside all styled components.
 
 ### HTTP & Auth
 `lib/http/axios.ts` exports a pre-configured Axios instance (`http`) that reads the JWT from `expo-secure-store` on every request and emits a `DeviceEventEmitter` event `on401` on 401 responses. `AuthProvider` listens for `on401` to clear the session. Services in `services/` use `http` directly via static class methods.

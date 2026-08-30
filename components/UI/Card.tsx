@@ -1,5 +1,5 @@
 import { BlurView } from 'expo-blur';
-import { PressableProps, StyleSheet, useColorScheme } from 'react-native';
+import { PressableProps, StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 
 export function UICard({
@@ -11,12 +11,11 @@ export function UICard({
   style?: PressableProps['style'];
   onPress?: PressableProps['onPress'];
 }) {
-  const dark = useColorScheme() === 'dark';
   return (
     <StyledCard style={style} onPress={onPress}>
       <BlurView
         intensity={24}
-        tint={dark ? 'dark' : 'light'}
+        tint="dark"
         experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
         pointerEvents="none"

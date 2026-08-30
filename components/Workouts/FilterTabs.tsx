@@ -1,5 +1,5 @@
 import { BlurView } from 'expo-blur';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
@@ -20,13 +20,12 @@ export function FilterTabs({
   onChange: (filter: WorkoutFilter) => void;
 }) {
   const theme = useTheme();
-  const dark = useColorScheme() === 'dark';
 
   return (
     <Container>
       <BlurView
         intensity={24}
-        tint={dark ? 'dark' : 'light'}
+        tint="dark"
         experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
         pointerEvents="none"

@@ -4,16 +4,12 @@ import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { NotificationsProvider } from '@/contexts/NotificationsProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useColorScheme, View } from 'react-native';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
+import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import { ThemeProvider as StyledProvider } from 'styled-components/native';
 
 function Routes() {
@@ -49,16 +45,7 @@ function Routes() {
   );
 }
 
-const customLightTheme = {
-  ...MD3LightTheme,
-  colors: {
-    ...MD3LightTheme.colors,
-    primary: '#4285F4',
-    background: '#FAFAFA',
-  },
-};
-
-const customDarkTheme = {
+const appTheme = {
   ...MD3DarkTheme,
   colors: {
     ...MD3DarkTheme.colors,
@@ -77,15 +64,10 @@ const customDarkTheme = {
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const paperTheme =
-    colorScheme === 'dark' ? customDarkTheme : customLightTheme;
-  const baseNavTheme = colorScheme === 'dark' ? DarkTheme : DefaultTheme;
-
   const navTheme = {
-    ...baseNavTheme,
+    ...DarkTheme,
     colors: {
-      ...baseNavTheme.colors,
+      ...DarkTheme.colors,
       background: 'transparent',
     },
   };
@@ -95,12 +77,12 @@ export default function RootLayout() {
       <ThemeProvider value={navTheme}>
         <SnackbarProvider>
           <AuthProvider>
-            <StyledProvider theme={paperTheme}>
-              <PaperProvider theme={paperTheme}>
+            <StyledProvider theme={appTheme}>
+              <PaperProvider theme={appTheme}>
                 <NotificationsProvider>
                   <ConfirmDialogProvider>
                     <Routes />
-                    <StatusBar style="auto" />
+                    <StatusBar style="light" />
                   </ConfirmDialogProvider>
                 </NotificationsProvider>
               </PaperProvider>
