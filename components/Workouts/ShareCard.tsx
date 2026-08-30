@@ -19,7 +19,19 @@ import styled from 'styled-components/native';
 
 const MAX_SCALE = 4;
 
+/**
+ * The card is laid out against a fixed 360pt canvas and every size is scaled
+ * from it, so the exported 1080x1920 image is identical on any phone. Without
+ * this the capture is resized by a different factor on each screen width and
+ * the typography ends up bigger or smaller than intended.
+ */
+const BASE_WIDTH = 360;
+
 type Props = {
+  width: number;
+  /** flattened while exporting: transparent corners come back black in apps
+      that drop the alpha channel */
+  rounded?: boolean;
   date: Date;
   distance: number;
   duration: number;
@@ -27,9 +39,10 @@ type Props = {
 };
 
 export const ShareCard = forwardRef<View, Props>(function ShareCard(
-  { date, distance, duration, background },
+  { width, rounded = true, date, distance, duration, background },
   ref,
 ) {
+  const k = width / BASE_WIDTH;
   const [size, setSize] = useState({ width: 0, height: 0 });
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -131,7 +144,13 @@ export const ShareCard = forwardRef<View, Props>(function ShareCard(
   return (
     // collapsable={false} keeps the view in the native hierarchy on Android,
     // otherwise there is nothing for view-shot to capture
-    <Card ref={ref} collapsable={false} onLayout={onLayout}>
+    <Card
+      ref={ref}
+      collapsable={false}
+      onLayout={onLayout}
+      k={k}
+      rounded={rounded}
+    >
       {photoUri ? (
         <GestureDetector gesture={Gesture.Simultaneous(pan, pinch)}>
           {image}
@@ -148,22 +167,22 @@ export const ShareCard = forwardRef<View, Props>(function ShareCard(
         pointerEvents="none"
       />
 
-      <Content pointerEvents="none">
-        <Brand>
-          <UILogo size={34} />
-          <BrandName>NatareApp</BrandName>
+      <Content pointerEvents="none" k={k}>
+        <Brand k={k}>
+          <UILogo size={Math.round(34 * k)} />
+          <BrandName k={k}>NatareApp</BrandName>
         </Brand>
 
-        <Stats>
-          <DateText>{formatFullDate(date)}</DateText>
-          <StatRow>
-            <Stat>
-              <StatValue>{formatMeters(distance)}</StatValue>
-              <StatLabel>Volume</StatLabel>
+        <Stats k={k}>
+          <DateText k={k}>{formatFullDate(date)}</DateText>
+          <StatRow k={k}>
+            <Stat k={k}>
+              <StatValue k={k}>{formatMeters(distance)}</StatValue>
+              <StatLabel k={k}>Volume</StatLabel>
             </Stat>
-            <Stat>
-              <StatValue>{formatTotalDuration(duration)}</StatValue>
-              <StatLabel>Tempo</StatLabel>
+            <Stat k={k}>
+              <StatValue k={k}>{formatTotalDuration(duration)}</StatValue>
+              <StatLabel k={k}>Tempo</StatLabel>
             </Stat>
           </StatRow>
         </Stats>
@@ -172,63 +191,63 @@ export const ShareCard = forwardRef<View, Props>(function ShareCard(
   );
 });
 
-const Card = styled.View`
+const Card = styled.View<{ k: number; rounded: boolean }>`
   width: 100%;
   aspect-ratio: 0.5625;
-  border-radius: 20px;
+  border-radius: ${({ k, rounded }) => (rounded ? 20 * k : 0)}px;
   overflow: hidden;
   background-color: #0b2a4a;
 `;
 
-const Content = styled.View`
+const Content = styled.View<{ k: number }>`
   flex: 1;
   justify-content: space-between;
-  padding: 24px;
+  padding: ${({ k }) => 24 * k}px;
 `;
 
-const Brand = styled.View`
+const Brand = styled.View<{ k: number }>`
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: ${({ k }) => 10 * k}px;
 `;
 
-const BrandName = styled.Text`
-  font-size: 20px;
+const BrandName = styled.Text<{ k: number }>`
+  font-size: ${({ k }) => 20 * k}px;
   font-weight: 700;
   color: #ffffff;
 `;
 
-const Stats = styled.View`
-  gap: 14px;
+const Stats = styled.View<{ k: number }>`
+  gap: ${({ k }) => 14 * k}px;
 `;
 
-const DateText = styled.Text`
-  font-size: 13px;
+const DateText = styled.Text<{ k: number }>`
+  font-size: ${({ k }) => 13 * k}px;
   font-weight: 600;
-  letter-spacing: 0.4px;
+  letter-spacing: ${({ k }) => 0.4 * k}px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
 `;
 
-const StatRow = styled.View`
+const StatRow = styled.View<{ k: number }>`
   flex-direction: row;
-  gap: 28px;
+  gap: ${({ k }) => 28 * k}px;
 `;
 
-const Stat = styled.View`
-  gap: 2px;
+const Stat = styled.View<{ k: number }>`
+  gap: ${({ k }) => 2 * k}px;
 `;
 
-const StatValue = styled.Text`
-  font-size: 34px;
+const StatValue = styled.Text<{ k: number }>`
+  font-size: ${({ k }) => 34 * k}px;
   font-weight: 800;
   color: #ffffff;
 `;
 
-const StatLabel = styled.Text`
-  font-size: 11px;
+const StatLabel = styled.Text<{ k: number }>`
+  font-size: ${({ k }) => 11 * k}px;
   font-weight: 600;
-  letter-spacing: 0.6px;
+  letter-spacing: ${({ k }) => 0.6 * k}px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.75);
 `;

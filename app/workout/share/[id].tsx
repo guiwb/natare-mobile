@@ -43,6 +43,7 @@ export default function ShareWorkoutScreen() {
   const [sharing, setSharing] = useState(false);
   const [sharingStory, setSharingStory] = useState(false);
   const [cardWidth, setCardWidth] = useState(0);
+  const [flatCorners, setFlatCorners] = useState(false);
   const [storiesAvailable] = useState(
     () => !!FACEBOOK_APP_ID && isInstagramStoryAvailable(),
   );
@@ -111,6 +112,24 @@ export default function ShareWorkoutScreen() {
       height: EXPORT_HEIGHT,
     });
 
+  /**
+   * The share sheet and most apps flatten the PNG alpha over black, so the
+   * rounded corners would come out as black wedges. Only the Instagram story
+   * composer paints its own background behind them, so it keeps the radius.
+   */
+  const captureSquared = async () => {
+    setFlatCorners(true);
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+
+    try {
+      return await capture();
+    } finally {
+      setFlatCorners(false);
+    }
+  };
+
   const share = async () => {
     if (!cardRef.current) return;
 
@@ -122,7 +141,7 @@ export default function ShareWorkoutScreen() {
         return;
       }
 
-      await Sharing.shareAsync(await capture(), {
+      await Sharing.shareAsync(await captureSquared(), {
         mimeType: 'image/png',
         UTI: 'public.png',
         dialogTitle: 'Compartilhar treino',
@@ -178,6 +197,8 @@ export default function ShareWorkoutScreen() {
             <View style={{ width: cardWidth }}>
               <ShareCard
                 ref={cardRef}
+                width={cardWidth}
+                rounded={!flatCorners}
                 date={date}
                 distance={workout.total_distance ?? 0}
                 duration={workout.total_duration ?? 0}
