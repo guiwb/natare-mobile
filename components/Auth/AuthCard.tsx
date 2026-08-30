@@ -6,7 +6,11 @@ import styled from 'styled-components/native';
 export function AuthCard({ children }: { children: ReactNode }) {
   const dark = useColorScheme() === 'dark';
   return (
-    <StyledBlur intensity={24} tint={dark ? 'dark' : 'light'}>
+    <StyledBlur
+      intensity={24}
+      tint={dark ? 'dark' : 'light'}
+      experimentalBlurMethod="dimezisBlurView"
+    >
       <StyledInner>{children}</StyledInner>
     </StyledBlur>
   );

@@ -123,6 +123,7 @@ export function UIScreen({
           <BlurView
             intensity={60}
             tint="dark"
+            experimentalBlurMethod="dimezisBlurView"
             style={StyleSheet.absoluteFill}
           />
         </MaskedView>

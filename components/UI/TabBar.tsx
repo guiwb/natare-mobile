@@ -22,6 +22,7 @@ export function UITabBar({ state, navigation }: any) {
     <StyledBlur
       intensity={50}
       tint="dark"
+      experimentalBlurMethod="dimezisBlurView"
       style={{ transform: [{ scale }] }}
     >
       {state.routes.map((route: any, index: number) => {

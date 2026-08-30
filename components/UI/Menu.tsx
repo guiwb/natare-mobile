@@ -39,6 +39,7 @@ export function UIMenu({
         <BlurView
           intensity={60}
           tint={dark ? 'dark' : 'light'}
+          experimentalBlurMethod="dimezisBlurView"
           style={StyleSheet.absoluteFill}
           pointerEvents="none"
         />

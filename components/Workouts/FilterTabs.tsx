@@ -27,6 +27,7 @@ export function FilterTabs({
       <BlurView
         intensity={24}
         tint={dark ? 'dark' : 'light'}
+        experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />
