@@ -1,6 +1,6 @@
 import { useTabBar } from '@/contexts/TabBarProvider';
 import MaskedView from '@react-native-masked-view/masked-view';
-import { BlurView } from 'expo-blur';
+import { UIGlass } from '@/components/UI/Glass';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ReactNode, useRef, useState } from 'react';
 import {
@@ -16,6 +16,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FADE = 28;
+const HEADER_FILL = '#06070a';
 
 const IOS = Platform.OS === 'ios';
 
@@ -36,7 +37,7 @@ export function UIScreen({
   refreshing,
   onRefresh,
 }: Props) {
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
   const { onScroll } = useTabBar();
   const [headerHeight, setHeaderHeight] = useState(top + 64);
   const scrollRef = useRef<ScrollView>(null);
@@ -97,7 +98,7 @@ export function UIScreen({
         contentContainerStyle={[
           styles.content,
           // on iOS the header space comes from the contentInset above
-          IOS ? null : { paddingTop: contentTop },
+          IOS ? null : { paddingTop: contentTop, paddingBottom: 120 + bottom },
           contentStyle,
         ]}
       >
@@ -109,24 +110,32 @@ export function UIScreen({
         pointerEvents="box-none"
         onLayout={(e) => onHeaderLayout(e.nativeEvent.layout.height)}
       >
-        <MaskedView
-          style={[StyleSheet.absoluteFill, { bottom: -FADE }]}
-          pointerEvents="none"
-          maskElement={
-            <LinearGradient
-              colors={['black', 'black', 'transparent']}
-              locations={[0, headerHeight / (headerHeight + FADE), 1]}
+        {IOS ? (
+          <MaskedView
+            style={[StyleSheet.absoluteFill, { bottom: -FADE }]}
+            pointerEvents="none"
+            maskElement={
+              <LinearGradient
+                colors={['black', 'black', 'transparent']}
+                locations={[0, headerHeight / (headerHeight + FADE), 1]}
+                style={StyleSheet.absoluteFill}
+              />
+            }
+          >
+            <UIGlass
+              intensity={60}
+              tint="dark"
               style={StyleSheet.absoluteFill}
             />
-          }
-        >
-          <BlurView
-            intensity={60}
-            tint="dark"
-            experimentalBlurMethod="dimezisBlurView"
-            style={StyleSheet.absoluteFill}
+          </MaskedView>
+        ) : (
+          <LinearGradient
+            colors={[HEADER_FILL, HEADER_FILL, 'transparent']}
+            locations={[0, headerHeight / (headerHeight + FADE), 1]}
+            style={[StyleSheet.absoluteFill, { bottom: -FADE }]}
+            pointerEvents="none"
           />
-        </MaskedView>
+        )}
         <View style={styles.headerInner}>{header}</View>
       </View>
     </View>

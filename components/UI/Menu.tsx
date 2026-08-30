@@ -1,4 +1,4 @@
-import { BlurView } from 'expo-blur';
+import { UIGlass } from '@/components/UI/Glass';
 import { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Menu } from 'react-native-paper';
@@ -30,10 +30,9 @@ export function UIMenu({
       ]}
     >
       <View style={styles.clip}>
-        <BlurView
+        <UIGlass
           intensity={60}
           tint="dark"
-          experimentalBlurMethod="dimezisBlurView"
           style={StyleSheet.absoluteFill}
           pointerEvents="none"
         />

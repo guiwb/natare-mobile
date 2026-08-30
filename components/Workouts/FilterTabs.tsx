@@ -1,4 +1,4 @@
-import { BlurView } from 'expo-blur';
+import { UIGlass } from '@/components/UI/Glass';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
@@ -23,10 +23,9 @@ export function FilterTabs({
 
   return (
     <Container>
-      <BlurView
+      <UIGlass
         intensity={24}
         tint="dark"
-        experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />

@@ -1,11 +1,12 @@
 import { useNotifications } from '@/contexts/NotificationsProvider';
 import { useTabBar } from '@/contexts/TabBarProvider';
-import { BlurView } from 'expo-blur';
-import { Animated, Pressable, View } from 'react-native';
+import { UIGlass } from '@/components/UI/Glass';
+import { Animated, Platform, Pressable, View } from 'react-native';
 import { Icon } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
-const AnimatedBlur = Animated.createAnimatedComponent(BlurView);
+const BASE_OFFSET = 20;
 
 const ICONS: Record<string, { focused: string; unfocused: string }> = {
   index: { focused: 'home', unfocused: 'home-outline' },
@@ -17,51 +18,55 @@ const ICONS: Record<string, { focused: string; unfocused: string }> = {
 export function UITabBar({ state, navigation }: any) {
   const { scale } = useTabBar();
   const { unreadCount } = useNotifications();
+  const { bottom } = useSafeAreaInsets();
+
+  // Android draws the tab bar under the system navigation bar (edge to edge)
+  const offset = BASE_OFFSET + (Platform.OS === 'android' ? bottom : 0);
 
   return (
-    <StyledBlur
-      intensity={50}
-      tint="dark"
-      experimentalBlurMethod="dimezisBlurView"
-      style={{ transform: [{ scale }] }}
-    >
-      {state.routes.map((route: any, index: number) => {
-        const focused = state.index === index;
+    <StyledBar style={{ transform: [{ scale }], bottom: offset }}>
+      <StyledGlass intensity={50} tint="dark">
+        {state.routes.map((route: any, index: number) => {
+          const focused = state.index === index;
 
-        const icons = ICONS[route.name] ?? {
-          focused: 'circle',
-          unfocused: 'circle-outline',
-        };
-        const icon = focused ? icons.focused : icons.unfocused;
-        const showDot = route.name === 'notifications' && unreadCount > 0;
+          const icons = ICONS[route.name] ?? {
+            focused: 'circle',
+            unfocused: 'circle-outline',
+          };
+          const icon = focused ? icons.focused : icons.unfocused;
+          const showDot = route.name === 'notifications' && unreadCount > 0;
 
-        return (
-          <StyledTabItem
-            key={route.key}
-            onPress={() => navigation.navigate(route.name)}
-          >
-            <StyledPill focused={focused}>
-              <IconBox>
-                <Icon
-                  source={icon}
-                  size={24}
-                  color={focused ? '#fff' : 'rgba(255, 255, 255, 0.55)'}
-                />
-                {showDot && <Dot />}
-              </IconBox>
-            </StyledPill>
-          </StyledTabItem>
-        );
-      })}
-    </StyledBlur>
+          return (
+            <StyledTabItem
+              key={route.key}
+              onPress={() => navigation.navigate(route.name)}
+            >
+              <StyledPill focused={focused}>
+                <IconBox>
+                  <Icon
+                    source={icon}
+                    size={24}
+                    color={focused ? '#fff' : 'rgba(255, 255, 255, 0.55)'}
+                  />
+                  {showDot && <Dot />}
+                </IconBox>
+              </StyledPill>
+            </StyledTabItem>
+          );
+        })}
+      </StyledGlass>
+    </StyledBar>
   );
 }
 
-const StyledBlur = styled(AnimatedBlur)`
+const StyledBar = styled(Animated.View)`
   position: absolute;
   bottom: 20px;
   left: 24px;
   right: 24px;
+`;
+
+const StyledGlass = styled(UIGlass)`
   border-radius: 50px;
   overflow: hidden;
   flex-direction: row;

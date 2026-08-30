@@ -1,20 +1,16 @@
-import { BlurView } from 'expo-blur';
+import { UIGlass } from '@/components/UI/Glass';
 import { ReactNode } from 'react';
 import styled from 'styled-components/native';
 
 export function AuthCard({ children }: { children: ReactNode }) {
   return (
-    <StyledBlur
-      intensity={24}
-      tint="dark"
-      experimentalBlurMethod="dimezisBlurView"
-    >
+    <StyledBlur intensity={24} tint="dark">
       <StyledInner>{children}</StyledInner>
     </StyledBlur>
   );
 }
 
-const StyledBlur = styled(BlurView)`
+const StyledBlur = styled(UIGlass)`
   width: 100%;
   max-width: 460px;
   border-radius: 24px;

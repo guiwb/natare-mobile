@@ -1,4 +1,4 @@
-import { BlurView } from 'expo-blur';
+import { UIGlass } from '@/components/UI/Glass';
 import { PressableProps, StyleSheet } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -13,10 +13,9 @@ export function UICard({
 }) {
   return (
     <StyledCard style={style} onPress={onPress}>
-      <BlurView
+      <UIGlass
         intensity={24}
         tint="dark"
-        experimentalBlurMethod="dimezisBlurView"
         style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />
