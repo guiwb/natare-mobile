@@ -58,7 +58,18 @@ O que você encontra no app:
 O acesso ao NatareApp é feito por convite do treinador ou da equipe. Se a sua equipe ainda não usa o NatareApp, fale com o seu treinador.
 ```
 
-## Novidades desta versão (primeira submissão)
+## Novidades desta versão
+
+### 1.0.1
+
+```
+• O app agora tem um visual escuro único, com melhor contraste e leitura na beira da piscina.
+• O card de compartilhamento do treino sai igual em qualquer tamanho de tela.
+• Ao abrir um treino que não está mais disponível, o app avisa o que aconteceu em vez de ficar em branco.
+• Correções na navegação depois de entrar e sair da conta.
+```
+
+### 1.0.0
 
 ```
 Primeira versão do NatareApp.
