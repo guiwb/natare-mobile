@@ -1,5 +1,6 @@
 import { AppBackground } from '@/components/AppBackground';
-import { AuthProvider } from '@/contexts/AuthProvider';
+import { UILoadingIndicator } from '@/components/UI/LoadingIndicator';
+import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { NotificationsProvider } from '@/contexts/NotificationsProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
@@ -16,23 +17,34 @@ import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
 import { ThemeProvider as StyledProvider } from 'styled-components/native';
 
 function Routes() {
+  const { user, isLoading } = useAuth();
+
   return (
     <View style={{ flex: 1 }}>
       <AppBackground />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: 'transparent' },
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="login" />
-        <Stack.Screen name="forgot-password" />
-        <Stack.Screen name="change-password" />
-        <Stack.Screen name="delete-account" />
-        <Stack.Screen name="workout/[id]" />
-        <Stack.Screen name="workout/share/[id]" />
-      </Stack>
+      {isLoading ? (
+        <UILoadingIndicator />
+      ) : (
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: 'transparent' },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Protected guard={!user}>
+            <Stack.Screen name="login" />
+            <Stack.Screen name="forgot-password" />
+          </Stack.Protected>
+          <Stack.Protected guard={!!user}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="change-password" />
+            <Stack.Screen name="delete-account" />
+            <Stack.Screen name="workout/[id]" />
+            <Stack.Screen name="workout/share/[id]" />
+          </Stack.Protected>
+        </Stack>
+      )}
     </View>
   );
 }

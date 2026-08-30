@@ -16,7 +16,9 @@ There are no tests configured in this project.
 ## Architecture
 
 ### Routing
-Expo Router with file-based routing. The entry point is `app/_layout.tsx`, which wraps the whole app in providers. `app/(tabs)/` contains the three tab screens (Home, Workouts, Profile). Auth screens (`login`, `forgot-password`) live at the root stack level.
+Expo Router with file-based routing. The entry point is `app/_layout.tsx`, which wraps the whole app in providers. `app/(tabs)/` contains the four tab screens (Home, Workouts, Notifications, Profile). Auth screens (`login`, `forgot-password`) live at the root stack level.
+
+Access control is declarative: `app/_layout.tsx` reads `useAuth` and wraps the stack screens in `Stack.Protected`, so the tabs and the other authenticated screens only exist while there is a `user`. Providers must not navigate on login/logout, the guard does it. `app/index.tsx` is only the `/` entry point and redirects to `/(tabs)` or `/login`.
 
 ### Provider stack (outermost → innermost)
 `SnackbarProvider` → `AuthProvider` → `StyledProvider` (styled-components) → `PaperProvider` (react-native-paper) → `ConfirmDialogProvider`

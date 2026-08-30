@@ -1,6 +1,5 @@
 import AuthService, { IUser } from '@/services/auth.service';
 import NotificationsService from '@/services/notifications.service';
-import { useRouter } from 'expo-router';
 import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
@@ -31,7 +30,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { snack } = useSnackbar();
-  const router = useRouter();
 
   const getCurrentUser = async () => {
     try {
@@ -58,7 +56,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { user, token } = await AuthService.login(email, password);
       setUser(user);
       await setItemAsync('token', token);
-      router.replace('/(tabs)');
     } catch (error: any) {
       if (typeof error === 'string') {
         snack(error);
@@ -83,7 +80,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     await deleteItemAsync('pushToken');
     await deleteItemAsync('token');
-    router.replace('/login');
   };
 
   const logout = async () => {

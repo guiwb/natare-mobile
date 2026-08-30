@@ -1,21 +1,8 @@
-import { UILoadingIndicator } from '@/components/UI/LoadingIndicator';
 import { useAuth } from '@/contexts/AuthProvider';
-import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
+  const { user } = useAuth();
 
-  useEffect(() => {
-    if (isLoading) return;
-
-    if (!user) {
-      router.replace('/login');
-    } else {
-      router.replace('/(tabs)');
-    }
-  }, [user, isLoading, router]);
-
-  return <UILoadingIndicator />;
+  return <Redirect href={user ? '/(tabs)' : '/login'} />;
 }
