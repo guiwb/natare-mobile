@@ -97,12 +97,15 @@ O NatareApp é um aplicativo fechado: o atleta só acessa por convite do treinad
 
 Use a conta de demonstração abaixo, que já possui treinos cadastrados:
 
-E-mail: ios-testing@natare.app
-Senha: 0.MX4$W>zD9\l_uslI
+E-mail: <preencher>
+Senha: <preencher>
 
 A exclusão de conta está disponível em Perfil > Excluir conta.
 O app não utiliza login social de terceiros.
 ```
+
+As credenciais são preenchidas na hora do envio e **não** ficam neste arquivo: o
+repositório é público. Mesma regra do `app-review-notes.md`.
 
 ## App Privacy (questionário)
 
