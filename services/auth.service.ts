@@ -40,6 +40,17 @@ export default class AuthService {
     return http.post('api/forgot-password', { email });
   }
 
+  static updatePassword(
+    currentPassword: string,
+    password: string,
+  ): Promise<void> {
+    return http.put('/api/password', {
+      current_password: currentPassword,
+      password,
+      password_confirmation: password,
+    });
+  }
+
   static deleteAccount(password: string): Promise<void> {
     return http.delete('/api/account', { data: { password } });
   }
