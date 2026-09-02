@@ -164,6 +164,20 @@ usada na revisão da Apple.
 
 ## Notas da versão (primeira publicação)
 
+O Play Console exige que, quando o texto usa tags de idioma, **nenhum** trecho
+fique fora delas (o erro é "há texto fora das tags de idioma"). A tag precisa ser
+o código do idioma da ficha e cada idioma configurado precisa do próprio bloco.
+O limite é de 500 caracteres por idioma.
+
 ```
+<pt-BR>
 Primeira versão do NatareApp.
+
+• Treino do dia na tela inicial, com blocos, séries, distâncias e volume total.
+• Sua semana em uma tela, com filtro de pendentes e concluídos.
+• Sequência de dias treinados e mapa de atividade mensal.
+• Histórico completo dos treinos realizados.
+• Notificações quando o treinador publica um treino ou envia um convite.
+• Resumo do treino pronto para compartilhar nos stories.
+</pt-BR>
 ```
