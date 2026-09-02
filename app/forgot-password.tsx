@@ -1,6 +1,6 @@
 import { AuthCard } from '@/components/Auth/AuthCard';
 import { AuthChip } from '@/components/Auth/AuthChip';
-import { DismissKeyboard } from '@/components/DismissKeyboard';
+import { AuthScreen } from '@/components/Auth/AuthScreen';
 import { UIButton } from '@/components/UI/Button';
 import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
@@ -11,7 +11,6 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextInput, useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { z } from 'zod';
 
@@ -40,75 +39,61 @@ export default function ForgotPassword() {
   };
 
   return (
-    <StyledScreen>
-      <DismissKeyboard>
-        <StyledCenter edges={['top', 'bottom']}>
-          <AuthCard>
-            <StyledBack onPress={() => router.push('/login')}>
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={16}
-                color={theme.colors.onSurfaceVariant}
-              />
-              <StyledBackText>Voltar ao login</StyledBackText>
-            </StyledBack>
+    <AuthScreen>
+      <AuthCard>
+        <StyledBack onPress={() => router.push('/login')}>
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={16}
+            color={theme.colors.onSurfaceVariant}
+          />
+          <StyledBackText>Voltar ao login</StyledBackText>
+        </StyledBack>
 
-            <AuthChip icon="email-outline">Recuperação de senha</AuthChip>
+        <AuthChip icon="email-outline">Recuperação de senha</AuthChip>
 
-            <StyledTitle>Esqueceu a senha?</StyledTitle>
-            <StyledSubtitle>
-              Sem problemas, informe o e-mail da sua conta e enviaremos um link
-              para você criar uma nova senha em segundos.
-            </StyledSubtitle>
+        <StyledTitle>Esqueceu a senha?</StyledTitle>
+        <StyledSubtitle>
+          Sem problemas, informe o e-mail da sua conta e enviaremos um link para
+          você criar uma nova senha em segundos.
+        </StyledSubtitle>
 
-            <UIFormInput
-              control={control}
-              name="email"
-              label="E-mail da conta"
-              placeholder="seu@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              mode="outlined"
-              left={<TextInput.Icon icon="email-outline" />}
-            />
+        <UIFormInput
+          control={control}
+          name="email"
+          label="E-mail da conta"
+          placeholder="seu@email.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          mode="outlined"
+          left={<TextInput.Icon icon="email-outline" />}
+        />
 
-            <UIButton
-              text="Enviar link de recuperação"
-              iconLeft="send"
-              loading={isLoading}
-              disabled={isLoading}
-              fullWidth
-              onPress={handleSubmit(send)}
-            />
+        <UIButton
+          text="Enviar link de recuperação"
+          iconLeft="send"
+          loading={isLoading}
+          disabled={isLoading}
+          fullWidth
+          onPress={handleSubmit(send)}
+        />
 
-            <StyledInfo>
-              <MaterialCommunityIcons
-                name="information-outline"
-                size={16}
-                color={theme.colors.primary}
-              />
-              <StyledInfoText>
-                O link expira em <StyledStrong>30 minutos</StyledStrong>. Confira
-                sua caixa de entrada e a pasta de spam.
-              </StyledInfoText>
-            </StyledInfo>
-          </AuthCard>
-        </StyledCenter>
-      </DismissKeyboard>
-    </StyledScreen>
+        <StyledInfo>
+          <MaterialCommunityIcons
+            name="information-outline"
+            size={16}
+            color={theme.colors.primary}
+          />
+          <StyledInfoText>
+            O link expira em <StyledStrong>30 minutos</StyledStrong>. Confira
+            sua caixa de entrada e a pasta de spam.
+          </StyledInfoText>
+        </StyledInfo>
+      </AuthCard>
+    </AuthScreen>
   );
 }
-
-const StyledScreen = styled.View`
-  flex: 1;
-`;
-
-const StyledCenter = styled(SafeAreaView)`
-  flex: 1;
-  justify-content: center;
-  padding: 24px;
-`;
 
 const StyledBack = styled.Pressable`
   flex-direction: row;

@@ -7,7 +7,7 @@ import { SnackbarProvider } from '@/contexts/SnackbarProvider';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
 import { ThemeProvider as StyledProvider } from 'styled-components/native';
@@ -25,6 +25,8 @@ function Routes() {
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: 'transparent' },
+            animation: Platform.OS === 'android' ? 'fade' : 'default',
+            animationDuration: 180,
           }}
         >
           <Stack.Screen name="index" />

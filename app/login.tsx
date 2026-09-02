@@ -1,6 +1,6 @@
 import { AuthCard } from '@/components/Auth/AuthCard';
 import { AuthChip } from '@/components/Auth/AuthChip';
-import { DismissKeyboard } from '@/components/DismissKeyboard';
+import { AuthScreen } from '@/components/Auth/AuthScreen';
 import { UIButton } from '@/components/UI/Button';
 import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Linking } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import { z } from 'zod';
 
@@ -36,80 +35,66 @@ export default function Login() {
   };
 
   return (
-    <StyledScreen>
-      <DismissKeyboard>
-        <StyledCenter edges={['top', 'bottom']}>
-          <AuthCard>
-            <AuthChip icon="lock-outline">Acesso seguro</AuthChip>
+    <AuthScreen>
+      <AuthCard>
+        <AuthChip icon="lock-outline">Acesso seguro</AuthChip>
 
-            <StyledTitle>Bem-vindo de volta</StyledTitle>
-            <StyledSubtitle>
-              Entre para ver seus próximos treinos e acompanhar sua evolução.
-            </StyledSubtitle>
+        <StyledTitle>Bem-vindo de volta</StyledTitle>
+        <StyledSubtitle>
+          Entre para ver seus próximos treinos e acompanhar sua evolução.
+        </StyledSubtitle>
 
-            <UIFormInput
-              control={control}
-              name="email"
-              label="E-mail"
-              placeholder="seu@email.com"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              mode="outlined"
-              left={<TextInput.Icon icon="email-outline" />}
-            />
+        <UIFormInput
+          control={control}
+          name="email"
+          label="E-mail"
+          placeholder="seu@email.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          mode="outlined"
+          left={<TextInput.Icon icon="email-outline" />}
+        />
 
-            <UIFormInput
-              control={control}
-              name="password"
-              label="Senha"
-              placeholder="Informe sua senha"
-              secureTextEntry
-              mode="outlined"
-              left={<TextInput.Icon icon="lock-outline" />}
-            />
+        <UIFormInput
+          control={control}
+          name="password"
+          label="Senha"
+          placeholder="Informe sua senha"
+          secureTextEntry
+          mode="outlined"
+          left={<TextInput.Icon icon="lock-outline" />}
+        />
 
-            <StyledForgotRow>
-              <StyledLink onPress={() => router.push('/forgot-password')}>
-                Esqueceu a senha?
-              </StyledLink>
-            </StyledForgotRow>
+        <StyledForgotRow>
+          <StyledLink onPress={() => router.push('/forgot-password')}>
+            Esqueceu a senha?
+          </StyledLink>
+        </StyledForgotRow>
 
-            <UIButton
-              text="Entrar na minha conta"
-              iconRight="arrow-right"
-              loading={isLoading}
-              disabled={isLoading}
-              fullWidth
-              onPress={handleSubmit(handleLogin)}
-            />
+        <UIButton
+          text="Entrar na minha conta"
+          iconRight="arrow-right"
+          loading={isLoading}
+          disabled={isLoading}
+          fullWidth
+          onPress={handleSubmit(handleLogin)}
+        />
 
-            <StyledDivider />
+        <StyledDivider />
 
-            <StyledFooter>
-              Precisa de ajuda?{' '}
-              <StyledLink
-                onPress={() => Linking.openURL('mailto:contato@natare.app')}
-              >
-                Fale conosco
-              </StyledLink>
-            </StyledFooter>
-          </AuthCard>
-        </StyledCenter>
-      </DismissKeyboard>
-    </StyledScreen>
+        <StyledFooter>
+          Precisa de ajuda?{' '}
+          <StyledLink
+            onPress={() => Linking.openURL('mailto:contato@natare.app')}
+          >
+            Fale conosco
+          </StyledLink>
+        </StyledFooter>
+      </AuthCard>
+    </AuthScreen>
   );
 }
-
-const StyledScreen = styled.View`
-  flex: 1;
-`;
-
-const StyledCenter = styled(SafeAreaView)`
-  flex: 1;
-  justify-content: center;
-  padding: 24px;
-`;
 
 const StyledTitle = styled.Text`
   margin-top: 6px;
