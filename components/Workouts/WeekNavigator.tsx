@@ -13,10 +13,12 @@ export function WeekNavigator({
   offset,
   onPrev,
   onNext,
+  onReset,
 }: {
   offset: number;
   onPrev: () => void;
   onNext: () => void;
+  onReset: () => void;
 }) {
   const theme = useTheme();
 
@@ -30,7 +32,19 @@ export function WeekNavigator({
         />
       </NavButton>
 
-      <Label>{getWeekLabel(offset)}</Label>
+      <LabelGroup>
+        <Label>{getWeekLabel(offset)}</Label>
+        {offset !== 0 && (
+          <ResetButton onPress={onReset}>
+            <Icon
+              source="calendar-arrow-left"
+              size={14}
+              color={theme.colors.primary}
+            />
+            <ResetText>Voltar à semana atual</ResetText>
+          </ResetButton>
+        )}
+      </LabelGroup>
 
       <NavButton onPress={onNext}>
         <Icon
@@ -47,6 +61,28 @@ const Container = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`;
+
+const LabelGroup = styled.View`
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+`;
+
+const ResetButton = styled.Pressable`
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background-color: ${({ theme }) => theme.colors.primaryContainer};
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+`;
+
+const ResetText = styled.Text`
+  font-size: 12px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 const Label = styled.Text`

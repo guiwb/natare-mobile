@@ -50,6 +50,11 @@ export default function WorkoutsScreen() {
     setWeekOffset((o) => o + dir);
   };
 
+  const resetWeek = () => {
+    setDirection(weekOffset > 0 ? -1 : 1);
+    setWeekOffset(0);
+  };
+
   const loadWorkouts = useCallback(() => {
     const { start, end } = getWeekBounds(weekOffset);
     return WorkoutService.list({
@@ -142,6 +147,7 @@ export default function WorkoutsScreen() {
           offset={weekOffset}
           onPrev={() => changeWeek(-1)}
           onNext={() => changeWeek(1)}
+          onReset={resetWeek}
         />
         <FilterTabs active={filter} onChange={setFilter} />
       </HeaderStack>
