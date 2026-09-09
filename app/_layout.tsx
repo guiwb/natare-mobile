@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { NotificationsProvider } from '@/contexts/NotificationsProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
-import { DarkTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View } from 'react-native';

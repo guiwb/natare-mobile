@@ -15,8 +15,8 @@ import WorkoutService, { IWorkout } from '@/services/workout.service';
 import { isAxiosError } from 'axios';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { DeviceEventEmitter } from 'react-native';
-import { ActivityIndicator, Icon, useTheme } from 'react-native-paper';
+import { ActivityIndicator, DeviceEventEmitter } from 'react-native';
+import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 function isNotStartedError(error: unknown): boolean {
@@ -142,7 +142,7 @@ export default function WorkoutDetailsScreen() {
     return (
       <UIScreen header={header} contentStyle={{ flexGrow: 1 }}>
         <Loading>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.primary} />
         </Loading>
       </UIScreen>
     );

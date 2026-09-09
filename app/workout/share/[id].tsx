@@ -15,8 +15,13 @@ import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Sharing from 'expo-sharing';
 import { useEffect, useRef, useState } from 'react';
-import { LayoutChangeEvent, ScrollView, View } from 'react-native';
-import { ActivityIndicator, Icon, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  LayoutChangeEvent,
+  ScrollView,
+  View,
+} from 'react-native';
+import { Icon, useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { captureRef } from 'react-native-view-shot';
 import styled from 'styled-components/native';
@@ -199,7 +204,7 @@ export default function ShareWorkoutScreen() {
 
       <Preview onLayout={onPreviewLayout}>
         {loading || !workout ? (
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.primary} />
         ) : (
           cardWidth > 0 && (
             <View style={{ width: cardWidth }}>

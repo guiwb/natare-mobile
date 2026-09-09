@@ -3,8 +3,8 @@ import { UIMenu } from '@/components/UI/Menu';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import HomeService, { IHeatmapDay } from '@/services/home.service';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DeviceEventEmitter, View } from 'react-native';
-import { ActivityIndicator, Icon, Menu, useTheme } from 'react-native-paper';
+import { ActivityIndicator, DeviceEventEmitter, View } from 'react-native';
+import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 const DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
@@ -79,7 +79,6 @@ function levelsFromDays(days: IHeatmapDay[]): Record<string, number> {
 export function ActivityHeatmapCard() {
   const today = new Date();
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
-  const [menuVisible, setMenuVisible] = useState(false);
   const [days, setDays] = useState<IHeatmapDay[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
@@ -139,55 +138,28 @@ export function ActivityHeatmapCard() {
       <HeaderRow>
         <Title>Mapa de atividades</Title>
         <UIMenu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          anchor={
-            <MonthButton onPress={() => setMenuVisible(true)}>
-              <MonthButtonText>{MONTHS[selectedMonth]}</MonthButtonText>
-              <Icon
-                source="chevron-down"
-                size={16}
-                color={theme.colors.onSurface}
-              />
-            </MonthButton>
-          }
+          title="Mês"
+          items={MONTHS.map((month, index) => ({
+            key: month,
+            title: month,
+            selected: index === selectedMonth,
+            onPress: () => setSelectedMonth(index),
+          }))}
         >
-          {MONTHS.map((month, index) => {
-            const selected = index === selectedMonth;
-            return (
-              <Menu.Item
-                key={month}
-                dense
-                title={month}
-                titleStyle={
-                  selected
-                    ? { color: theme.colors.primary, fontWeight: '700' }
-                    : undefined
-                }
-                trailingIcon={
-                  selected
-                    ? () => (
-                        <Icon
-                          source="check"
-                          size={18}
-                          color={theme.colors.primary}
-                        />
-                      )
-                    : undefined
-                }
-                onPress={() => {
-                  setSelectedMonth(index);
-                  setMenuVisible(false);
-                }}
-              />
-            );
-          })}
+          <MonthButton>
+            <MonthButtonText>{MONTHS[selectedMonth]}</MonthButtonText>
+            <Icon
+              source="chevron-down"
+              size={16}
+              color={theme.colors.onSurface}
+            />
+          </MonthButton>
         </UIMenu>
       </HeaderRow>
 
       {loading ? (
         <GridLoading rows={rows.length}>
-          <ActivityIndicator />
+          <ActivityIndicator color={theme.colors.primary} />
         </GridLoading>
       ) : (
         <View style={{ gap: 4 }}>
@@ -243,7 +215,7 @@ const Title = styled.Text`
   color: ${({ theme }) => theme.colors.onSurface};
 `;
 
-const MonthButton = styled.Pressable`
+const MonthButton = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 6px;

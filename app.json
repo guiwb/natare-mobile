@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "natareapp",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.guiweige.natareapp",
       "supportsTablet": false,
@@ -25,7 +24,6 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.guiweige.natareapp",
       "googleServicesFile": "./google-services.json"
@@ -56,7 +54,12 @@
         {
           "photosPermission": "O NatareApp precisa acessar suas fotos para você escolher a imagem do seu perfil."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-sharing",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

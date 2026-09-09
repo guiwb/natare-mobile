@@ -38,7 +38,12 @@ export default class CloudinaryService {
       body: formData,
     });
 
-    if (!response.ok) throw new Error('Falha no upload da imagem');
+    if (!response.ok) {
+      const detail = await response.text().catch(() => '');
+      throw new Error(
+        `Falha no upload da imagem (${response.status}): ${detail}`,
+      );
+    }
 
     const data = await response.json();
     return data.secure_url as string;

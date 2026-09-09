@@ -1,55 +1,80 @@
-import { UIGlass } from '@/components/UI/Glass';
-import { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Menu } from 'react-native-paper';
+import { UISheet } from '@/components/UI/Sheet';
+import { useState } from 'react';
+import { Pressable, ScrollView } from 'react-native';
+import { Icon, useTheme } from 'react-native-paper';
+import styled from 'styled-components/native';
+import { UIMenuItem, UIMenuProps } from './Menu.types';
 
-type Props = {
-  visible: boolean;
-  onDismiss: () => void;
-  anchor: ReactNode;
-  children: ReactNode;
-  anchorPosition?: 'top' | 'bottom';
-};
+export type { UIMenuItem, UIMenuProps } from './Menu.types';
 
 export function UIMenu({
-  visible,
-  onDismiss,
-  anchor,
+  items,
+  title,
+  disabled,
   children,
-  anchorPosition = 'bottom',
-}: Props) {
+}: UIMenuProps) {
+  const theme = useTheme();
+  const [visible, setVisible] = useState(false);
+
+  const colorOf = (item: UIMenuItem) =>
+    item.destructive
+      ? theme.colors.error
+      : item.selected
+        ? theme.colors.primary
+        : theme.colors.onSurface;
+
+  if (disabled) return <>{children}</>;
+
   return (
-    <Menu
-      visible={visible}
-      onDismiss={onDismiss}
-      anchor={anchor}
-      anchorPosition={anchorPosition}
-      contentStyle={[
-        styles.glass,
-        { borderColor: 'rgba(255, 255, 255, 0.12)' },
-      ]}
-    >
-      <View style={styles.clip}>
-        <UIGlass
-          intensity={60}
-          tint="dark"
-          style={StyleSheet.absoluteFill}
-          pointerEvents="none"
-        />
-        {children}
-      </View>
-    </Menu>
+    <>
+      <Pressable onPress={() => setVisible(true)}>{children}</Pressable>
+
+      <UISheet
+        visible={visible}
+        title={title}
+        onDismiss={() => setVisible(false)}
+      >
+        <ScrollView bounces={false} style={{ maxHeight: 360 }}>
+          {items.map((item) => (
+            <Row
+              key={item.key}
+              $selected={!!item.selected}
+              onPress={() => {
+                setVisible(false);
+                item.onPress();
+              }}
+            >
+              {!!item.icon && (
+                <Icon source={item.icon} size={20} color={colorOf(item)} />
+              )}
+
+              <RowText style={{ color: colorOf(item) }} $selected={!!item.selected}>
+                {item.title}
+              </RowText>
+
+              {item.selected && (
+                <Icon source="check" size={20} color={theme.colors.primary} />
+              )}
+            </Row>
+          ))}
+        </ScrollView>
+      </UISheet>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  glass: {
-    backgroundColor: 'transparent',
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  clip: {
-    borderRadius: 16,
-    overflow: 'hidden',
-  },
-});
+const Row = styled.Pressable<{ $selected: boolean }>`
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 8px;
+  border-radius: 12px;
+  background-color: ${({ theme, $selected }) =>
+    $selected ? theme.colors.primaryContainer : 'transparent'};
+`;
+
+const RowText = styled.Text<{ $selected: boolean }>`
+  flex: 1;
+  font-size: 15px;
+  font-weight: ${({ $selected }) => ($selected ? '700' : '500')};
+`;

@@ -1,9 +1,8 @@
 import { UIMenu } from '@/components/UI/Menu';
 import { UIProfilePicture } from '@/components/UI/ProfilePicture';
 import * as ImagePicker from 'expo-image-picker';
-import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { Icon, Menu, useTheme } from 'react-native-paper';
+import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 type Props = {
@@ -22,10 +21,8 @@ export function ProfileAvatar({
   onRemove,
 }: Props) {
   const theme = useTheme();
-  const [menuVisible, setMenuVisible] = useState(false);
 
   const pickImage = async () => {
-    setMenuVisible(false);
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return;
 
@@ -41,62 +38,50 @@ export function ProfileAvatar({
     }
   };
 
-  const remove = () => {
-    setMenuVisible(false);
-    onRemove();
-  };
-
   return (
     <UIMenu
-      visible={menuVisible}
-      onDismiss={() => setMenuVisible(false)}
-      anchor={
-        <Anchor disabled={loading} onPress={() => setMenuVisible(true)}>
-          <UIProfilePicture
-            uri={uri}
-            name={name}
-            size={90}
-            borderColor={theme.colors.primary}
-          />
-          {loading && (
-            <LoadingOverlay>
-              <ActivityIndicator color="#fff" />
-            </LoadingOverlay>
-          )}
-          <EditButton>
-            <Icon source="camera" size={16} color="#fff" />
-          </EditButton>
-        </Anchor>
-      }
+      disabled={loading}
+      items={[
+        {
+          key: 'pick',
+          title: uri ? 'Editar foto' : 'Adicionar foto',
+          icon: 'image-edit',
+          onPress: pickImage,
+        },
+        ...(uri
+          ? [
+              {
+                key: 'remove',
+                title: 'Remover foto',
+                icon: 'trash-can-outline',
+                destructive: true,
+                onPress: onRemove,
+              },
+            ]
+          : []),
+      ]}
     >
-      <Menu.Item
-        dense
-        leadingIcon={() => (
-          <Icon source="image-edit" size={20} color={theme.colors.onSurface} />
-        )}
-        title={uri ? 'Editar foto' : 'Adicionar foto'}
-        onPress={pickImage}
-      />
-      {uri && (
-        <Menu.Item
-          dense
-          leadingIcon={() => (
-            <Icon
-              source="trash-can-outline"
-              size={20}
-              color={theme.colors.error}
-            />
-          )}
-          title="Remover foto"
-          titleStyle={{ color: theme.colors.error }}
-          onPress={remove}
+      <Anchor>
+        <UIProfilePicture
+          uri={uri}
+          name={name}
+          size={90}
+          borderColor={theme.colors.primary}
         />
-      )}
+        {loading && (
+          <LoadingOverlay>
+            <ActivityIndicator color="#fff" />
+          </LoadingOverlay>
+        )}
+        <EditButton>
+          <Icon source="camera" size={16} color="#fff" />
+        </EditButton>
+      </Anchor>
     </UIMenu>
   );
 }
 
-const Anchor = styled.Pressable`
+const Anchor = styled.View`
   position: relative;
   align-self: center;
 `;

@@ -41,7 +41,8 @@ export default function ProfileScreen() {
       setUser(updatedUser);
       setAvatarUri(profilePicture || null);
       snack('Foto atualizada');
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao salvar a foto de perfil:', error);
       setAvatarUri(user.profile_picture ?? null);
       snack('Erro ao atualizar foto');
     } finally {
@@ -55,7 +56,8 @@ export default function ProfileScreen() {
     try {
       const url = await CloudinaryService.uploadImage(uri, 'profiles');
       await persistPicture(url);
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao enviar a imagem para o Cloudinary:', error);
       setAvatarUri(user?.profile_picture ?? null);
       setAvatarLoading(false);
       snack('Erro ao enviar imagem');

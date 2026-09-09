@@ -1,7 +1,9 @@
-import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 export function UILoadingIndicator() {
+  const theme = useTheme();
+
   return (
     <View
       style={[
@@ -13,7 +15,7 @@ export function UILoadingIndicator() {
         },
       ]}
     >
-      <ActivityIndicator size="large" />
+      <ActivityIndicator size="large" color={theme.colors.primary} />
     </View>
   );
 }
