@@ -1,4 +1,4 @@
-import { requireOptionalNativeModule } from 'expo-modules-core';
+import { requireOptionalNativeModule } from 'expo';
 
 export type InstagramStoryOptions = {
   /** Facebook App ID registered for this app; Instagram rejects the share without it. */

@@ -14,9 +14,9 @@ import dayjs from 'dayjs';
 import { useRouter } from 'expo-router';
 import { useRefresh } from '@/hooks/useRefresh';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { ActivityIndicator, Icon } from 'react-native-paper';
+import { Icon, useTheme } from 'react-native-paper';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import styled from 'styled-components/native';
 
@@ -38,6 +38,7 @@ function getWeekBounds(offset: number): {
 
 export default function WorkoutsScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const { snack } = useSnackbar();
   const [weekOffset, setWeekOffset] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -172,7 +173,7 @@ export default function WorkoutsScreen() {
           >
             {loading ? (
               <Loading>
-                <ActivityIndicator />
+                <ActivityIndicator color={theme.colors.primary} />
               </Loading>
             ) : isEmpty ? (
               <EmptyState>

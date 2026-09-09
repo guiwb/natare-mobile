@@ -4,6 +4,7 @@ import {
   useContext,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 import { Animated, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
 
@@ -20,7 +21,7 @@ const TabBarContext = createContext<TabBarContextValue>({
 });
 
 export function TabBarProvider({ children }: { children: ReactNode }) {
-  const scale = useRef(new Animated.Value(1)).current;
+  const [scale] = useState(() => new Animated.Value(1));
   const lastY = useRef(0);
   const target = useRef(1);
 

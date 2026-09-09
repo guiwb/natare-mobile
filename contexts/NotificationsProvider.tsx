@@ -1,8 +1,11 @@
-import { registerForPushNotifications } from '@/lib/notifications';
+import {
+  addNotificationListeners,
+  pushAvailable,
+  registerForPushNotifications,
+} from '@/lib/notifications';
 import NotificationsService, {
   INotification,
 } from '@/services/notifications.service';
-import * as Notifications from 'expo-notifications';
 import { setItemAsync } from 'expo-secure-store';
 import {
   createContext,
@@ -103,6 +106,13 @@ export const NotificationsProvider = ({
   };
 
   const registerPush = async () => {
+    if (!pushAvailable) {
+      console.warn(
+        'Push notifications indisponíveis neste ambiente (Expo Go). Use um development build.',
+      );
+      return;
+    }
+
     if (registered.current) return;
     registered.current = true;
 
@@ -132,19 +142,9 @@ export const NotificationsProvider = ({
     void registerPush();
     void refresh();
 
-    const received = Notifications.addNotificationReceivedListener(() => {
+    return addNotificationListeners(() => {
       void refresh();
     });
-    const responded = Notifications.addNotificationResponseReceivedListener(
-      () => {
-        void refresh();
-      },
-    );
-
-    return () => {
-      received.remove();
-      responded.remove();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 

@@ -18,7 +18,10 @@ export function useRefresh(task: () => Promise<unknown>) {
 
   // kept in a ref so `onRefresh` does not change identity on every render
   const taskRef = useRef(task);
-  taskRef.current = task;
+
+  useEffect(() => {
+    taskRef.current = task;
+  });
 
   useEffect(() => {
     mounted.current = true;

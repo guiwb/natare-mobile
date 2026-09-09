@@ -20,6 +20,12 @@ Expo Router with file-based routing. The entry point is `app/_layout.tsx`, which
 
 Access control is declarative: `app/_layout.tsx` reads `useAuth` and wraps the stack screens in `Stack.Protected`, so the tabs and the other authenticated screens only exist while there is a `user`. Providers must not navigate on login/logout, the guard does it. `app/index.tsx` is only the `/` entry point and redirects to `/(tabs)` or `/login`.
 
+### Navigation
+Since SDK 56 `expo-router` refuses any `@react-navigation/*` import (the bundle fails with an explicit error). The equivalents ship with the router itself: `expo-router/js-top-tabs` (the top tabs used in `app/(tabs)/_layout.tsx` through `withLayoutContext`) and `expo-router/react-navigation` (theme and types such as `ParamListBase`). `js-top-tabs` needs `react-native-tab-view` and `react-native-pager-view`, so both stay as direct dependencies.
+
+### Notifications
+`expo-notifications` is never imported statically: Expo Go dropped remote notifications in SDK 53 and since SDK 57 the import itself throws there, which used to break every module downstream (`lib/notifications.ts` → `NotificationsProvider` → `UI/TabBar` → `app/(tabs)/_layout.tsx`) and crash the router. `lib/notifications.ts` requires the module lazily behind `pushAvailable` and exports `registerForPushNotifications` and `addNotificationListeners`; in Expo Go push is simply off. Testing notifications for real still needs a development build.
+
 ### Provider stack (outermost → innermost)
 `SnackbarProvider` → `AuthProvider` → `StyledProvider` (styled-components) → `PaperProvider` (react-native-paper) → `ConfirmDialogProvider`
 
@@ -45,6 +51,7 @@ Instagram Stories composer as a sticker (transparency survives, unlike the share
 - Feature components are grouped by screen in `components/<ScreenName>/`.
 - All styling is done with `styled-components/native`. Inline `StyleSheet` is avoided.
 - `UICard` wraps a `Pressable` and accepts `style` as `PressableProps['style']`, so `({ pressed }) => ...` callbacks work.
+- `UIMenu` takes an `items` array and the trigger as `children`, and opens `UISheet`, the app's own bottom sheet (also used by the iOS wheel pickers). Paper's `Menu` is not used: its backdrop stopped dismissing on outside taps with RN 0.86.
 - `UISquareIcon` accepts a `color` prop (`'default' | 'red' | 'green' | 'orange'`) that controls both icon and background tint.
 
 ### Forms
