@@ -1,3 +1,4 @@
+import { withAlpha } from '@/lib/brand';
 import styled from 'styled-components/native';
 
 function getInitials(name?: string) {
@@ -19,7 +20,7 @@ export function UIProfilePicture({
   uri,
   name,
   size = 45,
-  borderColor = 'rgba(66, 133, 244, 0.4)',
+  borderColor,
 }: Props) {
   if (uri) {
     return (
@@ -39,14 +40,15 @@ export function UIProfilePicture({
   );
 }
 
-type StyleProps = { $size: number; $borderColor: string };
+type StyleProps = { $size: number; $borderColor?: string };
 
 const StyledImage = styled.Image<StyleProps>`
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
   border-radius: ${({ $size }) => $size}px;
   border-width: 3px;
-  border-color: ${({ $borderColor }) => $borderColor};
+  border-color: ${({ $borderColor, theme }) =>
+    $borderColor ?? withAlpha(theme.colors.primary, 0.4)};
   object-fit: cover;
 `;
 
@@ -55,8 +57,9 @@ const StyledFallback = styled.View<StyleProps>`
   height: ${({ $size }) => $size}px;
   border-radius: ${({ $size }) => $size}px;
   border-width: 3px;
-  border-color: ${({ $borderColor }) => $borderColor};
-  background-color: rgba(66, 133, 244, 0.15);
+  border-color: ${({ $borderColor, theme }) =>
+    $borderColor ?? withAlpha(theme.colors.primary, 0.4)};
+  background-color: ${({ theme }) => withAlpha(theme.colors.primary, 0.15)};
   align-items: center;
   justify-content: center;
 `;

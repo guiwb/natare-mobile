@@ -1,6 +1,8 @@
+import { deepShade, withAlpha } from '@/lib/brand';
 import { BlurView } from 'expo-blur';
 import { ComponentProps, forwardRef, Ref } from 'react';
 import { Platform, View } from 'react-native';
+import { useTheme } from 'react-native-paper';
 
 type Props = ComponentProps<typeof BlurView>;
 
@@ -10,32 +12,37 @@ type Props = ComponentProps<typeof BlurView>;
  * a subtle white veil for inline cards and an opaque panel for the floating
  * ones, which need to hide whatever scrolls under them.
  */
-const androidFill = (intensity: number) =>
-  intensity <= 30 ? 'rgba(255, 255, 255, 0.03)' : 'rgba(16, 18, 24, 0.94)';
+const androidFill = (intensity: number, primary: string) =>
+  intensity <= 30
+    ? 'rgba(255, 255, 255, 0.03)'
+    : withAlpha(deepShade(primary, 0.2, 0.078), 0.94);
 
-export const UIGlass = forwardRef<BlurView | View, Props>(function UIGlass(
-  props,
-  ref,
-) {
-  const { intensity = 50, tint, style, ...rest } = props;
+export const UIGlass = forwardRef<BlurView | View, Props>(
+  function UIGlass(props, ref) {
+    const { intensity = 50, tint, style, ...rest } = props;
+    const { colors } = useTheme();
 
-  if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios') {
+      return (
+        <BlurView
+          ref={ref as Ref<BlurView>}
+          intensity={intensity}
+          tint={tint}
+          style={style}
+          {...rest}
+        />
+      );
+    }
+
     return (
-      <BlurView
-        ref={ref as Ref<BlurView>}
-        intensity={intensity}
-        tint={tint}
-        style={style}
+      <View
+        ref={ref as Ref<View>}
+        style={[
+          { backgroundColor: androidFill(intensity, colors.primary) },
+          style,
+        ]}
         {...rest}
       />
     );
-  }
-
-  return (
-    <View
-      ref={ref as Ref<View>}
-      style={[{ backgroundColor: androidFill(intensity) }, style]}
-      {...rest}
-    />
-  );
-});
+  },
+);

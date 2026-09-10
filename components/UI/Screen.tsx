@@ -1,8 +1,9 @@
 import { useTabBar } from '@/contexts/TabBarProvider';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { UIGlass } from '@/components/UI/Glass';
+import { deepShade, withAlpha } from '@/lib/brand';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import {
   Platform,
   RefreshControl,
@@ -13,6 +14,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FADE = 28;
@@ -22,15 +24,16 @@ const FADE_ANDROID = 18;
 
 // a straight fill-to-transparent ramp reads as a hard edge, so the alpha falls
 // off on a curve and the last stops are nearly invisible
-const HEADER_FADE = [
-  'rgba(10, 18, 32, 0.8)',
-  'rgba(10, 18, 32, 0.8)',
-  'rgba(10, 18, 32, 0.68)',
-  'rgba(10, 18, 32, 0.47)',
-  'rgba(10, 18, 32, 0.25)',
-  'rgba(10, 18, 32, 0.1)',
-  'rgba(10, 18, 32, 0)',
-] as const;
+const HEADER_FADE_ALPHAS = [0.8, 0.8, 0.68, 0.47, 0.25, 0.1, 0];
+
+const headerFadeColors = (primary: string) => {
+  const shade = deepShade(primary);
+  return HEADER_FADE_ALPHAS.map((alpha) => withAlpha(shade, alpha)) as [
+    string,
+    string,
+    ...string[],
+  ];
+};
 
 const headerFadeStops = (solid: number) =>
   [
@@ -64,6 +67,11 @@ export function UIScreen({
 }: Props) {
   const { top, bottom } = useSafeAreaInsets();
   const { onScroll } = useTabBar();
+  const theme = useTheme();
+  const headerFade = useMemo(
+    () => headerFadeColors(theme.colors.primary),
+    [theme.colors.primary],
+  );
   const [headerHeight, setHeaderHeight] = useState(top + 64);
   const scrollRef = useRef<ScrollView>(null);
   const insetApplied = useRef(false);
@@ -116,7 +124,7 @@ export function UIScreen({
               // this here would offset it twice
               progressViewOffset={IOS ? undefined : headerHeight}
               tintColor="#FFFFFF"
-              colors={['#4285F4']}
+              colors={[theme.colors.primary]}
             />
           )
         }
@@ -155,7 +163,7 @@ export function UIScreen({
           </MaskedView>
         ) : (
           <LinearGradient
-            colors={HEADER_FADE}
+            colors={headerFade}
             locations={headerFadeStops(
               headerHeight / (headerHeight + FADE_ANDROID),
             )}

@@ -1,8 +1,7 @@
-import { Icon } from 'react-native-paper';
+import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 
 const colorMap = {
-  default: '#4285f4',
   red: '#EF4444',
   green: '#22C55E',
   orange: '#F97316',
@@ -23,11 +22,13 @@ export function UISquareIcon({
   bgOpacity?: number;
   style?: any;
 }) {
-  const bgColor = `${colorMap[color]}${bgOpacity}`;
+  const theme = useTheme();
+  const tint = color === 'default' ? theme.colors.primary : colorMap[color];
+  const bgColor = `${tint}${bgOpacity}`;
 
   return (
     <StyledIcon size={size} bgColor={bgColor} style={style}>
-      <Icon source={icon} size={iconSize} color={colorMap[color]} />
+      <Icon source={icon} size={iconSize} color={tint} />
     </StyledIcon>
   );
 }

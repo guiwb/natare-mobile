@@ -1,3 +1,4 @@
+import { withAlpha } from '@/lib/brand';
 import { UIScreen } from '@/components/UI/Screen';
 import { UIUserHeader } from '@/components/UI/UserHeader';
 import { useNotifications } from '@/contexts/NotificationsProvider';
@@ -94,8 +95,8 @@ const Card = styled.Pressable<{ unread: boolean }>`
   border-radius: 16px;
   padding: 16px;
   gap: 6px;
-  background-color: ${({ unread }) =>
-    unread ? 'rgba(66, 133, 244, 0.1)' : 'rgba(255, 255, 255, 0.04)'};
+  background-color: ${({ unread, theme }) =>
+    unread ? withAlpha(theme.colors.primary, 0.1) : 'rgba(255, 255, 255, 0.04)'};
 `;
 
 const Row = styled.View`

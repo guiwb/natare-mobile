@@ -1,4 +1,7 @@
-import AuthService, { IUser } from '@/services/auth.service';
+import AuthService, {
+  ICompanyBranding,
+  IUser,
+} from '@/services/auth.service';
 import NotificationsService from '@/services/notifications.service';
 import { deleteItemAsync, getItemAsync, setItemAsync } from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -7,6 +10,7 @@ import { useSnackbar } from './SnackbarProvider';
 
 interface AuthContextType {
   user: IUser | null;
+  company: ICompanyBranding | null;
   setUser: (user: IUser | null) => void;
   login: (email: string, password: string) => Promise<void | Error>;
   logout: () => Promise<void>;
@@ -28,6 +32,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
+  const [company, setCompany] = useState<ICompanyBranding | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { snack } = useSnackbar();
 
@@ -37,8 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!token) return;
 
-      const user = await AuthService.getCurrentUser();
-      setUser(user);
+      const { company: ownCompany, ...currentUser } =
+        await AuthService.getCurrentUser();
+      setCompany(ownCompany);
+      setUser(currentUser);
     } catch (error: any) {
       snack(error.message);
     } finally {
@@ -53,7 +60,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       if (!email || !password) throw 'Preencha todos os campos!';
 
-      const { user, token } = await AuthService.login(email, password);
+      const {
+        user,
+        company: ownCompany,
+        token,
+      } = await AuthService.login(email, password);
+      setCompany(ownCompany);
       setUser(user);
       await setItemAsync('token', token);
     } catch (error: any) {
@@ -78,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearLocalSession = async () => {
     setUser(null);
+    setCompany(null);
     await deleteItemAsync('pushToken');
     await deleteItemAsync('token');
   };
@@ -121,6 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const sub = DeviceEventEmitter.addListener('on401', async () => {
       setUser(null);
+      setCompany(null);
       await deleteItemAsync('token');
     });
 
@@ -134,6 +148,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        company,
         setUser,
         login,
         logout,
