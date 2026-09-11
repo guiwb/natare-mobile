@@ -15,13 +15,13 @@ export function UIUserHeader({
   subtitle?: string;
   showAvatar?: boolean;
 }) {
-  const { user } = useAuth();
+  const { user, company } = useAuth();
   const router = useRouter();
 
   return (
     <Container>
       <Pressable onPress={() => router.navigate('/')}>
-        <UILogo size={45} />
+        <UILogo size={45} uri={company?.logo_url} />
       </Pressable>
 
       <Greetings>

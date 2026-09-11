@@ -148,7 +148,10 @@ export default function WorkoutDetailsScreen() {
     );
   }
 
-  const tone = STATUS_TONE[workout.status];
+  const tone =
+    workout.status === 'scheduled'
+      ? { ...STATUS_TONE.scheduled, color: theme.colors.primary }
+      : STATUS_TONE[workout.status];
   const distance = workout.total_distance ?? 0;
   const duration = workout.total_duration ?? 0;
 

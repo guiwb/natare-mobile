@@ -3,6 +3,7 @@ import { UISquareIcon } from '@/components/UI/SquareIcon';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 import {
   formatDatetime,
@@ -29,6 +30,7 @@ const DOT_COLOR = {
 
 export function WorkoutCard({ workout }: { workout: Workout }) {
   const router = useRouter();
+  const theme = useTheme();
   const { id, name, icon, status, datetime, distance, duration } = workout;
   const isMissed = status === 'missed';
   const [pressed, setPressed] = useState(false);
@@ -56,7 +58,11 @@ export function WorkoutCard({ workout }: { workout: Workout }) {
         <InfoColumn>
           <NameRow>
             <WorkoutName>{name}</WorkoutName>
-            <StatusDot color={DOT_COLOR[status]} />
+            <StatusDot
+              color={
+                status === 'scheduled' ? theme.colors.primary : DOT_COLOR[status]
+              }
+            />
           </NameRow>
           <DateText>{formatDatetime(datetime)}</DateText>
         </InfoColumn>

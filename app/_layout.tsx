@@ -4,9 +4,15 @@ import { AuthProvider, useAuth } from '@/contexts/AuthProvider';
 import { ConfirmDialogProvider } from '@/contexts/ConfirmDialogProvider';
 import { NotificationsProvider } from '@/contexts/NotificationsProvider';
 import { SnackbarProvider } from '@/contexts/SnackbarProvider';
+import {
+  DEFAULT_BRAND_COLOR,
+  readableBrandColor,
+  withAlpha,
+} from '@/lib/brand';
 import { DarkTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ReactNode, useMemo } from 'react';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
@@ -47,23 +53,41 @@ function Routes() {
   );
 }
 
-const appTheme = {
-  ...MD3DarkTheme,
-  colors: {
-    ...MD3DarkTheme.colors,
-    primary: '#4285F4',
-    primaryContainer: 'rgba(66, 133, 244, 0.2)',
-    background: '#121212',
-    surface: '#1E1E1E',
-    onSurface: '#FFFFFF',
-    onSurfaceVariant: '#A0A0A0',
-    onBackground: '#FFFFFF',
-    error: '#EF4444',
-    errorContainer: 'rgba(239, 68, 68, 0.2)',
-    outline: 'rgba(255, 255, 255, 0.05)',
-    outlineVariant: 'rgba(255, 255, 255, 0.05)',
-  },
-};
+function buildAppTheme(brandColor?: string | null) {
+  const primary = brandColor
+    ? readableBrandColor(brandColor)
+    : DEFAULT_BRAND_COLOR;
+
+  return {
+    ...MD3DarkTheme,
+    colors: {
+      ...MD3DarkTheme.colors,
+      primary,
+      primaryContainer: withAlpha(primary, 0.2),
+      background: '#121212',
+      surface: '#1E1E1E',
+      onSurface: '#FFFFFF',
+      onSurfaceVariant: '#A0A0A0',
+      onBackground: '#FFFFFF',
+      error: '#EF4444',
+      errorContainer: 'rgba(239, 68, 68, 0.2)',
+      outline: 'rgba(255, 255, 255, 0.05)',
+      outlineVariant: 'rgba(255, 255, 255, 0.05)',
+    },
+  };
+}
+
+function BrandedTheme({ children }: { children: ReactNode }) {
+  const { company } = useAuth();
+  const brandColor = company?.brand_color;
+  const theme = useMemo(() => buildAppTheme(brandColor), [brandColor]);
+
+  return (
+    <StyledProvider theme={theme}>
+      <PaperProvider theme={theme}>{children}</PaperProvider>
+    </StyledProvider>
+  );
+}
 
 export default function RootLayout() {
   const navTheme = {
@@ -79,16 +103,14 @@ export default function RootLayout() {
       <ThemeProvider value={navTheme}>
         <SnackbarProvider>
           <AuthProvider>
-            <StyledProvider theme={appTheme}>
-              <PaperProvider theme={appTheme}>
-                <NotificationsProvider>
-                  <ConfirmDialogProvider>
-                    <Routes />
-                    <StatusBar style="light" />
-                  </ConfirmDialogProvider>
-                </NotificationsProvider>
-              </PaperProvider>
-            </StyledProvider>
+            <BrandedTheme>
+              <NotificationsProvider>
+                <ConfirmDialogProvider>
+                  <Routes />
+                  <StatusBar style="light" />
+                </ConfirmDialogProvider>
+              </NotificationsProvider>
+            </BrandedTheme>
           </AuthProvider>
         </SnackbarProvider>
       </ThemeProvider>

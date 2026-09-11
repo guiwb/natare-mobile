@@ -1,4 +1,5 @@
 import { UICard } from '@/components/UI/Card';
+import { withAlpha } from '@/lib/brand';
 import { UIMenu } from '@/components/UI/Menu';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
 import HomeService, { IHeatmapDay } from '@/services/home.service';
@@ -24,13 +25,11 @@ const MONTHS = [
   'Dezembro',
 ];
 
-const INTENSITY_COLORS = [
-  'rgba(66, 133, 244, 0.08)',
-  'rgba(66, 133, 244, 0.25)',
-  'rgba(66, 133, 244, 0.45)',
-  'rgba(66, 133, 244, 0.68)',
-  '#4285F4',
-];
+const INTENSITY_ALPHAS = [0.08, 0.25, 0.45, 0.68];
+
+function buildIntensityColors(primary: string) {
+  return [...INTENSITY_ALPHAS.map((alpha) => withAlpha(primary, alpha)), primary];
+}
 
 type DayCell = { day: number | null; level: number };
 
@@ -82,6 +81,10 @@ export function ActivityHeatmapCard() {
   const [days, setDays] = useState<IHeatmapDay[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
+  const intensityColors = useMemo(
+    () => buildIntensityColors(theme.colors.primary),
+    [theme.colors.primary],
+  );
   const { snack } = useSnackbar();
 
   const year = today.getFullYear();
@@ -176,7 +179,7 @@ export function ActivityHeatmapCard() {
                   key={cellIndex}
                   color={
                     cell.day !== null
-                      ? INTENSITY_COLORS[cell.level]
+                      ? intensityColors[cell.level]
                       : 'transparent'
                   }
                 />
@@ -188,7 +191,7 @@ export function ActivityHeatmapCard() {
 
       <LegendRow>
         <LegendLabel>Menor volume</LegendLabel>
-        {INTENSITY_COLORS.map((color, i) => (
+        {intensityColors.map((color, i) => (
           <LegendCell key={i} color={color} />
         ))}
         <LegendLabel>Maior volume</LegendLabel>

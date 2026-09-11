@@ -12,9 +12,21 @@ export interface IUser {
   updated_at: Date;
 }
 
+export interface ICompanyBranding {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  brand_color: string | null;
+}
+
+export interface ICurrentUserResponse extends IUser {
+  company: ICompanyBranding | null;
+}
+
 export interface ILoginResponse {
   token: string;
   user: IUser;
+  company: ICompanyBranding | null;
 }
 
 export default class AuthService {
@@ -31,7 +43,7 @@ export default class AuthService {
     return http.delete('/api/logout');
   }
 
-  static async getCurrentUser(): Promise<IUser> {
+  static async getCurrentUser(): Promise<ICurrentUserResponse> {
     const { data } = await http.get('/api/current-user');
     return data;
   }
