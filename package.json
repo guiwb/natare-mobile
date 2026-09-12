@@ -7,7 +7,9 @@
     "android": "node ./scripts/update-env-ip.js && expo start --android",
     "ios": "node ./scripts/update-env-ip.js && expo start --ios",
     "web": "node ./scripts/update-env-ip.js && expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -56,7 +58,6 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.4",
-    "@types/styled-components-react-native": "^5.2.5",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~57.0.2",
     "typescript": "~6.0.3"
