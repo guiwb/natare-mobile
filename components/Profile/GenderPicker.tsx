@@ -1,11 +1,13 @@
 import { UISheet } from '@/components/UI/Sheet';
+import { GENDER_LABELS, GENDER_OPTIONS } from '@/constants/profile';
+import { TGender } from '@/services/user.service';
 import { Picker } from '@react-native-picker/picker';
 import { useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { TextInput, useTheme } from 'react-native-paper';
 
-const OPTIONS = ['Masculino', 'Feminino', 'Prefiro não responder', 'Outro'];
+
 
 export function GenderPicker({ control }: { control: Control<any> }) {
   const theme = useTheme();
@@ -21,7 +23,7 @@ export function GenderPicker({ control }: { control: Control<any> }) {
             <TextInput
               mode="outlined"
               label="Gênero"
-              value={value ?? ''}
+              value={value ? (GENDER_LABELS[value as TGender] ?? '') : ''}
               editable={false}
               right={<TextInput.Icon icon="chevron-down" />}
             />
@@ -30,8 +32,12 @@ export function GenderPicker({ control }: { control: Control<any> }) {
 
         const items = [
           <Picker.Item key="empty" label="Selecione" value="" />,
-          ...OPTIONS.map((option) => (
-            <Picker.Item key={option} label={option} value={option} />
+          ...GENDER_OPTIONS.map((option) => (
+            <Picker.Item
+              key={option.value}
+              label={option.label}
+              value={option.value}
+            />
           )),
         ];
 

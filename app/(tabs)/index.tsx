@@ -2,6 +2,7 @@ import { ActivityHeatmapCard } from '@/components/Home/ActivityHeatmapCard';
 import { DayStreakCard } from '@/components/Home/DayStreakCard';
 import { HomeEmptyState } from '@/components/Home/HomeEmptyState';
 import { LastWorkoutCard } from '@/components/Home/LastWorkoutCard';
+import { MissingProfileBanner } from '@/components/Home/MissingProfileBanner';
 import { NextWorkoutCard } from '@/components/Home/NextWorkoutCard';
 import {
   CompletedWorkout,
@@ -114,6 +115,8 @@ export default function HomeScreen() {
           <UIUserHeader subtitle="Boas-vindas," title={user?.name ?? 'Início'} />
         }
       >
+        <MissingProfileBanner />
+
         {isEmpty ? (
           <HomeEmptyState />
         ) : (

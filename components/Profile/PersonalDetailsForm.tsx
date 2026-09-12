@@ -1,6 +1,7 @@
 import { UIButton } from '@/components/UI/Button';
 import { UICard } from '@/components/UI/Card';
 import { UIFormInput } from '@/components/UI/FormInput';
+import { maskPhone } from '@/lib/phone';
 import { BirthDatePicker } from './BirthDatePicker';
 import { GenderPicker } from './GenderPicker';
 import { Control } from 'react-hook-form';
@@ -34,6 +35,16 @@ export function PersonalDetailsForm({ control, email, onSave, loading }: Props) 
             value={email}
             editable={false}
             disabled
+          />
+
+          <UIFormInput
+            control={control}
+            name="phone"
+            label="Celular"
+            mode="outlined"
+            keyboardType="phone-pad"
+            placeholder="(11) 99999-8888"
+            mask={maskPhone}
           />
 
           <BirthDatePicker control={control} />

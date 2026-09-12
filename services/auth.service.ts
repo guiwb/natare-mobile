@@ -2,12 +2,19 @@ import { http } from '@/lib/http/axios';
 
 type TRole = 'ADMIN' | 'COACH' | 'ATHLETE';
 
+export type TGender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
+
 export interface IUser {
   id: string;
   name: string;
   email: string;
   profile_picture: string;
   role: TRole;
+  birth_date: string | null;
+  weight: number | null;
+  height: number | null;
+  phone: string | null;
+  gender: TGender | null;
   created_at: Date;
   updated_at: Date;
 }

@@ -1,4 +1,6 @@
+import { UIFieldError } from '@/components/UI/FieldError';
 import { UISheet } from '@/components/UI/Sheet';
+import { MIN_BIRTH_DATE, maxBirthDate } from '@/constants/profile';
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from '@react-native-community/datetimepicker';
@@ -18,14 +20,16 @@ export function BirthDatePicker({ control }: { control: Control<any> }) {
     <Controller
       control={control}
       name="birthDate"
-      render={({ field: { value, onChange } }) => {
+      render={({ field: { value, onChange }, fieldState: { error } }) => {
         const date: Date = value instanceof Date ? value : new Date(2000, 0, 1);
+        const maximumDate = maxBirthDate();
 
         const openAndroid = () => {
           DateTimePickerAndroid.open({
             value: date,
             mode: 'date',
-            maximumDate: new Date(),
+            maximumDate,
+            minimumDate: MIN_BIRTH_DATE,
             onValueChange: (_, selected) => onChange(selected),
           });
         };
@@ -46,10 +50,13 @@ export function BirthDatePicker({ control }: { control: Control<any> }) {
                   label="Data de nascimento"
                   value={value instanceof Date ? formatDate(value) : ''}
                   editable={false}
+                  error={!!error}
                   right={<TextInput.Icon icon="calendar" />}
                 />
               </View>
             </Pressable>
+
+            <UIFieldError message={error?.message} />
 
             {Platform.OS === 'ios' && (
               <UISheet
@@ -62,7 +69,8 @@ export function BirthDatePicker({ control }: { control: Control<any> }) {
                   value={date}
                   mode="date"
                   display="spinner"
-                  maximumDate={new Date()}
+                  maximumDate={maximumDate}
+                  minimumDate={MIN_BIRTH_DATE}
                   locale="pt-BR"
                   onValueChange={(_, selected) => onChange(selected)}
                   style={{ width: '100%' }}

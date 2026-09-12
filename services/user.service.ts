@@ -2,12 +2,19 @@ import { http } from '@/lib/http/axios';
 
 type TRole = 'ADMIN' | 'COACH' | 'ATHLETE';
 
+export type TGender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
+
 export interface IUser {
   id: string;
   name: string;
   email: string;
   profile_picture: string;
   role: TRole;
+  birth_date: string | null;
+  weight: number | null;
+  height: number | null;
+  phone: string | null;
+  gender: TGender | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -19,6 +26,16 @@ export interface IUsersList {
     offset: number;
   };
   items: IUser[];
+}
+
+export interface IProfilePayload {
+  name?: string;
+  profile_picture?: string;
+  birth_date?: string | null;
+  weight?: number | null;
+  height?: number | null;
+  phone?: string | null;
+  gender?: TGender | null;
 }
 
 export interface ICreateUpdateUser {
@@ -40,11 +57,11 @@ export default class UserService {
     return response;
   }
 
-  static async updateProfile(user: IUser): Promise<IUser> {
-    const { data: response } = await http.patch(`/api/users/${user.id}`, {
-      name: user.name,
-      profile_picture: user.profile_picture,
-    });
+  static async updateProfile(
+    id: string,
+    payload: IProfilePayload,
+  ): Promise<IUser> {
+    const { data: response } = await http.patch(`/api/users/${id}`, payload);
     return response;
   }
 
