@@ -15,7 +15,10 @@ Para a Google Play, veja [release-android.md](./release-android.md).
 
 ## Versionamento
 
-- `expo.version` no `app.json` é a versão exibida na loja (ex.: `1.0.0`). Subir manualmente a cada release, seguindo semver.
+- `expo.version` no `app.json` é a versão exibida na loja (ex.: `1.0.0`). O bump é automático: a
+  workflow `Version` roda a cada push na `main`, calcula o incremento semver pelos Conventional
+  Commits desde a última tag, atualiza `app.json`/`package.json` e cria a tag `vX.Y.Z`
+  (ver [versionamento automático](./versioning.md)).
 - O build number é gerenciado pelo EAS (`cli.appVersionSource: "remote"` + `build.production.autoIncrement: true`), então **não** deve existir `ios.buildNumber` no `app.json`.
 - O app não usa `expo-updates`, portanto não há canal de OTA update: toda correção exige novo build e nova submissão.
 

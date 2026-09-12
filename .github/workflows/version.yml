@@ -1,0 +1,56 @@
+name: Version
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: version-main
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: "!startsWith(github.event.head_commit.message, 'chore(release):')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - id: bump
+        run: node scripts/bump-version.js
+
+      - name: Commit, tag and push
+        if: steps.bump.outputs.tag != ''
+        env:
+          VERSION: ${{ steps.bump.outputs.version }}
+          TAG: ${{ steps.bump.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if [ -n "$VERSION" ]; then
+            git add app.json package.json package-lock.json
+            git commit -m "chore(release): bump the app version to $VERSION [skip ci]"
+
+            pushed=0
+            for attempt in 1 2 3; do
+              if git push origin HEAD:main; then
+                pushed=1
+                break
+              fi
+              echo "push rejected, rebasing on origin/main (attempt $attempt)"
+              git pull --rebase origin main
+            done
+            [ "$pushed" -eq 1 ] || { echo "could not push the release commit"; exit 1; }
+          fi
+
+          git tag "$TAG"
+          git push origin "$TAG"

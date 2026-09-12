@@ -159,8 +159,9 @@ track `internal`, de onde a release é promovida pelo console.
 
 Igual ao iOS:
 
-- `expo.version` no `app.json` é a versão exibida na loja. Subir manualmente a
-  cada release, seguindo semver.
+- `expo.version` no `app.json` é a versão exibida na loja. O bump é automático via
+  workflow `Version` a cada push na `main` (ver
+  [versionamento automático](./versioning.md)).
 - O `versionCode` é gerenciado pelo EAS (`cli.appVersionSource: "remote"` +
   `build.production.autoIncrement: true`), então **não** deve existir
   `android.versionCode` no `app.json`.

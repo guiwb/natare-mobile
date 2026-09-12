@@ -15,4 +15,10 @@ module.exports = defineConfig([
       'react-hooks/purity': 'warn',
     },
   },
+  {
+    files: ['scripts/**/*.js'],
+    languageOptions: {
+      globals: { __dirname: 'readonly', process: 'readonly' },
+    },
+  },
 ]);
