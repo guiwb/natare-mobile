@@ -2,6 +2,7 @@ import { UIButton } from '@/components/UI/Button';
 import { UIFormInput } from '@/components/UI/FormInput';
 import { UIPasswordStrength } from '@/components/UI/PasswordStrength';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
+import { applyApiFieldErrors, newPasswordSchema } from '@/lib/validation';
 import AuthService from '@/services/auth.service';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
@@ -17,17 +18,11 @@ import { Icon, useTheme } from 'react-native-paper';
 import styled from 'styled-components/native';
 import { z } from 'zod';
 
-const PASSWORD_MIN_LENGTH = 8;
-
 const schema = z
   .object({
     currentPassword: z.string().min(1, 'Informe sua senha atual'),
-    newPassword: z
-      .string()
-      .min(PASSWORD_MIN_LENGTH, `Mínimo ${PASSWORD_MIN_LENGTH} caracteres`),
-    confirmPassword: z
-      .string()
-      .min(PASSWORD_MIN_LENGTH, `Mínimo ${PASSWORD_MIN_LENGTH} caracteres`),
+    newPassword: newPasswordSchema,
+    confirmPassword: z.string().min(1, 'Confirme a nova senha'),
   })
   .refine((d) => d.newPassword === d.confirmPassword, {
     message: 'As senhas não coincidem',
@@ -44,7 +39,7 @@ export default function ChangePasswordScreen() {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setError } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       currentPassword: '',
@@ -64,13 +59,14 @@ export default function ChangePasswordScreen() {
       router.back();
     } catch (error: any) {
       if (error?.response?.status === 422) {
-        const errors = error.response.data?.errors ?? {};
+        if (error.response.data?.errors?.current_password) {
+          setError('currentPassword', { message: 'Senha atual incorreta.' });
+          return;
+        }
 
-        snack(
-          errors.current_password
-            ? 'Senha atual incorreta.'
-            : 'Confira a nova senha e tente novamente.',
-        );
+        if (!applyApiFieldErrors(error, setError, { password: 'newPassword' })) {
+          snack('Confira a nova senha e tente novamente.');
+        }
         return;
       }
 

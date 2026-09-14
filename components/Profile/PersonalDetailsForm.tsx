@@ -1,3 +1,4 @@
+import { NAME_MAX_LENGTH } from '@/lib/validation';
 import { UIButton } from '@/components/UI/Button';
 import { UICard } from '@/components/UI/Card';
 import { UIFormInput } from '@/components/UI/FormInput';
@@ -27,6 +28,7 @@ export function PersonalDetailsForm({ control, email, onSave, loading }: Props) 
             label="Nome completo"
             mode="outlined"
             autoCapitalize="words"
+            maxLength={NAME_MAX_LENGTH}
           />
 
           <TextInput

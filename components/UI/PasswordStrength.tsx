@@ -1,10 +1,11 @@
+import { passwordScore } from '@/lib/validation';
 import styled from 'styled-components/native';
 
 const LABELS = ['Muito fraca', 'Fraca', 'Média', 'Boa', 'Forte'];
 const COLORS = ['#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E'];
 
 export function getPasswordScore(password: string): number {
-  return Math.min(4, Math.floor(password.length / 3));
+  return passwordScore(password);
 }
 
 export function UIPasswordStrength({ password }: { password: string }) {

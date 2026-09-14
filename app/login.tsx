@@ -4,6 +4,11 @@ import { AuthScreen } from '@/components/Auth/AuthScreen';
 import { UIButton } from '@/components/UI/Button';
 import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
+import {
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  emailSchema,
+} from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -14,11 +19,10 @@ import styled from 'styled-components/native';
 import { z } from 'zod';
 
 const schema = z.object({
-  email: z
+  email: emailSchema,
+  password: z
     .string()
-    .min(1, 'Email obrigatório')
-    .refine((val) => /\S+@\S+\.\S+/.test(val), { message: 'Email inválido' }),
-  password: z.string().min(6, 'Mínimo 6 caracteres'),
+    .min(PASSWORD_MIN_LENGTH, `Mínimo ${PASSWORD_MIN_LENGTH} caracteres`),
 });
 
 export default function Login() {
@@ -49,6 +53,7 @@ export default function Login() {
           name="email"
           label="E-mail"
           placeholder="seu@email.com"
+          maxLength={EMAIL_MAX_LENGTH}
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}

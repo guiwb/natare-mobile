@@ -5,6 +5,7 @@ import { UIButton } from '@/components/UI/Button';
 import { UIFormInput } from '@/components/UI/FormInput';
 import { useAuth } from '@/contexts/AuthProvider';
 import { useSnackbar } from '@/contexts/SnackbarProvider';
+import { EMAIL_MAX_LENGTH, emailSchema } from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -15,10 +16,7 @@ import styled from 'styled-components/native';
 import { z } from 'zod';
 
 const schema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email obrigatório')
-    .refine((val) => /\S+@\S+\.\S+/.test(val), { message: 'Email inválido' }),
+  email: emailSchema,
 });
 
 export default function ForgotPassword() {
@@ -63,6 +61,7 @@ export default function ForgotPassword() {
           name="email"
           label="E-mail da conta"
           placeholder="seu@email.com"
+          maxLength={EMAIL_MAX_LENGTH}
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}

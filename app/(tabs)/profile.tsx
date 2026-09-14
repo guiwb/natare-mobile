@@ -11,6 +11,11 @@ import AuthService from '@/services/auth.service';
 import CloudinaryService from '@/services/cloudinary.service';
 import UserService, { TGender } from '@/services/user.service';
 import { isValidPhone, maskPhone, phoneDigits } from '@/lib/phone';
+import {
+  applyApiFieldErrors,
+  isNetworkError,
+  nameSchema,
+} from '@/lib/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { useRefresh } from '@/hooks/useRefresh';
@@ -36,7 +41,7 @@ const optionalMeasure = (min: number, max: number, message: string) =>
     );
 
 const schema = z.object({
-  name: z.string().min(1, 'Nome obrigatório'),
+  name: nameSchema,
   birthDate: z
     .date()
     .optional()
@@ -102,7 +107,7 @@ export default function ProfileScreen() {
 
   const handleRemove = () => persistPicture('');
 
-  const { control, setValue, handleSubmit } = useForm({
+  const { control, setValue, handleSubmit, setError } = useForm({
     resolver: zodResolver(schema),
   });
 
@@ -149,8 +154,23 @@ export default function ProfileScreen() {
       const updated = await UserService.updateProfile(user.id, payload);
       setUser({ ...user, ...updated });
       snack('Perfil atualizado com sucesso');
-    } catch {
-      snack('Erro ao atualizar perfil');
+    } catch (error) {
+      const handled = applyApiFieldErrors(error, setError, {
+        name: 'name',
+        phone: 'phone',
+        gender: 'gender',
+        weight: 'weight',
+        height: 'height',
+        birth_date: 'birthDate',
+      });
+
+      if (!handled) {
+        snack(
+          isNetworkError(error)
+            ? 'Não foi possível conectar ao servidor. Verifique sua conexão.'
+            : 'Erro ao atualizar perfil',
+        );
+      }
     } finally {
       setLoading(false);
     }
