@@ -88,10 +88,16 @@ Sem FCM o `getExpoPushTokenAsync` falha e nenhum token é registrado (o feed in-
    ```
 4. **Chave da conta de serviço FCM V1:** Firebase → Configurações do projeto → aba **Contas de serviço** → "Gerar nova chave privada" (JSON). Suba no Expo:
    ```bash
-   npx eas credentials
-   # Android → Push Notifications → FCM V1 service account key → aponte o JSON
+   npx eas credentials -p android
+   # production → Google Service Account → Manage your Google Service Account Key for Push
+   # Notifications (FCM V1) → aponte o JSON (ou reaproveite uma chave já enviada)
    ```
+   A chave fica vinculada ao **application identifier**, não ao projeto do Expo. Se o `android.package` mudar, o identificador novo nasce sem chave e é preciso vincular de novo, senão o push para de chegar no Android (foi o que causou a [#28](https://github.com/guiwb/natare-mobile/issues/28): o package virou `com.guiweige.natareapp` e a chave continuou só no `com.guiweige.nataremobile`).
 5. **Rebuild do dev client** (o `google-services.json` é config nativa, exige novo build) e reinstale no device.
+
+> **Canal Android:** o app cria o canal `default-v2` (importância `HIGH`) e apaga o `default` antigo, que ficou com importância `DEFAULT` e não mostrava banner. O Android nunca aumenta a importância de um canal existente, nem se ele for recriado com o mesmo id, daí o id novo. A API precisa mandar esse mesmo `channelId` (`notifications.android_channel_id`).
+
+> **Diagnóstico:** falha de credencial não aparece no app nem na resposta do envio. O token é gerado normalmente e o Expo aceita a mensagem; o erro (`InvalidCredentials`, `MismatchSenderId`) só aparece no recibo, consultado em `/--/api/v2/push/getReceipts` com o `id` do ticket.
 
 > **Versionamento:** faça commit do `google-services.json` (não é segredo, vai embutido no app, e o `eas build` usa o git, então arquivos não commitados não entram no build). **Nunca** faça commit da chave da conta de serviço FCM V1 (a privada do passo 4); ela vive só no EAS.
 

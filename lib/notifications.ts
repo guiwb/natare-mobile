@@ -10,6 +10,9 @@ type NotificationsModule = typeof import('expo-notifications');
  * imports this file (the tabs layout included). The native module is only
  * loaded in builds that actually support it.
  */
+/** Must match `notifications.android_channel_id` in the API. */
+export const ANDROID_CHANNEL_ID = 'default-v2';
+
 export const pushAvailable =
   Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
 
@@ -56,9 +59,12 @@ export async function registerForPushNotifications(): Promise<string | null> {
   if (!Device.isDevice) return null;
 
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.DEFAULT,
+    // The original channel shipped with DEFAULT importance and Android never
+    // raises it, not even when the channel is recreated with the same id.
+    await Notifications.deleteNotificationChannelAsync('default');
+    await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
+      name: 'Notificações',
+      importance: Notifications.AndroidImportance.HIGH,
     });
   }
 
